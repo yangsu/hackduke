@@ -1,0 +1,48 @@
+i.icon-cogs, i.icon-thumbs-up, i.icon-group {
+	font-size:120px;
+	padding-left: 130px;
+}
+
+h2.explained {
+	padding-bottom:25px;
+	text-align: center;
+	height:72px;
+}
+
+.explain-row {
+	height: 200px;
+}
+
+h1.hero-home {
+	text-align:center;
+}
+
+.start-row {
+	height:120px;
+	padding-top:15px;
+}
+
+.start-btn {
+	font-size: 35px;
+	padding: 30px;
+	margin-left: 55px;
+}
+
+.thumbnail {
+    min-width: 260px;
+}
+
+.thumbnails li {
+    margin-left: 0px !important;
+    margin-right: 20px !important;
+}
+
+i.icon-briefcase {
+	font-size:100px;
+	margin-bottom:80px;
+	margin-top:15px;
+}
+
+h2.padded, h4.padded {
+	padding:20px;
+}

@@ -1,0 +1,11 @@
+{
+    "name": "Testing"
+  , "version": "0.0.1"
+  , "private": true
+  , "dependencies": {
+      "express": ">= 0.0.1"
+    , "jade": ">= 0.0.1"
+    , "mongodb": "1.1.8"
+    , "socket.io": "0.9.10"
+  }
+}

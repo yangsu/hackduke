@@ -1,0 +1,107 @@
+<div class="row">
+	<div class="hero-unit">
+	    <h1 class="hero-home">Documentation: Ready, Fire, Aim!</h1>
+	</div>
+</div>
+
+<div class="row explain-row">
+	<div class="span12">
+        <h2>How to call the REST API <small>(All results returned as JSON objects)</small></h2>
+    </div>
+    <div class="span12">
+        <h4 class="padded">To get all courses in a department: </h4>
+        <pre>Access: http://openworld.aws.af.cm/courses/?department=math </pre>
+    </div>
+    <div class="span12">
+        <h4 class="padded">This will return: <small>All courses in the math department</small></h4>
+        <pre> 
+            [
+              {
+                "id": 2775,
+                "year": "2012",
+                "term": "spring",
+                "department": "MATH",
+                "course_number": "221",
+                "course_name": "Linear Algebra and Applications",
+                "ALP": 0,
+                "CZ": 0,
+                "SS": 0,
+                "QS": 1,
+                "NS": 0,
+                "FL": 0,
+                "STS": 0,
+                "CCI": 0,
+                "EI": 0,
+                "W": 0,
+                "R": 0
+              },
+              ... and all other math courses ...
+            ]
+        </pre>
+    </div>
+
+    <div class="span12">
+        <h4 class="padded">To get courses with specific requirements: </h4>
+        <pre>Access: http://openworld.aws.af.cm/courses/?QS=1&NS=1&R=1 </pre>
+    </div>
+    <div class="span12">
+        <h4 class="padded">This will return: <small>All courses that fulfill Duke's QS, NS and R requirement</small></h4>
+        <pre> 
+            [
+              {
+                "id": 2618,
+                "year": "2012",
+                "term": "spring",
+                "department": "BIOLOGY",
+                "course_number": "215L",
+                "course_name": "Introduction to Modeling in Mathematical Biology",
+                "ALP": 0,
+                "CZ": 0,
+                "SS": 0,
+                "QS": 1,
+                "NS": 1,
+                "FL": 0,
+                "STS": 0,
+                "CCI": 0,
+                "EI": 0,
+                "W": 0,
+                "R": 1
+              }
+            ]
+        </pre>
+    </div>
+
+    <div class="span12">
+        <h4 class="padded">To get courses with any given criteria: </h4>
+        <pre>Access: http://openworld.aws.af.cm/courses/?term=spring&department=econ&qs=1</pre>
+    </div>
+    <div class="span12">
+        <h4 class="padded">This will return: <small>All courses that fulfill Duke's QS, NS and R requirement</small></h4>
+        <pre> 
+            [
+              {
+                "id": 2178,
+                "year": "2012",
+                "term": "spring",
+                "department": "ECON",
+                "course_number": "390",
+                "course_name": "Selected Topics in Economics",
+                "ALP": 0,
+                "CZ": 0,
+                "SS": 1,
+                "QS": 1,
+                "NS": 0,
+                "FL": 0,
+                "STS": 1,
+                "CCI": 1,
+                "EI": 0,
+                "W": 0,
+                "R": 1
+              },
+              ... And all other matches ...
+            ]
+        </pre>
+    </div>
+    
+</div>
+
