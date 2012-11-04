@@ -1,4 +1,15 @@
+# Fabio
 .idea
+*.iml
+
+# Node
 node_modules
 *.log
-*.iml
+
+# Yeoman
+temp
+intermediate
+publish
+
+# Sublime
+*.sublime*
