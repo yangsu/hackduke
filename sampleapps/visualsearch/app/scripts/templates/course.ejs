@@ -1,0 +1,15 @@
+<article>
+    <h2><%= department %> <%= course_number %></h2>
+    <h3><%= course_name %></h3>
+    <h4><%= year %> <%= term %></h4>
+    <div class="tags">
+    <%
+    var tags = ['ALP', 'CCI', 'CZ', 'EI', 'FL', 'NS', 'QS', 'R', 'SS', 'STS', 'W'];
+    for (var i = 0, l = tags.length; i < l; i++) {
+        if (arguments[0][tags[i]] == '1') { %>
+            <a class="tag"><%= tags[i] %></a>
+        <% }
+    }
+    %>
+    </div>
+</article>

@@ -1,0 +1,22 @@
+/* Will be compiled down to a single stylesheet with your sass files */
+
+body {
+  background-color: #E6EBEA;
+  font-family: Georgia, serif;
+}
+
+article {
+  padding: 20px;
+  margin: 10px 0;
+  border: 1px solid #DDD;
+  background-color: white;
+}
+
+.tag {
+  background-color: #7EABE2;
+  color: white;
+  padding: 2px 4px;
+  margin-right: 5px;
+  border-radius: 5px;
+  border: 1px solid #4787D6;
+}
