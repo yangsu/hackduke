@@ -1,5 +1,8 @@
+// Node Modules
 var https = require('https')
   , querystring = require('querystring');
+
+var _ = require('lodash');
 
 var data = {};
 
@@ -26,7 +29,7 @@ var req = https.request(options, function(res) {
   // console.log("headers: ", res.headers);
   res.on('data', function(chunk) {
     var text = chunk.toString();
-    parseBaseCat(text);
+    console.log(parseBaseCat(text));
   });
 });
 req.end();
@@ -35,11 +38,27 @@ req.on('error', function(e) {
   console.error(e);
 });
 
+function escapeRegex(regex) {
+  return regex.replace(/([\/])/g, "\\$1");
+};
+
 function parseBaseCat(text) {
-  var myRe = /<a[^>]*><h6>(\w+)<\/h6><br\/><p[^>]+>([^<]+)<\/p>/g;
-  var matches;
-  while ((matches = myRe.exec(text)) !== null) {
-    var msg = "Found " + matches.slice(1).join(',');
-    console.log(msg);
+  var reg = '<a[^>]*><h6>(\\w+)</h6><br/><p[^>]+>([^<]+)</p>';
+  return parseRegex(text, reg, ['letter', 'label']);
+};
+
+function parseRegex(text, regex, labels) {
+  // match all, ignore case
+  var reg = new RegExp(escapeRegex(regex), 'gi');
+  var returnVal = [];
+  var matches, tempVal;
+
+  while ((matches = reg.exec(text)) !== null) {
+    tempVal = _.reduce(labels, function (memo, label, i) {
+      memo[label] = matches[i + 1];
+      return memo;
+    }, {});
+    returnVal.push(tempVal);
   }
+  return returnVal;
 };
