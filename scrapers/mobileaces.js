@@ -43,8 +43,8 @@ function escapeRegex(regex) {
 };
 
 function parseBaseCat(text) {
-  var reg = '<a[^>]*><h6>(\\w+)</h6><br/><p[^>]+>([^<]+)</p>';
-  return parseRegex(text, reg, ['letter', 'label']);
+  var reg = '<a href="([^"]+)"><h6>(\\w+)</h6><br/><p[^>]+>([^<]+)</p>';
+  return parseRegex(text, reg, ['link', 'letter', 'label']);
 };
 
 function parseRegex(text, regex, labels) {
