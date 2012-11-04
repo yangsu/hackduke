@@ -1,0 +1,9 @@
+{
+  "name": "scrapers",
+  "version": "0.0.0",
+  "description": "",
+  "dependencies": {
+    "lodash": "~0.9.1"
+  },
+  "devDependencies": {}
+}
