@@ -128,7 +128,7 @@ parsers.section = function (text) {
   returnVal.info = parseRegex(
     text,
     '<p><b>([^<]+)</b></p><p><strong>[^<]+</strong>([^<]+)<br/><strong>[^<]+</strong>([^<]+)<br/><strong>[^<]+</strong>([^<]+)<br/><strong>[^<]+</strong>([^<]+)<br/><strong>[^<]+</strong>([^<]+)<br/>',
-    ['title', 'session', 'units', 'topic', 'description']
+    ['title', 'session', 'classNumber', 'units', 'topic', 'description']
   )[0];
 
   tempLabel = 'enrollmentReq';
