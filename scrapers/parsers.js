@@ -26,7 +26,10 @@ function regexToStr(regex) {
  */
 function trim(str) {
   if (str) {
-    return str.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');
+    return str
+      .replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'')
+      .replace(/\s+/g,' ')
+      .replace(/:$/, '');
   } else {
     return '';
   }
