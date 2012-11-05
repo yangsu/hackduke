@@ -19,14 +19,11 @@ var base = {
 
 queue.push(base);
 
-var parsers = {
-  base: parseBaseCat,
-  letter: parseLetter,
-  classes: parseClasses,
-  class: parseClass
-};
+var parsers = {};
 
 function fetch(item) {
+  if (!item || !item.path) return;
+  console.log('fetching',item.path);
   var options = {
     host: 'm.siss.duke.edu',
     port: 443,
@@ -65,8 +62,8 @@ function processNext () {
   console.log('processNext', index, '/',queue.length);
   if (index < queue.length) {
     fetch(queue[index++]);
-  } else {
     console.log(queue);
+  } else {
     process.exit(0);
   }
 };
@@ -77,44 +74,37 @@ function escapeRegex(regex) {
   return regex.replace(/([\/])/g, "\\$1");
 };
 
-function parseBaseCat(text) {
-  var reg = '<a href="([^"]+)"><h6>([^<]+)</h6><br/><p[^>]+>([^<]+)</p>'
-    , result = parseRegex(text, reg, ['path', 'letter', 'label']);
-  return _.map(result, function (item) {
-    return _.extend(item, {
-      type: 'letter'
-    })
-  });
+function liParseGenerator(regex, labels, childType) {
+  return function (text) {
+    var result = parseRegex(text, regex, labels);
+    return _.map(result, function (item) {
+      return _.extend(item, {
+        type: childType
+      })
+    });
+  };
 };
 
-function parseLetter(text) {
-  var reg = '<li><a href="([^"]+subject=(\\w+)[^"]+)">([^<]+)</a></li>'
-    , result = parseRegex(text, reg, ['path', 'subject', 'label']);
-  return _.map(result, function (item) {
-    return _.extend(item, {
-      type: 'classes'
-    })
-  });
-};
+parsers.base = liParseGenerator(
+  '<a href="([^"]+)"><h6>([^<]+)</h6><br/><p[^>]+>([^<]+)</p>',
+  ['path', 'letter', 'label'],
+  'letter'
+);
 
-function parseClasses(text) {
-  var reg = '<li><a href="([^"]+class=(\\w+)[^"]+)"><h4>([^<]+)</h4>'
-    , result = parseRegex(text, reg, ['path', 'class', 'label']);
-  return _.map(result, function (item) {
-    return _.extend(item, {
-      type: 'class'
-    })
-  });
-};
+parsers.letter = liParseGenerator(
+  '<li><a href="([^"]+subject=(\\w+)[^"]+)">([^<]+)</a></li>',
+  ['path', 'subject', 'label'],
+  'classes'
+);
 
-function parseClass(text) {
-  // var reg = '<li><a href="([^"]+class=(\\w+)[^"]+)"><h4>([^<]+)</h4></a></li>'
-  //   , result = parseRegex(text, reg, ['path', 'class', 'label']);
-  // return _.map(result, function (item) {
-  //   return _.extend(item, {
-  //     type: 'class'
-  //   })
-  // });
+parsers.classes = liParseGenerator(
+  '<li><a href="([^"]+class=(\\w+)[^"]+)"><h4>([^<]+)</h4>',
+  ['path', 'class', 'label'],
+  'class'
+);
+
+parsers.class = function (text) {
+
 };
 
 function parseRegex(text, regex, labels) {
@@ -123,6 +113,7 @@ function parseRegex(text, regex, labels) {
   var returnVal = [];
   var matches, tempVal;
 
+  // while => if to limit to 1 link
   if ((matches = reg.exec(text)) !== null) {
     tempVal = _.reduce(labels, function (memo, label, i) {
       memo[label] = matches[i + 1];
