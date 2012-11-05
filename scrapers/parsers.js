@@ -6,6 +6,14 @@ function escapeRegex(regex) {
   return regex.replace(/([\/])/g, "\\$1");
 };
 
+function trim(str) {
+  if (str) {
+    return str.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');
+  } else {
+    return '';
+  }
+};
+
 function parseRegex(text, regex, labels, limit) {
   // match all, ignore case, multiline
   var reg = new RegExp(escapeRegex(regex), 'gim')
@@ -20,7 +28,7 @@ function parseRegex(text, regex, labels, limit) {
     }
 
     tempVal = _.reduce(labels, function (memo, label, i) {
-      memo[label] = matches[i + 1];
+      memo[label] = trim(matches[i + 1]);
       return memo;
     }, {});
     returnVal.push(tempVal);
