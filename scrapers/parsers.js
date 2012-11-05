@@ -102,7 +102,7 @@ parsers.class = function (text) {
       '<li style[^>]*>([^<]+)</li>',
       ['req'],
       10
-    );
+    )[0]['req'];
   }
 
   tempLabel = 'path';
