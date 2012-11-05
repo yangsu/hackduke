@@ -14,7 +14,7 @@ a.get('https://www.siss.duke.edu/psp/CSPRD01/?cmd=start') do |page|
 
   # Submit the login form
   my_page = page.form_with(:action => '/idp/authn/external') do |f|
-    f.field_with(:id => "j_username").value = 'NETID'
+    f.field_with(:id => "j_username").value = 'USERID'
     f.field_with(:id => "j_password").value = 'PASSWORD'
   end.submit
 
@@ -22,7 +22,7 @@ a.get('https://www.siss.duke.edu/psp/CSPRD01/?cmd=start') do |page|
 
   final = form.submit
 
-  a.get('https://www.siss.duke.edu/psp/CSPRD01/EMPLOYEE/HRMS/h/?tab=DEFAULT') do |page|
+  a.get('https://www.siss.duke.edu/psp/CSPRD01/EMPLOYEE/HRMS/h/?cmd=getCachedPglt&pageletname=HC_STUDENT_CENTER_HOME&tab=DEFAULT&PORTALPARAM_COMPWIDTH=Narrow&ptlayout=N') do |page|
     puts page.body
   end
 
