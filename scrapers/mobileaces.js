@@ -63,8 +63,13 @@ function fetch(item) {
     });
 
     res.on('end', function () {
-      var result = parsers[item.type](text);
-      queue = queue.concat(result);
+      try {
+        var result = parsers[item.type](text);
+        queue = queue.concat(result);
+      } catch (e) {
+        console.log('Edge case');
+        console.log(item);
+      }
       process.nextTick(processNext);
 
       console.log('fetched',item.path, 'in', (Date.now() - starttime)/1000, 's');
