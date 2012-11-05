@@ -13,3 +13,6 @@ publish
 
 # Sublime
 *.sublime*
+
+# Scrapers
+maces-*.json
