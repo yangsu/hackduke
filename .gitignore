@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Fabio
 .idea
 *.iml
@@ -16,3 +17,7 @@ publish
 
 # Scrapers
 maces-*.json
+=======
+.DS_Store
+test/config/test.sqlite
+>>>>>>> df936ebab602c5ec76beb5f4902516fc146ef735
