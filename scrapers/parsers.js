@@ -14,7 +14,23 @@ function trim(str) {
   }
 };
 
-function parseRegex(text, regex, labels, limit) {
+function parseMatches(matches, labels) {
+  return  _.reduce(labels, function (memo, label, i) {
+    memo[label] = trim(matches[i + 1]);
+    return memo;
+  }, {});
+};
+
+function parseRegex(text, regex, labels) {
+  // match all, ignore case, multiline
+  var reg = new RegExp(escapeRegex(regex), 'im')
+    , matches = reg.exec(text)
+    , returnVal = parseMatches(matches, labels);
+
+  return returnVal;
+};
+
+function parseRegexG(text, regex, labels, limit) {
   // match all, ignore case, multiline
   var reg = new RegExp(escapeRegex(regex), 'gim')
     , returnVal = []
@@ -27,10 +43,8 @@ function parseRegex(text, regex, labels, limit) {
       break;
     }
 
-    tempVal = _.reduce(labels, function (memo, label, i) {
-      memo[label] = trim(matches[i + 1]);
-      return memo;
-    }, {});
+    tempVal = parseMatches(matches, labels)
+
     returnVal.push(tempVal);
     matchCount++;
   }
@@ -39,7 +53,7 @@ function parseRegex(text, regex, labels, limit) {
 
 function liParseGenerator(regex, labels, childType) {
   return function (text) {
-    var result = parseRegex(text, regex, labels);
+    var result = parseRegexG(text, regex, labels);
     return _.map(result, function (item) {
       return _.extend(item, {
         type: childType
@@ -69,7 +83,7 @@ parsers.classes = liParseGenerator(
 parsers.class = function (text) {
   var returnVal = {}
     , tempLabel = 'content'
-    , uls = parseRegex(
+    , uls = parseRegexG(
       text,
       '<ul[^>]+>(.+?)(</ul>)',
       [tempLabel],
@@ -80,16 +94,16 @@ parsers.class = function (text) {
     text,
     '<h3>([^<]+)</h3><p><strong>[^<]+</strong></p><p>([^<]+)</p>',
     ['number', 'title', 'description']
-  )[0];
+  );
 
-  returnVal.details = parseRegex(
+  returnVal.details = parseRegexG(
     uls[0][tempLabel],
     '<li[^>]*><h4>([^<]+)</h4><h4[^>]+>([^<]+)</h4',
     ['label', 'value'],
     10
   );
 
-  returnVal.offering = parseRegex(
+  returnVal.offering = parseRegexG(
     uls[1][tempLabel],
     '<li[^>]*><h4>([^<]+)</h4><h4[^>]+>([^<]+)</h4',
     ['label', 'value'],
@@ -102,7 +116,7 @@ parsers.class = function (text) {
       '<li style[^>]*>([^<]+)</li>',
       ['req'],
       10
-    )[0]['req'];
+    )['req'];
   }
 
   tempLabel = 'path';
@@ -110,11 +124,11 @@ parsers.class = function (text) {
     text,
     '<a data-role="button" href="([^"]+)"',
     [tempLabel]
-  )[0][tempLabel];
+  )[tempLabel];
 
   returnVal.type = 'terms';
 
-  return [returnVal];
+  return returnVal;
 };
 
 parsers.terms = liParseGenerator(
@@ -137,20 +151,20 @@ parsers.section = function (text) {
     text,
     '<p><b>([^<]+)</b></p><p><strong>[^<]+</strong>([^<]+)<br/><strong>[^<]+</strong>([^<]+)<br/><strong>[^<]+</strong>([^<]+)<br/><strong>[^<]+</strong>([^<]+)<br/><strong>[^<]+</strong>([^<]+)<br/>',
     ['title', 'session', 'classNumber', 'units', 'topic', 'description']
-  )[0];
+  );
 
   tempLabel = 'enrollmentReq';
   var temp = parseRegex(
     text,
     '<p><strong>[^<]+</strong>([^<]+)<br/></p>',
     [tempLabel]
-  )[0];
+  );
 
   if (temp) {
     returnVal[tempLabel] = temp[tempLabel];
   }
 
-  returnVal.details = parseRegex(
+  returnVal.details = parseRegexG(
     text,
     '<li[^>]*><h4>([^<]+)</h4><h4[^>]+>([^<]+)</h4',
     ['label', 'value'],
@@ -161,13 +175,13 @@ parsers.section = function (text) {
     text,
     '<li[^>]*><a[^>]*href="([^"]+)"><h4>[^<]+</h4><h4[^>]+>([^<]+)</h4',
     ['link', 'location']
-  )[0];
+  );
 
   if (temp) {
     returnVal.location = temp;
     returnVal.path = returnVal.location.link;
     returnVal.type = 'location';
-    return [returnVal];
+    return returnVal;
   }
 };
 
@@ -176,7 +190,7 @@ parsers.location = function (text) {
     text,
     'initialize\\(([^,]+),([^\\)]+)\\);',
     ['latitude', 'longitude']
-  )[0];
+  );
   return returnVal;
 }
 
