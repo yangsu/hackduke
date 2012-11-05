@@ -25,7 +25,8 @@ queue.push(base);
 
 function fetch(item) {
   if (!item || !item.path) return;
-  console.log('fetching',item.path);
+
+  var starttime = Date.now();
   var options = {
     host: 'm.siss.duke.edu',
     port: 443,
@@ -49,6 +50,8 @@ function fetch(item) {
       var result = parsers[item.type](text);
       queue = queue.concat(result);
       process.nextTick(processNext);
+
+      console.log('fetching',item.path, 'in', (Date.now() - starttime)/1000, 's');
     });
 
   });
@@ -63,7 +66,7 @@ function processNext () {
   console.log('processNext', index, '/',queue.length);
   if (index < queue.length) {
     fetch(queue[index++]);
-    console.log(queue);
+    // console.log(queue);
   } else {
     process.exit(0);
   }
