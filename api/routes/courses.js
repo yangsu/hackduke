@@ -1,7 +1,7 @@
 var mysql      = require('mysql');
 
 //Use this for AppFog dev 
-
+/*
 var vcap_service = JSON.parse(process.env.VCAP_SERVICES);
 var creds = vcap_service["mysql-5.1"][0]["credentials"];
 
@@ -14,9 +14,9 @@ var connection = mysql.createConnection({
 
 connection.connect();
 connection.query("use "+creds.name);
-
+*/
 //Use this for local dev
-/*
+
 var connection = mysql.createConnection({
   host     : '127.0.0.1',
   user     : 'root',
@@ -26,7 +26,7 @@ var connection = mysql.createConnection({
 
 connection.connect();
 connection.query("use openuniversity");
-*/
+
 
 exports.findAll=function(req, res) {
   
