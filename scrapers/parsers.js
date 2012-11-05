@@ -70,9 +70,9 @@ parsers.class = function (text) {
 
   returnVal.info = parseRegex(
     text,
-    '<h3>([^<]+)</h3><p><strong>([^<]+)</strong></p><p>([^<]+)</p>',
+    '<h3>([^<]+)</h3><p><strong>[^<]+</strong></p><p>([^<]+)</p>',
     ['number', 'title', 'description']
-  );
+  )[0];
 
   returnVal.details = parseRegex(
     uls[0][tempLabel],
@@ -104,13 +104,72 @@ parsers.class = function (text) {
     [tempLabel]
   )[0][tempLabel];
 
-  returnVal.type = 'sections';
+  returnVal.type = 'terms';
 
+  return [returnVal];
+};
+
+parsers.terms = liParseGenerator(
+  '<li><a href="([^"]+openSections=(\\w+)[^"]+crse_id=(\\w+)[^"]+)"\\s*>([^<]+)',
+  ['path', 'sectionId', 'courseId', 'sectionLabel'],
+  'term'
+);
+
+parsers.term = liParseGenerator(
+  '<li><a href="([^"]+strm=(\\w+)[^"]+section=(\\w+)[^"]+class_nbr=(\\w+)[^"]+)">([^<]+)',
+  ['path', 'termId', 'sectionId', 'classNumber'],
+  'section'
+);
+
+parsers.section = function (text) {
+    var returnVal = {}
+    , tempLabel;
+
+  returnVal.info = parseRegex(
+    text,
+    '<p><b>([^<]+)</b></p><p><strong>[^<]+</strong>([^<]+)<br/><strong>[^<]+</strong>([^<]+)<br/><strong>[^<]+</strong>([^<]+)<br/><strong>[^<]+</strong>([^<]+)<br/><strong>[^<]+</strong>([^<]+)<br/>',
+    ['title', 'session', 'units', 'topic', 'description']
+  )[0];
+
+  tempLabel = 'enrollmentReq';
+  var temp = parseRegex(
+    text,
+    '<p><strong>[^<]+</strong>([^<]+)<br/></p>',
+    [tempLabel]
+  )[0];
+
+  if (temp) {
+    returnVal[tempLabel] = temp[tempLabel];
+  }
+
+  returnVal.details = parseRegex(
+    text,
+    '<li[^>]*><h4>([^<]+)</h4><h4[^>]+>([^<]+)</h4',
+    ['label', 'value'],
+    20
+  );
+
+  temp = parseRegex(
+    text,
+    '<li[^>]*><a[^>]*href="([^"]+)"><h4>[^<]+</h4><h4[^>]+>([^<]+)</h4',
+    ['link', 'location']
+  )[0];
+
+  if (temp) {
+    returnVal.location = temp;
+    returnVal.path = returnVal.location.link;
+    returnVal.type = 'location';
+    return [returnVal];
+  }
+};
+
+parsers.location = function (text) {
+  var returnVal = parseRegex(
+    text,
+    'initialize\\(([^,]+),([^\\)]+)\\);',
+    ['latitude', 'longitude']
+  )[0];
   return returnVal;
-};
-
-parsers.sections = function (text) {
-
-};
+}
 
 module.exports = parsers;

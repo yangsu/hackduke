@@ -24,13 +24,24 @@ var base = {
 queue.push(base);
 
 function fetch(item) {
-  if (!item || !item.path) return;
+  if (!item || !item.path) {
+    process.nextTick(processNext);
+    return;
+  }
 
-  var starttime = Date.now();
+  var starttime = Date.now()
+    , path;
+
+  if (item.path[0] === '/') {
+    path = item.path;
+  } else {
+    path = '/public_page/' + item.path
+  }
+
   var options = {
     host: 'm.siss.duke.edu',
     port: 443,
-    path: '/public_page/' + item.path,
+    path: path,
     method: 'GET',
     headers: {
       Cookie: cookie
@@ -50,8 +61,7 @@ function fetch(item) {
       var result = parsers[item.type](text);
       queue = queue.concat(result);
       process.nextTick(processNext);
-
-      console.log('fetching',item.path, 'in', (Date.now() - starttime)/1000, 's');
+      console.log('fetched',item.path, 'in', (Date.now() - starttime)/1000, 's');
     });
 
   });
@@ -66,9 +76,16 @@ function processNext () {
   console.log('processNext', index, '/',queue.length);
   if (index < queue.length) {
     fetch(queue[index++]);
-    // console.log(queue);
   } else {
-    process.exit(0);
+    var fs = require('fs');
+    fs.writeFile('data.json', JSON.stringify(queue, null, 4), function(err) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("Data JSON file was saved!");
+        }
+        process.exit(0);
+    });
   }
 };
 
