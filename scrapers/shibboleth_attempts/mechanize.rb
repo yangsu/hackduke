@@ -14,9 +14,7 @@ a.get('https://www.siss.duke.edu/psp/CSPRD01/?cmd=start') do |page|
 
   # Submit the login form
   my_page = page.form_with(:action => '/idp/authn/external') do |f|
-    #f.j_username  = 'flb5' #ARGV[0]
     f.field_with(:id => "j_username").value = 'NETID'
-    #f.j_password  = 'handyArmsWursti7' #ARGV[1]
     f.field_with(:id => "j_password").value = 'PASSWORD'
   end.submit
 
