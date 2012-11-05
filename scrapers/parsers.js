@@ -39,7 +39,10 @@ function trim(str) {
  * @return {object}         object containing label => matches
  */
 function extractMatches(matches, labels) {
-  if (!labels || labels.length === 1) {
+  if (!matches || matches.length <= 1) {
+    console.log('Irregular Data');
+    console.log(matches);
+  } else if (!labels || labels.length === 1) {
     return trim(matches[1]);
   } else {
     return  _.reduce(labels, function (memo, label, i) {
@@ -78,7 +81,7 @@ function regexGParse(text, regex, labels, limit) {
   var reg = new RegExp(regexToStr(regex), 'gim')
     , returnVal = []
     , matchCount = 0
-    , matchLimit = limit || 1
+    , matchLimit = limit || 1000
     , matches
     , tempVal;
 
@@ -151,9 +154,7 @@ parsers.class = function (text) {
   var returnVal = {}
     , uls = regexGParse(
       text,
-      /<ul[^>]+>(.+?)(<\/ul>)/,
-      null,
-      3
+      /<ul[^>]+>(.+?)(<\/ul>)/
     );
 
   returnVal.info = regexParse(
@@ -165,15 +166,13 @@ parsers.class = function (text) {
   returnVal.details = regexGParse(
     uls[0],
     /<li[^>]*><h4>([^<]+)<\/h4><h4[^>]+>([^<]+)<\/h4/,
-    ['label', 'value'],
-    10
+    ['label', 'value']
   );
 
   returnVal.offering = regexGParse(
     uls[1],
     /<li[^>]*><h4>([^<]+)<\/h4><h4[^>]+>([^<]+)<\/h4/,
-    ['label', 'value'],
-    10
+    ['label', 'value']
   );
 
   if (uls[2]) {
@@ -237,8 +236,7 @@ parsers.section = function (text) {
   returnVal.details = regexGParse(
     text,
     /<li[^>]*><h4>([^<]+)<\/h4><h4[^>]+>([^<]+)<\/h4/,
-    ['label', 'value'],
-    20
+    ['label', 'value']
   );
 
   temp = regexParse(
