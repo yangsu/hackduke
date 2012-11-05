@@ -3,7 +3,6 @@
 # ex: ~ ruby mechanize.rb flb5 mypassword
 # returns JSON object of students classes
 
-require 'rubygems'
 require 'mechanize'
 require 'logger'
 require 'json'
