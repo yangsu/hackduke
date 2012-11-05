@@ -15,14 +15,17 @@ function trim(str) {
 };
 
 function parseMatches(matches, labels) {
-  return  _.reduce(labels, function (memo, label, i) {
-    memo[label] = trim(matches[i + 1]);
-    return memo;
-  }, {});
+  if (!labels || labels.length === 1) {
+    return trim(matches[1]);
+  } else {
+    return  _.reduce(labels, function (memo, label, i) {
+      memo[label] = trim(matches[i + 1]);
+      return memo;
+    }, {});
+  }
 };
 
 function parseRegex(text, regex, labels) {
-  // match all, ignore case, multiline
   var reg = new RegExp(escapeRegex(regex), 'im')
     , matches = reg.exec(text)
     , returnVal = parseMatches(matches, labels);
@@ -82,11 +85,10 @@ parsers.classes = liParseGenerator(
 
 parsers.class = function (text) {
   var returnVal = {}
-    , tempLabel = 'content'
     , uls = parseRegexG(
       text,
       '<ul[^>]+>(.+?)(</ul>)',
-      [tempLabel],
+      null,
       3
     );
 
@@ -97,14 +99,14 @@ parsers.class = function (text) {
   );
 
   returnVal.details = parseRegexG(
-    uls[0][tempLabel],
+    uls[0],
     '<li[^>]*><h4>([^<]+)</h4><h4[^>]+>([^<]+)</h4',
     ['label', 'value'],
     10
   );
 
   returnVal.offering = parseRegexG(
-    uls[1][tempLabel],
+    uls[1],
     '<li[^>]*><h4>([^<]+)</h4><h4[^>]+>([^<]+)</h4',
     ['label', 'value'],
     10
@@ -112,19 +114,17 @@ parsers.class = function (text) {
 
   if (uls[2]) {
     returnVal.enrollmentReq = parseRegex(
-      uls[2][tempLabel],
+      uls[2],
       '<li style[^>]*>([^<]+)</li>',
-      ['req'],
+      null,
       10
-    )['req'];
+    );
   }
 
-  tempLabel = 'path';
   returnVal.path = parseRegex(
     text,
-    '<a data-role="button" href="([^"]+)"',
-    [tempLabel]
-  )[tempLabel];
+    '<a data-role="button" href="([^"]+)"'
+  );
 
   returnVal.type = 'terms';
 
@@ -153,15 +153,13 @@ parsers.section = function (text) {
     ['title', 'session', 'classNumber', 'units', 'topic', 'description']
   );
 
-  tempLabel = 'enrollmentReq';
   var temp = parseRegex(
     text,
-    '<p><strong>[^<]+</strong>([^<]+)<br/></p>',
-    [tempLabel]
+    '<p><strong>[^<]+</strong>([^<]+)<br/></p>'
   );
 
   if (temp) {
-    returnVal[tempLabel] = temp[tempLabel];
+    returnVal.enrollmentReq = temp;
   }
 
   returnVal.details = parseRegexG(
