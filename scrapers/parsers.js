@@ -145,8 +145,7 @@ parsers.term = liParseGenerator(
 );
 
 parsers.section = function (text) {
-    var returnVal = {}
-    , tempLabel;
+  var returnVal = {};
 
   returnVal.info = parseRegex(
     text,
