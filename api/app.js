@@ -30,12 +30,15 @@ app.configure('production', function(){
   app.use(express.errorHandler());
 });
 
+
 /* Routes */
 
 //other Routes
 
 // Project Routes
 app.get('/courses', course.findRequirements);
+app.get('/oauthcall', routes.oauthcall);
+app.get('/oauthresp', routes.oauthresp);
 
 
 http.createServer(app).listen(app.get('port'), function(){

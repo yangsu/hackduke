@@ -32,7 +32,7 @@ myOAP.on('enforce_login', function(req, res, authorize_url, next) {
 // render the authorize form with the submission URL
 // use two submit buttons named "allow" and "deny" for the user's choice
 myOAP.on('authorize_form', function(req, res, client_id, authorize_url) {
-  res.end('<html>this app wants to access your account... <form method="post" action="' + authorize_url + '"><button name="allow">Allow</button><button name="deny">Deny</button></form>');
+  res.end('<html>this app wants to access your class schedule <form method="post" action="' + authorize_url + '"><button name="allow">Allow</button><button name="deny">Deny</button></form>');
 });
 
 // save the generated grant code for the current user
@@ -41,11 +41,13 @@ myOAP.on('save_grant', function(req, client_id, code, next) {
     myGrants[req.session.user] = {};
 
   myGrants[req.session.user][client_id] = code;
+  console.log(JSON.stringify(myGrants));
   next();
 });
 
 // remove the grant when the access token has been sent
 myOAP.on('remove_grant', function(user_id, client_id, code) {
+  console.log('remove grant was called');
   if(myGrants[user_id] && myGrants[user_id][client_id])
     delete myGrants[user_id][client_id];
 });
@@ -67,7 +69,7 @@ myOAP.on('lookup_grant', function(client_id, client_secret, code, next) {
 
 // embed an opaque value in the generated access token
 myOAP.on('create_access_token', function(user_id, client_id, next) {
-  var data = 'blah'; // can be any data type or null
+  var data = 'schedule'; // can be any data type or null
 
   next(data);
 });
@@ -79,6 +81,7 @@ myOAP.on('save_access_token', function(user_id, client_id, access_token) {
 
 // an access token was received in a URL query string parameter or HTTP header
 myOAP.on('access_token', function(req, token, next) {
+  console.log("Access token listener called!");
   var TOKEN_TTL = 10 * 60 * 1000; // 10 minutes
 
   if(token.grant_date.getTime() + TOKEN_TTL > Date.now()) {
@@ -96,16 +99,17 @@ app.use(express.bodyParser());
 app.use(express.query());
 app.use(express.cookieParser());
 app.use(express.session({store: new MemoryStore({reapInterval: 50 * 60 * 1000}), secret: 'abracadabra'}));
-app.use(app.router);
 app.use(myOAP.oauth());
 app.use(myOAP.login());
+app.use(app.router);
+
 
 app.get('/', oauth.home);
-
 app.get('/login', oauth.loginPage);
 app.post('/login', oauth.loginSubmit);
 app.get('/logout', oauth.logout);
 app.get('/secret', oauth.secret);
+app.get('/exchange', oauth.exchange);
 
 app.listen(8081);
 

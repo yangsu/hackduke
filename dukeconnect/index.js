@@ -25,9 +25,12 @@ OAuth2Provider.prototype.generateAccessToken = function(user_id, client_id, extr
 };
 
 OAuth2Provider.prototype.login = function() {
+
   var self = this;
 
   return function(req, res, next) {
+    //console.log('Access token in index.js: '+JSON.stringify(req.query.access_token));
+
     var data, atok, user_id, client_id, grant_date, extra_data;
 
     if(req.query['access_token']) {
@@ -49,6 +52,8 @@ OAuth2Provider.prototype.login = function() {
       return res.end(e.message);
     }
 
+    console.log("info avaiable: "+user_id+" "+extra_data);
+
     self.emit('access_token', req, {
       user_id: user_id,
       client_id: client_id,
@@ -57,6 +62,46 @@ OAuth2Provider.prototype.login = function() {
     }, next);
   };
 };
+
+OAuth2Provider.prototype.exchange = function() {
+
+  var self = this;
+
+  return function(req, res, next) {
+    console.log('Access token in exchange: '+JSON.stringify(req.query.access_token));
+
+    var data, atok, user_id, client_id, grant_date, extra_data;
+
+    if(req.query['access_token']) {
+      atok = req.query['access_token'];
+    } else if((req.headers['authorization'] || '').indexOf('Bearer ') == 0) {
+      atok = req.headers['authorization'].replace('Bearer', '').trim();
+    } else {
+      return next();
+    }
+
+    try {
+      data = self.serializer.parse(atok);
+      user_id = data[0];
+      client_id = data[1];
+      grant_date = new Date(data[2]);
+      extra_data = data[3];
+    } catch(e) {
+      res.writeHead(400);
+      return res.end(e.message);
+    }
+
+    console.log("info avaiable exch: "+user_id+" "+extra_data);
+
+    self.emit('access_token', req, {
+      user_id: user_id,
+      client_id: client_id,
+      extra_data: extra_data,
+      grant_date: grant_date
+    }, next);
+  };
+};
+
 
 OAuth2Provider.prototype.oauth = function() {
   var self = this;
@@ -151,10 +196,13 @@ OAuth2Provider.prototype.oauth = function() {
       }
 
     } else if(req.method == 'POST' && '/oauth/access_token' == uri) {
+
       var     client_id = req.body.client_id,
           client_secret = req.body.client_secret,
            redirect_uri = req.body.redirect_uri,
                    code = req.body.code;
+
+      console.log(req.body.client_id+" "+req.body.client_secret+" "+req.body.redirect_uri+" "+req.body.code);
 
       self.emit('lookup_grant', client_id, client_secret, code, function(err, user_id) {
         if(err) {
