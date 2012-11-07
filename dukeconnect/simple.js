@@ -32,7 +32,7 @@ myOAP.on('enforce_login', function(req, res, authorize_url, next) {
 // render the authorize form with the submission URL
 // use two submit buttons named "allow" and "deny" for the user's choice
 myOAP.on('authorize_form', function(req, res, client_id, authorize_url) {
-  res.end('<html>this app wants to access your class schedule <form method="post" action="' + authorize_url + '"><button name="allow">Allow</button><button name="deny">Deny</button></form>');
+  res.render('permission_page', { title: 'Home', url: authorize_url});
 });
 
 // save the generated grant code for the current user
@@ -94,6 +94,8 @@ myOAP.on('access_token', function(req, token, next) {
   next();
 });
 
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
 app.use(express.logger());
 app.use(express.bodyParser());
 app.use(express.query());
@@ -102,6 +104,7 @@ app.use(express.session({store: new MemoryStore({reapInterval: 50 * 60 * 1000}),
 app.use(myOAP.oauth());
 app.use(myOAP.login());
 app.use(app.router);
+app.use(express.static(__dirname + '/public'));
 
 
 app.get('/', oauth.home);

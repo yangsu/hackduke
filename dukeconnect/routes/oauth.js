@@ -34,7 +34,8 @@ exports.loginPage = function(req, res, next) {
 
     var next_url = req.query.next ? req.query.next : '/';
 
-    res.end('<html><form method="post" action="/login"><input type="hidden" name="next" value="' + next_url + '"><input type="text" placeholder="username" name="username"><input type="password" placeholder="password" name="password"><button type="submit">Login</button></form>');
+    res.render('login', { title: 'Duke Connect', url: next_url});
+
   };
 
 exports.loginSubmit = function(req, res, next) {

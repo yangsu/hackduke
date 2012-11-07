@@ -1,0 +1,16 @@
+TODO Till Min Vi
+
+2. Make all Pages pretty, refactor any html calls to use routers proper
+3. Figure out how to get Data AFTER request call with specific requests (maybe store password temporarily?)
+4. Add support for getting more information, build modularly with permissions
+5. Move App Key, Secret storage to MongoDB
+6. Make Key, Secret Generator linked to Duke Net ID
+7. Make Developper Signup & Generator page (Add Apps: App=> key,secret pair)
+8. Write Docs
+
+
+
+Eventually:
+
+- Add SSL
+- Limit Request Number per Day

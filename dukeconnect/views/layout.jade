@@ -1,0 +1,30 @@
+doctype 5
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/libs/bootstrap/css/united.bootstrap.min.css')
+    link(rel='stylesheet', href='/libs/bootstrap/css/bootstrap-responsive.min.css')
+    link(rel='stylesheet', href='/libs/bootstrap/css/font-awesome.css')
+    link(rel='stylesheet', href='/css/style.css')
+
+  body
+
+  .navbar.navbar-fixed-top
+    .navbar-inner
+       .container
+        a.brand(href = '/') DukeConnect
+
+  block content
+
+  #footer
+    .container
+      .row
+        .span6
+          Copyright &copy; #{+new Date().getFullYear()} 
+          a(href='/page?name=about') About 
+          | | 
+          a(href='/page?name=contact') Contact Us 
+          
+
+    script(src="/libs/jquery-1.8.2.min.js")
+    script(src="/libs/bootstrap/js/bootstrap.min.js")
