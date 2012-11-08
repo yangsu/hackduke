@@ -4,7 +4,7 @@
 # returns JSON object of students classes
 
 require 'mechanize'
-require 'logger'
+# require 'logger'
 require 'json'
 
 a = Mechanize.new 
@@ -13,7 +13,8 @@ a.agent.redirect_ok = :all, true
 a.ssl_version = 'SSLv3'
 a.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
-a.log = Logger.new "mech.log"
+# uncomment this to get logs
+#a.log = Logger.new "mech.log"
 
 a.get('https://www.siss.duke.edu/psp/CSPRD01/?cmd=start') do |page|
 
@@ -38,7 +39,7 @@ a.get('https://www.siss.duke.edu/psp/CSPRD01/?cmd=start') do |page|
     end
   end
 
-  puts courses.to_json
+  puts courses.to_json 
 
 
   '''

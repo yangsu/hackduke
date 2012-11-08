@@ -1,4 +1,4 @@
-var userData = require('../userdata').userData;
+var userData = require('../models/userdata').userData;
 var myUserData = new userData();
 
 exports.home =  function(req, res, next) {
@@ -90,24 +90,6 @@ exports.secret = function(req, res, next) {
     }
 
   };
-
-  /*--------------------------------------------------------------------------------------------------------------------*/
-// Populate database with sample data -- Only used once: the first time the application is started.
-// You'd typically not find this code in a real-life app, since the database would already exist.
-var populateData = function() {
-
-    var userdata = [
-    {
-        netid: "flb5",
-        data: "['COMPSCI 250-001 LEC (1721)','COMPSCI 250-01R REC (1722)','COMPSCI 330-001 LEC (1730)','COMPSCI 330-01R REC (1731)','ECON 462-01 LEC (3179)','PHYSICS 136-01 LEC (2605)' ]"
-    },
-    ];
-
-    db.collection('userdata', function(err, collection) {
-        collection.insert(userdata, {safe:true}, function(err, result) {});
-    });
-
-};
 
 
 
