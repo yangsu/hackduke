@@ -1,23 +1,5 @@
-var mongo = require('mongodb');
-
-var Server = mongo.Server,
-  Db = mongo.Db,
-  BSON = mongo.BSONPure;
-
-var server = new Server('localhost', 27017, {auto_reconnect: true});
-db = new Db('dukeconnect', server);
-
-db.open(function(err, db) {
-  if(!err) {
-    console.log("connected to 'dukeconnect' database");
-    db.collection('userdata', {safe:true}, function(err, collection) {
-      if(err) {
-        console.log("The 'userdata' collection doesnt exist. Creating it with sample data...");
-        populateData();
-      }
-    });
-  }
-});
+var userData = require('../userdata').userData;
+var myUserData = new userData();
 
 exports.home =  function(req, res, next) {
     res.end('home, logged in? ' + !!req.session.user);
@@ -58,18 +40,12 @@ exports.loginSubmit = function(req, res, next) {
       data: schedule
     };
 
-      //Store it into the DB
-      db.collection('userdata', function(err, collection) {
-        collection.insert(insert_data, {safe:true}, function(err, result) {
-          if(err) {
-            res.send({'error':'An error has occured'});
-          }
-          else {
-            console.log("success: " + JSON.stringify(result[0]));
-            res.writeHead(303, {Location: req.body.next || '/'});
-            res.end();
-          }
-        });
+      myUserData.insert(insert_data, function(worked) {
+        console.log(worked+" returned");
+        if(worked == true) {
+          res.writeHead(303, {Location: req.body.next || '/'});
+          res.end();
+        }
       });
 
       if (error !== null) {
@@ -97,14 +73,13 @@ exports.secret = function(req, res, next) {
 
   exports.exchange = function(req, res, next) {
 
+    var schedule = "temp";
     if(req.session.user) {
-        db.collection('userdata', function(err, collection) {
-          collection.findOne({ netid: req.session.user}, function(err, item) {
-            if(err) {
-              res.send("error: "+err);
-            }
-            else {
-              res.send(item);
+        myUserData.findOne(req.session.user, function(result) {
+          schedule = result;
+          myUserData.remove(req.session.user, function(result) {
+            if(result == true) {
+              res.send(schedule);
             }
           });
         });

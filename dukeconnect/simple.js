@@ -1,11 +1,12 @@
 // simple server with a protected resource at /secret secured by OAuth 2
 
 var OAuth2Provider = require('./index').OAuth2Provider,
-           express = require('express'),
-           path = require('path'),
-           http = require('http'),
-           oauth = require('./routes/oauth.js'),
-       MemoryStore = express.session.MemoryStore;
+    express = require('express'),
+    path = require('path'),
+    http = require('http'),
+    oauth = require('./routes/oauth.js'),
+    MemoryStore = express.session.MemoryStore;
+
 
 // hardcoded list of <client id, client secret> tuples
 var myClients = {
