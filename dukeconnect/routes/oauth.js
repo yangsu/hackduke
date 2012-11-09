@@ -1,5 +1,10 @@
+var grant = require('../models/grant').grant;
+var myGrant = new grant();
+
 var userData = require('../models/userdata').userData;
 var myUserData = new userData();
+
+var aces = require('../lib/aces').aces;
 
 exports.home =  function(req, res, next) {
     res.end('home, logged in? ' + !!req.session.user);
@@ -21,36 +26,20 @@ exports.loginPage = function(req, res, next) {
   };
 
 exports.loginSubmit = function(req, res, next) {
-    var sys = require('sys')
-    var exec = require('child_process').exec;
 
     var user = req.body.username;
     var pass = req.body.password;
     req.session.user = user;
-    var schedule = "temp";
 
-    var command = "ruby ../scrapers/authenticated_scrapes/mechanize.rb "+user+" "+pass;
-    // executes script that gets course from ACES
-    var child = exec(command, function (error, stdout, stderr) {
-      console.log(error+" "+stderr+" "+command);
-      schedule = stdout;
+    //call aces lib and get & store schedule
+    var myAces = new aces(user, pass);
 
-      var insert_data = {
-      netid: req.session.user,
-      data: schedule
-    };
-
-      myUserData.insert(insert_data, function(worked) {
-        console.log(worked+" returned");
-        if(worked == true) {
-          res.writeHead(303, {Location: req.body.next || '/'});
-          res.end();
-        }
-      });
-
-      if (error !== null) {
-          console.log('exec error: ' + error);
-        }
+    myAces.getSchedule(function(result) {
+      console.log("Aces returned: "+result);
+      if(result == true) {
+        res.writeHead(303, {Location: req.body.next || '/'});
+        res.end();
+      }
     });
 
   };
@@ -73,16 +62,20 @@ exports.secret = function(req, res, next) {
 
   exports.exchange = function(req, res, next) {
 
-    var schedule = "temp";
+    //TODO: Make this function work asyncronously for multiple perms
     if(req.session.user) {
-        myUserData.findOne(req.session.user, function(result) {
-          schedule = result;
-          myUserData.remove(req.session.user, function(result) {
-            if(result == true) {
-              res.send(schedule);
-            }
-          });
-        });
+          //split perms and fetch data related to each
+          var perms = req.session.data.split(',');
+
+          myUserData.findByPerms(req.session.user, perms, function(result) {
+            var user_data = result;
+            myUserData.remove(req.session.user, function(result) {
+                  if(result == true) {
+                    res.send(user_data);
+                  }
+                });
+              });
+
     }
     else {
       res.writeHead(403);

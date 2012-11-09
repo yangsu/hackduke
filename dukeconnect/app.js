@@ -1,6 +1,6 @@
 // simple server with a protected resource at /secret secured by OAuth 2
 
-var OAuth2Provider = require('./oauth2provider').OAuth2Provider,
+var OAuth2Provider = require('./lib/oauth2provider').OAuth2Provider,
     express = require('express'),
     path = require('path'),
     http = require('http'),
@@ -34,12 +34,14 @@ myOAP.on('authorize_form', function(req, res, client_id, authorize_url) {
 });
 
 // save the generated grant code for the current user
-myOAP.on('save_grant', function(req, client_id, code, next) {
+myOAP.on('save_grant', function(req, client_id, code, perms, next) {
+  var perm_array = perms.split(",");
+  var perm_json = JSON.stringify(perm_array);
   var insert_data = {
     netid: req.session.user,
     client: client_id,
     code: code,
-    perms: ["schedule"]
+    perms: perm_json
   }
 
   myGrant.insert(insert_data, function(result) {
@@ -54,10 +56,11 @@ myOAP.on('save_grant', function(req, client_id, code, next) {
 
 // remove the grant when the access token has been sent
 myOAP.on('remove_grant', function(user_id, client_id, code) {
+  /*
   myGrant.remove(user_id, client_id, function(result) {
     //could check if deleted here
   });
-  
+  */
 });
 
 // find the user for a particular grant
@@ -80,10 +83,8 @@ myOAP.on('lookup_grant', function(client_id, client_secret, code, next) {
 });
 
 // embed an opaque value in the generated access token
-myOAP.on('create_access_token', function(user_id, client_id, next) {
-  var data = 'schedule'; // can be any data type or null
-
-  next(data);
+myOAP.on('create_access_token', function(user_id, client_id, perms, next) {
+  next(perms);
 });
 
 // (optional) do something with the generated access token

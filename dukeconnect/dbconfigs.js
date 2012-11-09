@@ -41,7 +41,7 @@ var populateData = function() {
     var userdata = [
     {
         netid: "flb5",
-        data: "['COMPSCI 250-001 LEC (1721)','COMPSCI 250-01R REC (1722)','COMPSCI 330-001 LEC (1730)','COMPSCI 330-01R REC (1731)','ECON 462-01 LEC (3179)','PHYSICS 136-01 LEC (2605)' ]"
+        schedule: "['COMPSCI 250-001 LEC (1721)','COMPSCI 250-01R REC (1722)','COMPSCI 330-001 LEC (1730)','COMPSCI 330-01R REC (1731)','ECON 462-01 LEC (3179)','PHYSICS 136-01 LEC (2605)' ]"
     },
     ];
 

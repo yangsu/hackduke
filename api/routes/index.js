@@ -40,7 +40,7 @@ exports.oauthcall = function(req, res) {
       'client_id' : '1',
       'client_secret': '1secret',
       'redirect_uri': 'http://localhost:3000/oauthresp',
-        'code' : code,
+        'code' : code
     });
 
     
