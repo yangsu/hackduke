@@ -1,6 +1,6 @@
 TODO Till Min Vi
 
-4. Add support for getting more information, build modularly with permissions
+4. Get a couple more info pieces and add support for them
 6. Make Key, Secret Generator linked to Duke Net ID
 7. Make Developper Signup & Generator page (Add Apps: App=> key,secret pair)
 8. Write Docs
