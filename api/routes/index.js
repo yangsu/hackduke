@@ -1,10 +1,11 @@
-
 /*
  * GET home page.
  */
 
  var http = require('http');
  var querystring = require('querystring');
+ var Shred = require("shred");
+ var shred = new Shred();
 
 exports.index = function(req, res){
 	/*
@@ -26,62 +27,53 @@ exports.index_process_form = function(req, res) {
     res.render('profile', {title: "Profile", email: req.session.email});
 };
 
-//   http://localhost:8081/oauth/authorize?client_id=1&perms=schedule&redirect_uri=http://localhost:3000/oauthcall
+//   http://localhost:8081/oauth/authorize?client_id=2&perms=schedule,basic_info,advanced_info&redirect_uri=http://localhost:3000/oauthcall
 
 exports.oauthcall = function(req, res) {
 
-    var code = req.query.code;
+   var code = req.query.code;
 
-    //change req, res var names
-    // get code from get var and pass
-    // edit below post request
 
-    var post_data = querystring.stringify({
-      'client_id' : '1',
-      'client_secret': '1secret',
-      'redirect_uri': 'http://localhost:3000/oauthresp',
-        'code' : code
-    });
-
-    
-    var options = {
-      host: 'localhost',
-      port: 8081,
-      path: '/oauth/access_token',
-      method: 'POST',
+    var req = shred.post({
+      url: "http://localhost:8081/oauth/access_token",
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': post_data.length
+        "Content-Type": "application/json"
+      },
+      // Shred will JSON-encode PUT/POST bodies
+      content: { client_id: "2", client_secret: "2secret", redirect_uri: "http://localhost:3000/oauthresp", code: code, perms: "schedule,basic_info,advanced_info" },
+
+      on: {
+        // you can use response codes as events
+        200: function(response) {
+
+          var access_token = response.content.data.access_token;
+
+          var req = shred.get({
+            url: "http://localhost:8081/exchange?access_token="+access_token,
+            headers: {
+              Accept: "application/json"
+            },
+            on: {
+              // You can use response codes as events
+              200: function(response) {
+                // Shred will automatically JSON-decode response bodies that have a
+                // JSON Content-Type
+                res.send(response.content.data);
+              },
+              // Any other response means something's wrong
+              response: function(response) {
+                console.log("Oh no!");
+              }
+            }
+          });
+
+        },
+        response: function(response) {
+          // We got a 40X that is not a 409, or a 50X
+          console.log("Oh no, something went wrong!");
+        }
       }
-    };
-
-    var req2 = http.request(options, function(res2) {
-      console.log('STATUS: ' + res2.statusCode);
-      console.log('HEADERS: ' + JSON.stringify(res2.headers));
-      res2.setEncoding('utf8');
-      res2.on('data', function (chunk) {
-        console.log('BODY: ' + chunk);
-        var responseObj = JSON.parse(chunk);
-        res.writeHead(302, {
-          'Location': 'http://localhost:8081/exchange?access_token='+responseObj.access_token
-        });
-        res.end();
-      });
     });
-
-    req2.on('error', function(e) {
-      console.log('problem with request: ' + e.message);
-    });
-
-    // write data to request body
-    req2.write(post_data);
-    req2.end();
     
-
-};
-
-exports.oauthresp = function(req, res) {
-
-    res.end(req.body);
 
 };
