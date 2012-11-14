@@ -19,7 +19,7 @@ var queue = [{
 
 // Cookie necessary to make https requests for aces
 var cookie = querystring.stringify({
-  PHPSESSID: 'rej3a4u96kvl899r6mip8132o1'
+  PHPSESSID: 'ida3lrfjs4lg8mueim6e3d7rt1'
 }, ';', '=');
 
 /**
