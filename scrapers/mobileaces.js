@@ -22,6 +22,16 @@ var cookie = querystring.stringify({
   PHPSESSID: 'ida3lrfjs4lg8mueim6e3d7rt1'
 }, ';', '=');
 
+var fs = require('fs');
+var outfile = 'maces.json';
+function appendOutput (item) {
+  fs.appendFileSync(outfile, JSON.stringify(item, null, 4) + ',', 'utf8', function(err) {
+    if (err) {
+      console.log(err, item);
+    }
+  });
+};
+
 /**
  * Read the current item in the queue
  * Makes https requests to fetch the next page if item.path exists
@@ -65,10 +75,16 @@ function fetch(item) {
     res.on('end', function () {
       try {
         var result = parsers[item.type](text);
-        if (result)
+        if (result) {
+          result = _.extend(result, {
+            parentType: item.type,
+            parentPath: item.path
+          });
+          appendOutput(result);
           queue = queue.concat(result);
+        }
       } catch (e) {
-        console.log('Edge case');
+        console.log('Edge case', e);
         console.log(item);
       }
       process.nextTick(processNext);
@@ -100,15 +116,6 @@ function processNext () {
       console.log('Fetch failed', item);
     }
   } else {
-    var fs = require('fs');
-    fs.writeFile('maces-'+Date.now()+'.json', JSON.stringify(queue, null, 4), function(err) {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log("Data JSON file was saved!");
-        }
-        process.exit(0);
-    });
   }
 };
 
