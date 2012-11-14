@@ -65,7 +65,8 @@ function fetch(item) {
     res.on('end', function () {
       try {
         var result = parsers[item.type](text);
-        queue = queue.concat(result);
+        if (result)
+          queue = queue.concat(result);
       } catch (e) {
         console.log('Edge case');
         console.log(item);
