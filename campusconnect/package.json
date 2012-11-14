@@ -12,7 +12,7 @@
     "serializer": ">=0.0.2 <0.1.0"
     ,"mongodb": "1.1.8"
     , "shred": "0.8.8"
-    , "express-validator": "0.3.0",
+    , "express-validator": "0.3.0"
     , "jshashes": "0.1.4b"
     , "connect-flash": "0.1.0"
   },
