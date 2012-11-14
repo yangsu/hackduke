@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Fabio
 .idea
 campusconnect/node_modules
@@ -18,7 +17,9 @@ publish
 
 # Scrapers
 maces-*.json
-=======
+
+# Mac
 .DS_Store
+
+# sqlite
 test/config/test.sqlite
->>>>>>> df936ebab602c5ec76beb5f4902516fc146ef735
