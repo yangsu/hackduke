@@ -93,7 +93,12 @@ function processNext () {
   console.log('processNext', index, '/',queue.length);
 
   if (index < queue.length) {
-    fetch(queue[index++]);
+    var item = queue[index++];
+    try {
+      fetch(item);
+    } catch (e) {
+      console.log('Fetch failed', item);
+    }
   } else {
     var fs = require('fs');
     fs.writeFile('maces-'+Date.now()+'.json', JSON.stringify(queue, null, 4), function(err) {
