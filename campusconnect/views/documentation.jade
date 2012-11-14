@@ -1,0 +1,164 @@
+extends layout
+
+block content
+
+  .container
+    .row
+      .hero-unit
+        h1 How to integrate Duke Connect!
+
+    .row.spaced
+      .span12
+        h2 Basic Premise
+        p Integrate Duke Connect into your web app in order to easily get personalized data about Duke students who signup with your service. 
+        p We have built an OAuth 2.0 interface that allows you to ask Duke students for access to their college related data (i.e name, email, schedule, classes taken, major, etc...). You can then use this data to make awesome, useful apps. 
+        h3 There are three steps to the process:
+        ol
+          li
+            h4 Authentication
+          li
+            h4 Permission request
+          li
+            h4 Data Request
+
+    .row.spaced
+      .span12
+        h2 1. Authentication
+        img(src="../images/authentication.png", class="img-polaroid img-documentation")
+        p As a developper, you must redirect the user to the following URL to begin the process:
+        pre http://www.campusconnect.com/oauth/authorize?client_id=CLIENT_ID&perms=PERMISSIONS&redirect_uri=REDIRECT_URL
+        p NOTE: You must replace the words in bold with your app's details and desired permissions
+        p This will send the user to a login page where they must authenticate using their netid and password. 
+
+    .row.spaced      
+      .span12
+        h2 2. Permission request
+
+        img(src="../images/permission_request.png", class="img-polaroid img-documentation")
+
+        p Once the user is authenticated, we redirect them to a dialog where they are asked whether they want to grant your app access to the requested permissions. If they accept, we will redirect them to the specified redirect_url and append the GET variable "code" to the redirect.
+
+        h3 A bit about permissions:
+
+        p Below are the specific permissions that you may ask for. Put all the permission parameters you would like into a comma separated list (no spaces) and include it in the redirect URL above.
+
+        table.table.table-striped
+          th Permission
+          th permission Parameter
+          th Description
+          tr
+            td Basic Info
+            td basic_info
+            td 
+              .first-lvl {
+              .second-lvl "basic_info":
+              .third-lvl { 
+              .fourth-lvl name: "Bob Jones",
+              .fourth-lvl email: "bob.jones@duke.edu" 
+              .third-lvl }
+              .first-lvl }
+          tr
+            td Schedule
+            td schedule
+            td 
+              .first-lvl { 
+              .second-lvl "schedule": [ 
+              .third-lvl "COMPSCI 250-001 LEC (1721)",
+              .third-lvl "COMPSCI 250-01R REC (1722)",
+              .third-lvl "COMPSCI 330-001 LEC (1730)",
+              .third-lvl "COMPSCI 330-01R REC (1731)",
+              .third-lvl "ECON 462-01 LEC (3179)",
+              .third-lvl "PHYSICS 136-01 LEC (2605)"
+              .second-lvl ]
+              .first-lvl }
+          tr
+            td Advanced Info
+            td advanced_info
+            td  
+              .first-lvl { 
+              .second-lvl "advanced_info": {
+              .third-lvl "phone": "641-5029" 
+              .second-lvl }
+              .first-lvl }
+
+    .row.spaced      
+      .span12
+        h2 3. Data Request
+
+        p Now that the user has authenticated and given your app the requested permissions, you can use the code your received to ask for an access_token. This access_token will then allow you to ask us for any of the data you have received permission for. 
+
+    .row.spaced      
+      .span12
+        h3 Asking for an Access Token
+
+        p To recieve an access token, you must send a post request to the following URL with the attached POST variables:
+
+        pre
+          b Request (POST):
+          p URL: http://www.campusconnect.com/oauth/access_token
+          b POST Parameters:
+          ul POST Parameters:
+            li client_id: "YOUR_CLIENT_ID",
+            li client_secret: "YOUR_CLIENT_SECRET",
+            li redirect_uri: "http://YOUR_WEBB_APP/PATH/TO/REQUEST_HANDLER",
+            li code: code, 
+            li perms: "PERMISSIONS" 
+        
+        p If the request is successful, the response will be a call back to your redirect_uri with an access token appended as a GET variable.
+
+        pre Response calls: http://YOUR_WEBB_APP/PATH/TO/REQUEST_HANDLER?access_token=YOUR_NEW_ACCESS_TOKEN
+
+        b NOTE: Look below for libraries in several languages to make and handle CampusConnect OAuth 2.0 requests
+
+    .row.spaced      
+      .span12
+        h3 Asking for the user's data with the access token
+
+        p Now that you have an access token, the last step is to send a GET request to the following URL. The response will be a JSON object with the user details you have asked for
+
+        pre
+          b Request (GET): 
+          p http://www.campusconnect.com/exchange?access_token=YOUR_ACCESS_TOKEN
+          b Response:
+          .first-lvl {
+          .second-lvl "basic_info":
+          .third-lvl { 
+          .fourth-lvl name: "Bob Jones",
+          .fourth-lvl email: "bob.jones@duke.edu" 
+          .third-lvl }
+          .second-lvl "schedule": [ 
+          .third-lvl "COMPSCI 250-001 LEC (1721)",
+          .third-lvl "COMPSCI 250-01R REC (1722)",
+          .third-lvl "COMPSCI 330-001 LEC (1730)",
+          .third-lvl "COMPSCI 330-01R REC (1731)",
+          .third-lvl "ECON 462-01 LEC (3179)",
+          .third-lvl "PHYSICS 136-01 LEC (2605)"
+          .second-lvl ]
+          .second-lvl "advanced_info": {
+          .third-lvl "phone": "641-5029" 
+          .second-lvl }
+          .first-lvl }
+
+    .row.spaced      
+      .span12
+        h3 CampusConnect Libraries
+        p We have written a couple libraries to make integrating CampusConnect a little easier. The code is documented and should have a method to handle each type of request you will need to make.
+
+        ul.padded-ul
+          li
+            a(href="#", class="big-links") Node.js
+          li
+            a(href="#", class="big-links") Ruby
+          li 
+            a(href="#", class="big-links") PHP
+          li 
+            a(href="#", class="big-links") Python
+
+    .row.spaced      
+      .span12
+        h2 4. With great power comes great responsibility
+
+        h3 Be sure to respect users privacy and delete a users data from your servers upon a users request
+
+
+

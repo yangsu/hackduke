@@ -1,0 +1,58 @@
+extends layout
+
+block content
+
+  .container
+    .row
+      .hero-unit
+        h1.offset1 Welcome #{name}! 
+      if (typeof flash != 'undefined')
+        if flash.message
+          .alert.alert-success #{flash.message}
+        if flash.alert
+          .alert.alert-block #{flash.alert}
+        if flash.error
+          .alert.alert-error #{flash.error}
+
+    .row.spaced
+      .span4
+        button(class="btn btn-success btn-large btn-margin", href="#myModal", role="button", data-toggle="modal") Add a new app
+        // button(class="btn btn-large btn-margin", type="submit") Edit Account
+
+    .row.spaced
+      .span8.offset1
+        table.table.table-striped.table-bordered
+          thead
+            th App name
+            th Public key
+            th Secret key
+            th Action
+          tbody
+          - if (apps != undefined)
+            for app in apps
+              tr
+                td #{app.name}
+                td #{app.client_id}
+                td #{app.client_secret}
+                td 
+                  a(href="javascript: document.appdelete.action = '/client/#{app.client_id}'; document.appdelete.submit();") delete
+
+    .row.spaced
+      .span8.offset1
+        h3.calltoaction Ok, now I'm ready, show me how to 
+          a(href="/documentation") get started!
+
+  #myModal(class="modal hide fade", tabindex="-1", role="dialog", aria-labelledby="myModalLabel", aria-hidden="true")
+    .modal-header
+      button(type="button", class="close", data-dismiss="modal", aria-hidden="true") ×
+      h3#myModalLabel Create new awesome app
+    .modal-body
+      form(method="post", action="/client", name="appform")
+        input(type="text", name="appname", value="App name")
+    .modal-footer
+      button(class="btn", data-dismiss="modal", aria-hidden="true") Close
+      button(class="btn btn-primary", onclick="javascript: document.appform.submit();") Create app
+
+  form(name="appdelete", method="POST", action="/client")
+    input(type="hidden", name="_method", value="delete")
+    

@@ -1,0 +1,12 @@
+extends layout
+
+block content
+
+  .container
+    form(method="post", action="#{url}", class="form-signin")
+      h2.form-signin-heading Give #{app_name} Access to:
+      each perm in perms
+        p - #{perm}
+      button(name="allow", class="btn btn-large btn-success btn-padding") Allow 
+      button(name="deny", class="btn btn-large btn-danger btn-padding") Deny
+
