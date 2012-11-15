@@ -33,7 +33,6 @@ app.get('/', users.home);
 //OAUTH routes
 app.get('/login', oauth.loginPage);
 app.post('/login', oauth.loginSubmit);
-app.get('/secret', oauth.secret);
 app.get('/exchange', oauth.exchange);
 
 //Developper page routes

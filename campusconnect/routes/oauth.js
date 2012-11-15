@@ -56,15 +56,6 @@ exports.loginSubmit = function(req, res, next) {
 
   };
 
-exports.secret = function(req, res, next) {
-    if(req.session.user) {
-      res.end('proceed to secret lair, extra data: ' + JSON.stringify(req.session.data));
-    } else {
-      res.writeHead(403);
-      res.end('no');
-    }
-  };
-
   exports.exchange = function(req, res, next) {
 
     if(req.session.user) {

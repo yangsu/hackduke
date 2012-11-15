@@ -32,7 +32,7 @@ myOAP.on('authorize_form', function(req, res, client_id, authorize_url) {
   }
   myClient.findByClientid(client_id, function(result) {
       if(result != false) {
-        app_name = result.name;
+        app_name = (Object.keys(result).length === 0) ? "App" : result.name;
         res.render('permission_page', { title: 'Home', url: authorize_url, app_name: app_name, perms:perm_descriptors, session: session.email});
       }
   });
