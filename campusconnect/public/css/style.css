@@ -17,6 +17,23 @@ pre {
 
 /* Login Form */
 
+.submit-space {
+    width:180px;
+    height:40px;
+}
+
+.button-float {
+    float:left;
+}
+
+#login-spin {
+    float:right;
+    height:40px;
+    width:40px;
+    display:none;
+    padding-top: 20px;
+}
+
 .form-signin {
     max-width: 500px;
     padding: 19px 29px 29px;
