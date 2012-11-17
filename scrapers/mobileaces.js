@@ -25,7 +25,7 @@ var cookie = querystring.stringify({
 var fs = require('fs');
 var outfile = 'maces.json';
 function appendOutput (item) {
-  fs.appendFileSync(outfile, JSON.stringify(item, null, 4) + ',', 'utf8', function(err) {
+  fs.appendFileSync(outfile, JSON.stringify(item, null, 4) + ',', 'ascii', function(err) {
     if (err) {
       console.log(err, item);
     }
