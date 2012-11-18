@@ -28,6 +28,12 @@ db.open(function(err, db) {
         populateClients();
       }
     });
+    db.collection('developers', {safe:true}, function(err, collection) {
+      if(err) {
+        console.log("The 'developers' collection doesnt exist. Creating it with sample data...");
+        populateDevelopers();
+      }
+    });
     db.collection('users', {safe:true}, function(err, collection) {
       if(err) {
         console.log("The 'users' collection doesnt exist. Creating it with sample data...");
@@ -46,7 +52,7 @@ var populateData = function() {
 
     var userdata = [
         {
-            "netid":"flb5",
+            "unique_identifier":"flb5",
             "schedule":["COMPSCI 250-001 LEC (1721)","COMPSCI 250-01R REC (1722)","COMPSCI 330-001 LEC (1730)","COMPSCI 330-01R REC (1731)","ECON 462-01 LEC (3179)","PHYSICS 136-01 LEC (2605)"],
             "basic_info":{"name":"Fabio Berger","email":"berger.berger@duke.edu"},
             "advanced_info":{"phone": "92834728"}
@@ -63,7 +69,7 @@ var populateGrants = function() {
 
     var grants = [
     {
-        netid: "flb5",
+        unique_identifier: "flb5",
         client: "1",
         code: "lkjskjdakjefs",
         perms: ["schedule", "courses_taken"]
@@ -99,12 +105,27 @@ var populateClients = function() {
 
 };
 
+var populateDevelopers = function() {
+
+    var developers = [
+    {
+        name: "Fabio Berger",
+        email: "flb5@duke.edu"
+    },
+    ];
+
+    db.collection('developers', function(err, collection) {
+        collection.insert(developers, {safe:true}, function(err, result) {});
+    });
+
+};
+
 var populateUsers = function() {
 
     var users = [
     {
-        name: "Fabio Berger",
-        email: "flb5@duke.edu"
+        unique_identifier: "netid+university",
+        university: "Duke"
     },
     ];
 

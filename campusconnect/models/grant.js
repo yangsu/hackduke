@@ -11,6 +11,27 @@ function grant() {
 
 };
 
+//Update grant
+grant.prototype.update = function(perm_array, client_id, unique_identifier, code, callback) {
+
+  //update perms in grant as well as the code
+  console.log("inside grant update: "+perm_array+" "+client_id+" "+code+" "+unique_identifier);
+
+  //Store it into the DB
+      db.collection('grants', function(err, collection) {
+        collection.update({ unique_identifier: unique_identifier, client_id: client_id }, { "$addToSet" : { perms : { $each : perm_array } }, "$set": { code: code } }, {upsert:true}, function(err, result) {
+          if(err) {
+            console.log("There is an error updating: "+err);
+            callback(err);
+          }
+          else {
+            callback(true);
+          }
+        });
+      });
+
+}
+
 //Insert grant
 // insert_data is JSON Object
 grant.prototype.insert = function(insert_data, callback) {
@@ -30,12 +51,12 @@ grant.prototype.insert = function(insert_data, callback) {
 }
 
 //Remove grant
-// netid is a string
+// unique_identifier is a string
 // client_id is a string
-grant.prototype.remove = function(net_id, client_id, callback) {
+grant.prototype.remove = function(unique_identifier, client_id, callback) {
 
   db.collection('grants', function(err, collection) {
-    collection.remove({'netid': net_id, 'client': client_id}, {safe:true}, function(err, result) {
+    collection.remove({'unique_identifier': unique_identifier, 'client': client_id}, {safe:true}, function(err, result) {
         if(err) {
           callback(err);
         }
@@ -48,13 +69,31 @@ grant.prototype.remove = function(net_id, client_id, callback) {
 
 }
 
-// Find one grant object using a netid
-// netid is a string
+// Find one grant object using a unique_identifier
+// unique_identifier is a string
 // client_id is a string
-grant.prototype.findOne = function(net_id, client_id, callback) {
+grant.prototype.findOne = function(unique_identifier, client_id, callback) {
 
   db.collection('grants', function(err, collection) {
-          collection.findOne({ netid: net_id, client: client_id}, function(err, item) {
+          collection.findOne({ unique_identifier: unique_identifier, client: client_id}, function(err, item) {
+            if(err) {
+              callback(err);
+            }
+            else {
+              callback(item);
+            }
+          });
+        });
+
+}
+
+// Find one grant object using a client_id and code
+// unique_identifier is a string
+// client_id is a string
+grant.prototype.findGivenCode = function(client_id, code, callback) {
+
+  db.collection('grants', function(err, collection) {
+          collection.findOne({ client_id: client_id, code: code}, function(err, item) {
             if(err) {
               callback(false);
             }
@@ -67,12 +106,14 @@ grant.prototype.findOne = function(net_id, client_id, callback) {
 }
 
 // Find one grant object using a client_id and code
-// netid is a string
+// unique_identifier is a string
 // client_id is a string
-grant.prototype.findGivenCode = function(client_id, code, callback) {
+grant.prototype.findGivenPerms = function(unique_identifier, client_id, perms, callback) {
+
+  var perm_array = perms.split(",");
 
   db.collection('grants', function(err, collection) {
-          collection.findOne({ client: client_id, code: code}, function(err, item) {
+          collection.findOne({ unique_identifier: unique_identifier, client_id: client_id, perms: { "$all" : perm_array}}, function(err, item) {
             if(err) {
               callback(false);
             }

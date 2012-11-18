@@ -27,7 +27,7 @@ exports.index_process_form = function(req, res) {
     res.render('profile', {title: "Profile", email: req.session.email});
 };
 
-//   http://localhost:8081/oauth/authorize?client_id=8e88bc9f6af0dde6b7e82d7db393f79f&perms=schedule,basic_info,advanced_info&redirect_uri=http://localhost:3000/oauthcall
+//   http://localhost:8081/oauth/authorize?client_id=21a71360d6a6093b4f8a577b61af776d&perms=basic_info,advanced_info&uni=unc&redirect_uri=http://localhost:3000/oauthcall
 
 exports.oauthcall = function(req, res) {
 
@@ -40,7 +40,7 @@ exports.oauthcall = function(req, res) {
         "Content-Type": "application/json"
       },
       // Shred will JSON-encode PUT/POST bodies
-      content: { client_id: "8e88bc9f6af0dde6b7e82d7db393f79f", client_secret: "b606c3255d62f6c99d82eed443cbc99a", redirect_uri: "http://localhost:3000/oauthresp", code: code, perms: "schedule,basic_info,advanced_info" },
+      content: { client_id: "21a71360d6a6093b4f8a577b61af776d", client_secret: "df42bb12f0015d25ebf9bbc2c785baaf", redirect_uri: "http://localhost:3000/oauthresp", code: code, uni: "duke", perms: "schedule,basic_info,advanced_info" },
 
       on: {
         // you can use response codes as events
@@ -58,6 +58,7 @@ exports.oauthcall = function(req, res) {
               200: function(response) {
                 // Shred will automatically JSON-decode response bodies that have a
                 // JSON Content-Type
+                console.log(response.content.data);
                 res.send(response.content.data);
               },
               // Any other response means something's wrong

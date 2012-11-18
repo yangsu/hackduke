@@ -31,10 +31,10 @@ user.prototype.insert = function(insert_data, callback) {
 
 //Remove user by email
 // email is a string
-user.prototype.remove = function(email, callback) {
+user.prototype.remove = function(unique_id, callback) {
 
   db.collection('users', function(err, collection) {
-    collection.remove({'email': email}, {safe:true}, function(err, result) {
+    collection.remove({'unique_id': unique_id}, {safe:true}, function(err, result) {
         if(err) {
           callback(err);
         }
@@ -47,12 +47,12 @@ user.prototype.remove = function(email, callback) {
 
 }
 
-// Find one user's objects using a email
+// Find one user's objects using a unique_id
 // email is a string
-user.prototype.findOne = function(email, callback) {
+user.prototype.findOne = function(unique_id, callback) {
 
   db.collection('users', function(err, collection) {
-          collection.findOne({"email": email}, function(err, item) {
+          collection.findOne({"unique_id": unique_id}, function(err, item) {
             if(err) {
               callback(false);
             }

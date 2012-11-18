@@ -11,7 +11,7 @@ function userData() {
 
 };
 
-//Insert netid and userdata
+//Insert unique_identifier and userdata
 // insert_data is JSON Object
 userData.prototype.insert = function(insert_data, callback) {
 
@@ -29,12 +29,12 @@ userData.prototype.insert = function(insert_data, callback) {
 
 }
 
-//Remove netid and userdata
-// netid is a string
-userData.prototype.remove = function(net_id, callback) {
+//Remove userdata
+// unique_identifier is a string
+userData.prototype.remove = function(unique_identifier, callback) {
   
   db.collection('userdata', function(err, collection) {
-    collection.remove({'netid': net_id}, {safe:true}, function(err, result) {
+    collection.remove({'unique_identifier': unique_identifier}, {safe:true}, function(err, result) {
         if(err) {
           callback(err);
         }
@@ -50,12 +50,12 @@ callback(true);
 
 }
 
-// Find one userdata object using a netid
-// netid is a string
-userData.prototype.findOne = function(net_id, callback) {
+// Find one userdata object using a unique_identifier
+// unique_identifier is a string
+userData.prototype.findOne = function(unique_identifier, callback) {
 
   db.collection('userdata', function(err, collection) {
-          collection.findOne({ netid: net_id}, function(err, item) {
+          collection.findOne({ unique_identifier: unique_identifier}, function(err, item) {
             if(err) {
               callback(err);
             }
@@ -67,9 +67,9 @@ userData.prototype.findOne = function(net_id, callback) {
 
 }
 
-// Find one userdata object using a netid
-// netid is a string
-userData.prototype.findByPerms = function(net_id, perms, callback) {
+// Find one userdata object using a unique_identifier
+// unique_identifier is a string
+userData.prototype.findByPerms = function(unique_identifier, perms, callback) {
 
   //TODO: check to make sure perm field exists in table
   var field_info = {};
@@ -78,7 +78,7 @@ userData.prototype.findByPerms = function(net_id, perms, callback) {
   });
   field_info['_id'] = 0;
   db.collection('userdata', function(err, collection) {
-          collection.findOne({ netid: net_id}, field_info, function(err, item) {
+          collection.findOne({ unique_identifier: unique_identifier}, field_info, function(err, item) {
             if(err) {
               callback(err);
             }

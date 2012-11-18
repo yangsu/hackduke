@@ -4,7 +4,7 @@ block content
 
   .container
     form(method="post", action="/login", class="form-signin")
-      h2.form-signin-heading Duke Connect
+      h2.form-signin-heading #{university} Connect
       p Login to use your Duke Account with #{app_name}
       input(type="hidden", name="next", value="#{url}")
       input(type="text", class="input-block-level", name="username", placeholder="NetID")
