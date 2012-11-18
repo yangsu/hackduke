@@ -1,15 +1,10 @@
 {
-  "name": "College API",
-  "version": "0.0.0",
-  "description": "An API to access course data from Universities",
-  "author": {
-    "name": "Fabio Berger, Yang Su and Soroush Pour",
-  },
-  "main": "index",
-  "dependencies": {
-    "restify": "1.4.4",
-    "coffee-script": "1.4.0",
-    "underscore": "1.4.2",
-    "async": "0.1.22"
-  },
+    "name": "College API"
+  , "version": "0.0.1"
+  , "dependencies": {
+      "restify": "1.4.4",
+      "coffee-script": "1.4.0",
+      "underscore": "1.4.2",
+      "async": "0.1.22"
+  }
 }
