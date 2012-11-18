@@ -46,10 +46,6 @@ a.get('https://cc.unc.edu/psp/campus/EMPLOYEE/HRMS/c/SA_LEARNER_SERVICES.SSS_STU
     if possible_perms.include?(perm) and (perm == 'schedule' || perm == 'basic_info' || perm == 'advanced_info')
 
       a.get('https://cc.unc.edu/psp/campus/EMPLOYEE/HRMS/c/SA_LEARNER_SERVICES.SSS_STUDENT_CENTER.GBL') do |page|
-
-        page.links.each do |link|
-          puts link.text
-        end
         
         if perm == 'schedule'
           courses = Array.new()

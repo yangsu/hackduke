@@ -27,7 +27,7 @@ exports.index_process_form = function(req, res) {
     res.render('profile', {title: "Profile", email: req.session.email});
 };
 
-//   http://localhost:8081/oauth/authorize?client_id=21a71360d6a6093b4f8a577b61af776d&perms=basic_info,advanced_info&uni=unc&redirect_uri=http://localhost:3000/oauthcall
+//   http://localhost:8081/oauth/authorize?client_id=21a71360d6a6093b4f8a577b61af776d&perms=basic_info,advanced_info,schedule&uni=unc&redirect_uri=http://localhost:3000/oauthcall
 
 exports.oauthcall = function(req, res) {
 
