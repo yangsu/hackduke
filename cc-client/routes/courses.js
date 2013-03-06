@@ -1,4 +1,4 @@
-var mysql      = require('mysql');
+/* var mysql      = require('mysql'); */
 
 //Use this for AppFog dev 
 /*
@@ -16,6 +16,8 @@ connection.connect();
 connection.query("use "+creds.name);
 */
 //Use this for local dev
+
+/* 
 
 var connection = mysql.createConnection({
   host     : '127.0.0.1',
@@ -64,4 +66,4 @@ exports.findRequirements=function(req, res) {
   });
 }
 
-
+*/

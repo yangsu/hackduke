@@ -5,29 +5,44 @@ Basic OAuth 2.0 API for accessing personal Duke & UNC Student data from ACES wit
 
 ### How to use:
 
-1. Start or download Node.js & MongoDB
+1. Download and install Node.js & MongoDB
 
-2. Enter correct directory:
+2. Navigate to correct directory:
 ```bash
-cd campusconnect
+$ cd campusconnect
 ```
 
 3. Install dependencies:
 ```bash
-npm install
+$ npm install
 ```
 
 4. Start the server
 ```bash
-npm app.js
+$ node app.js
 ```
 
 5. Visit localhost:8081 in your browser
 
 
-
 ## CC-Client
-  A sample client application to CampusConnect
+A sample client application to CampusConnect
+
+### How to use:
+
+1. Install dependencies for cc-client
+
+2. In one terminal start cc-client server
+```bash
+$ npm cc-client/app.js
+```
+
+3. In another terminal start campusconnect server
+```bash
+$ npm campusconnect/app.js
+```
+
+
 
 ## Scrapers
  Complete course scraper for Duke University & Authenticated scrapers for ACES
