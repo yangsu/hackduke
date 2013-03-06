@@ -2,10 +2,6 @@
 .idea
 campusconnect/node_modules
 *.iml
-unc/unc.txt
-upenn/Penn
-campusconnect/TODO.txt
-collegeapi
 
 
 # Node
