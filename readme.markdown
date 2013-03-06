@@ -47,8 +47,30 @@ $ npm campusconnect/app.js
 http://localhost:8081/oauth/authorize?client_id=2f18b05f9da2c9c32c8b32cc1e1c6717&perms=transcript&uni=duke&redirect_uri=http://localhost:3000/oauthcall
 ```
 
+5. Look at localhost:8081/documentation for an indepth look at implementing clients for CampusConnect
+
 ## Scrapers
  Complete course scraper for Duke University & Authenticated scrapers for ACES
+
+ ### How to use Authenticated Scapers:
+
+Note: Both Duke & UNC Scrapers are functional (UPenn a work in progress)
+
+1. Install Gem dependencies (mechanize & nokogiri)
+```bash
+$ bundle install
+```
+
+2. On terminal, run following command 
+```bash
+$ ruby mechanize.rb netid password transcript,advanced_info,basic_info,schedule
+```
+
+It will return the data in JSON format
+
+ ### How to use Aces Course Scapers:
+
+TODO
 
 ## Sample Apps
   A visual search app built for an earlier version of Duke's course data
