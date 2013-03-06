@@ -50,7 +50,7 @@ http://localhost:8081/oauth/authorize?client_id=2f18b05f9da2c9c32c8b32cc1e1c6717
 5. Look at localhost:8081/documentation for an indepth look at implementing clients for CampusConnect
 
 ## Scrapers
- Complete course scraper for Duke University & Authenticated scrapers for ACES
+Complete course scraper for Duke University & Authenticated scrapers for ACES
 
 ### How to use Authenticated Scapers:
 
