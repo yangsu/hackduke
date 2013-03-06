@@ -52,7 +52,7 @@ http://localhost:8081/oauth/authorize?client_id=2f18b05f9da2c9c32c8b32cc1e1c6717
 ## Scrapers
  Complete course scraper for Duke University & Authenticated scrapers for ACES
 
- ### How to use Authenticated Scapers:
+### How to use Authenticated Scapers:
 
 Note: Both Duke & UNC Scrapers are functional (UPenn a work in progress)
 
@@ -68,7 +68,7 @@ $ ruby mechanize.rb netid password transcript,advanced_info,basic_info,schedule
 
 It will return the data in JSON format
 
- ### How to use Aces Course Scapers:
+### How to use Aces Course Scapers:
 
 TODO
 
