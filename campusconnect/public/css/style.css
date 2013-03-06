@@ -15,6 +15,13 @@ pre {
     background-color: white;
 }
 
+.white {
+    color: white !important;
+    padding: 10px 30px 12px;
+    float: left;
+    display: block;
+}
+
 /* Login Form */
 
 .submit-space {
