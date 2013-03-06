@@ -4,6 +4,7 @@
 # returns JSON object of students classes
 
 require 'mechanize'
+require 'nokogiri'
 # require 'logger'
 require 'json'
 
@@ -26,6 +27,7 @@ a.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
 a.get('https://medley.isc-seo.upenn.edu/pennInTouch/jsp/fast.do?1=2&amp;access=student') do |page|
 
+  puts page.apply_to(html).to_s
 
   page.links.each do |link|
     puts link.text

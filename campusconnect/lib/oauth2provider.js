@@ -111,7 +111,11 @@ OAuth2Provider.prototype.oauth = function() {
         authorize_url += '&' + querystring.stringify({x_user_id: self.serializer.stringify(user_id)});
 
         // user is logged in, render approval page
-        var legible_perms = {schedule: 'Current Course Schedule', basic_info: "Basic Info (full name & email)", advanced_info: "Advanced Info (phone number)"};
+        var legible_perms = {
+          schedule: 'Current Course Schedule', 
+          basic_info: "Basic Info (full name & email)", 
+          advanced_info: "Advanced Info (phone number)", 
+          transcript: "Full university transcript (highschool credits, degree, grades)"};
         var perms = querystring.parse(authorize_url).perms.split(",");
         var perm_descriptors = [];
         for(var i in perms) {

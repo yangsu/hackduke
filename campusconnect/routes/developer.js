@@ -25,7 +25,6 @@ exports.addApp = function(req, res) {
   }
 
   req.assert('appname', 'Invaid App name').notEmpty().len(3, 20);
-
   req.sanitize('appname');
 
   var errors = req.validationErrors();

@@ -27,7 +27,8 @@ exports.index_process_form = function(req, res) {
     res.render('profile', {title: "Profile", email: req.session.email});
 };
 
-//   http://localhost:8081/oauth/authorize?client_id=21a71360d6a6093b4f8a577b61af776d&perms=basic_info,advanced_info,schedule&uni=unc&redirect_uri=http://localhost:3000/oauthcall
+//   This is the URL to use to test a client redirect to CampusConnect
+//   http://localhost:8081/oauth/authorize?client_id=2f18b05f9da2c9c32c8b32cc1e1c6717&perms=transcript&uni=duke&redirect_uri=http://localhost:3000/oauthcall
 
 exports.oauthcall = function(req, res) {
 
@@ -40,7 +41,7 @@ exports.oauthcall = function(req, res) {
         "Content-Type": "application/json"
       },
       // Shred will JSON-encode PUT/POST bodies
-      content: { client_id: "21a71360d6a6093b4f8a577b61af776d", client_secret: "df42bb12f0015d25ebf9bbc2c785baaf", redirect_uri: "http://localhost:3000/oauthresp", code: code, uni: "duke", perms: "schedule,basic_info,advanced_info" },
+      content: { client_id: "2f18b05f9da2c9c32c8b32cc1e1c6717", client_secret: "b9d84f78d9a37ba42965df2b8c513194", redirect_uri: "http://localhost:3000/oauthresp", code: code, uni: "duke", perms: "transcript" },
 
       on: {
         // you can use response codes as events
