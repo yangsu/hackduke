@@ -7,22 +7,27 @@ Basic OAuth 2.0 API for accessing personal Duke & UNC Student data from ACES wit
 
 1. Download and install Node.js & MongoDB
 
-2. Navigate to correct directory:
+2. Start MongoDB Server
+```bash
+$ mongod
+```
+
+3. Navigate to correct directory:
 ```bash
 $ cd campusconnect
 ```
 
-3. Install dependencies:
+4. Install dependencies:
 ```bash
 $ npm install
 ```
 
-4. Start the server
+5. Start the server
 ```bash
 $ node app.js
 ```
 
-5. Visit localhost:8081 in your browser
+6. Visit localhost:8081 in your browser
 
 
 ## CC-Client
