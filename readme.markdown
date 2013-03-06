@@ -42,7 +42,10 @@ $ npm cc-client/app.js
 $ npm campusconnect/app.js
 ```
 
-
+4. Use the following URL as redirect from client app to CampusConnect API
+```
+http://localhost:8081/oauth/authorize?client_id=2f18b05f9da2c9c32c8b32cc1e1c6717&perms=transcript&uni=duke&redirect_uri=http://localhost:3000/oauthcall
+```
 
 ## Scrapers
  Complete course scraper for Duke University & Authenticated scrapers for ACES
