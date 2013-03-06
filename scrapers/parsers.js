@@ -162,7 +162,7 @@ parsers.class = function (text) {
 
   returnVal.info = regexParse(
     text,
-    /<h3>([^<]+)<\/h3><p><strong>[^<]+<\/strong><\/p><p>([^<]+)<\/p>/,
+    /<h3>([^<]+)<\/h3><p><strong>([^<]+)<\/strong><\/p><p>([^<]+)<\/p>/,
     ['number', 'title', 'description']
   );
 
