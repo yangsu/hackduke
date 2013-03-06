@@ -3,7 +3,7 @@
 ## CampusConnect
 ### Basic OAuth 2.0 API for accessing personal Duke & UNC Student data from ACES with their permission
 
-## api
+## CC-Client
 ###  A sample client application to CampusConnect
 
 ## Scrapers
