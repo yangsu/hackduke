@@ -56,16 +56,14 @@ var requests = _.chain(letters)
             });
 
             async.parallel(dbRequests, function(err, data) {
-              if (err) {
-                console.log('DB ERROR', err);
+              if (data) {
+                console.log('Saved ', data.length, ' departments');
               }
-              console.log('Saved ', data.length, ' departments');
-              cb(null, result);
+              cb(err, result);
             });
           }
 
         } catch (e) {
-          console.log('PARSE ERROR', e);
           cb(e);
         }
 
