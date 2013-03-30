@@ -12071,3 +12071,5 @@ var catalog = [
 ["XTIANTHE","Christian Theology","CONTMP SYST THEOL AMER/ENGLAND"," 835"," 835"],
 ["XTIANTHE","Christian Theology","XTIANTHEO ELECTIVE"," 999"," 999"]
 ];
+
+exports.catalog = catalog;
