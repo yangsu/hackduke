@@ -1,4 +1,8 @@
 var _ = require('lodash');
+var querystring = require('querystring');
+var exec = require('child_process').exec;
+
+var config = require('./config');
 
 var utils = {};
 
@@ -115,6 +119,17 @@ function listParserGenerator(regex, labels, childType) {
   };
 };
 
+var cookie = querystring.stringify({
+  PHPSESSID: config.PHPSESSID
+}, ';', '=');
+
+var constructURL = function (path) {
+  if (path[0] !== '/') {
+    path = '/public_page/' + path
+  }
+  return config.BASEURL + path;
+};
+
 function genCurlTimingFlag() {
   return ' -w curltiming:%{speed_download}:%{time_total}:%{time_appconnect}';
 };
@@ -123,13 +138,34 @@ function parseCurlTiming(text) {
   return regexParse(text, /curltiming:([^:]+):([^:]+):([^:]+)/, ['speed','totaltime', 'starttime']);
 };
 
+
+function fetch(path, cb) {
+  path = constructURL(path);
+
+  var command = 'curl "' + path + '" --cookie "' + cookie + '"';
+
+  command += genCurlTimingFlag();
+
+  return exec(command, function (error, stdout, stderr) {
+    var timing;
+    if (_.isString(stdout)) {
+      timing = parseCurlTiming(stdout);
+    }
+
+    if (error) {
+      error.stderr = stderr;
+    }
+
+    cb(error, stdout, timing);
+  });
+};
+
 utils.trim = trim;
 
 utils.regexParse = regexParse;
 utils.regexGParse = regexGParse;
 utils.listParserGenerator = listParserGenerator;
 
-utils.genCurlTimingFlag = genCurlTimingFlag;
-utils.parseCurlTiming = parseCurlTiming;
+utils.fetch = fetch;
 
 module.exports = utils;
