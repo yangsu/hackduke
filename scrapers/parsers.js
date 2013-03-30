@@ -1,132 +1,11 @@
-var _ = require('lodash');
+var utils = require('./utils');
 
 var parsers = {};
-
-/*******************************************************************************
- * Helper Functions
- ******************************************************************************/
-
-/**
- * Convert a regex to string that can be used to create another regex with different flags
- * This is avoid the type error
- *   'Cannot supply flags when constructing one RegExp from another'
- *
- * @param  {RegExp} regex input regex
- * @return {string}       valid regex string
- */
-function regexToStr(regex) {
-  // remove the slashes at the beginning and the end in the string representation of RegExp
-  return regex.toString().slice(1, -1);
-};
-
-/**
- * Remove spaces at the beginning and the end of a string
- * @param  {string} str input string
- * @return {string}     trimmed string
- */
-function trim(str) {
-  if (str) {
-    return str
-      .replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'')
-      .replace(/\s+/g,' ')
-      .replace(/:$/, '');
-  } else {
-    return '';
-  }
-};
-
-/**
- * Construct an object with the subgroup matches as values and labels as keys
- * @param  {array}  matches array of matches returned by regex.exec
- * @param  {array}  labels  array of labels corresponding to the matches
- * @return {object}         object containing label => matches
- */
-function extractMatches(matches, labels) {
-  if (!matches || matches.length <= 1) {
-    console.log('Irregular Data');
-    console.log(matches);
-  } else if (!labels || labels.length === 1) {
-    return trim(matches[1]);
-  } else {
-    return  _.reduce(labels, function (memo, label, i) {
-      memo[label] = trim(matches[i + 1]);
-      return memo;
-    }, {});
-  }
-};
-
-/**
- * Using regex to parse the input text and extract the matches
- * @param  {string} text   input text
- * @param  {RegExp} regex  parsing RegExp
- * @param  {array}  labels array of labels corresponding to the matches
- * @return {object}        object containing label => matches
- */
-function regexParse(text, regex, labels) {
-  // ignore case, multiline
-  var reg = new RegExp(regexToStr(regex), 'im')
-    , matches = reg.exec(text)
-    , returnVal = extractMatches(matches, labels);
-
-  return returnVal;
-};
-
-/**
- * Using regex with the global flag to parse the input text and extract all the matches
- * @param  {string} text   input text
- * @param  {RegExp} regex  parsing RegExp
- * @param  {array}  labels array of labels corresponding to the matches
- * @param  {int}    limit  limit on the number of matches returned
- * @return {object}        object containing label => matches
- */
-function regexGParse(text, regex, labels, limit) {
-  // match all, ignore case, multiline
-  var reg = new RegExp(regexToStr(regex), 'gim')
-    , returnVal = []
-    , matchCount = 0
-    , matchLimit = limit || 1000
-    , matches
-    , tempVal;
-
-  while ((matches = reg.exec(text)) !== null) {
-    if (matchCount >= matchLimit) {
-      break;
-    }
-
-    tempVal = extractMatches(matches, labels)
-
-    returnVal.push(tempVal);
-    matchCount++;
-  }
-  return returnVal;
-};
-
-/**
- * Generates functions that parse lists. The results contain a type that point to the next parser to be used
- * @param  {RegExp} regex     parsing RegExp
- * @param  {array}  labels    array of labels corresponding to the matches
- * @param  {string} childType type of the parsed results
- * @return {array}            object containing label => matches
- */
-function listParserGenerator(regex, labels, childType) {
-  return function (text) {
-    var result = regexGParse(text, regex, labels);
-    return _.map(result, function (item) {
-      return _.extend(item, {
-        type: childType
-      })
-    });
-  };
-};
-
-/*******************************************************************************
- * Parsers
- ******************************************************************************/
 
 /**
  * Parse the root page
  */
-parsers.base = listParserGenerator(
+parsers.base = utils.listParserGenerator(
   /<a href="([^"]+)"><h6>([^<]+)<\/h6><br\/><p[^>]+>([^<]+)<\/p>/,
   ['path', 'letter', 'label'],
   'departments'
@@ -135,7 +14,7 @@ parsers.base = listParserGenerator(
 /**
  * Parse pages corresponding to each letter, extract departments
  */
-parsers.departments = listParserGenerator(
+parsers.departments = utils.listParserGenerator(
   /<li><a href="([^"]+subject=(\w+)[^"]+)">([^<]+)<\/a><\/li>/,
   ['path', 'subject', 'label'],
   'department'
@@ -144,7 +23,7 @@ parsers.departments = listParserGenerator(
 /**
  * Parse pages corresponding to each department, extract classes
  */
-parsers.department = listParserGenerator(
+parsers.department = utils.listParserGenerator(
   /<li><a href="([^"]+class=(\w+)[^"]+)"><h4>([^<]+)<\/h4>/,
   ['path', 'class', 'label'],
   'class'
@@ -155,37 +34,37 @@ parsers.department = listParserGenerator(
  */
 parsers.class = function (text) {
   var returnVal = {}
-    , uls = regexGParse(
+    , uls = utils.regexGParse(
       text,
       /<ul[^>]+>(.+?)(<\/ul>)/
     );
 
-  returnVal.info = regexParse(
+  returnVal.info = utils.regexParse(
     text,
     /<h3>([^<]+)<\/h3><p><strong>([^<]+)<\/strong><\/p><p>([^<]+)<\/p>/,
     ['number', 'title', 'description']
   );
 
-  returnVal.details = regexGParse(
+  returnVal.details = utils.regexGParse(
     uls[0],
     /<li[^>]*><h4>([^<]+)<\/h4><h4[^>]+>([^<]+)<\/h4/,
     ['label', 'value']
   );
 
-  returnVal.offering = regexGParse(
+  returnVal.offering = utils.regexGParse(
     uls[1],
     /<li[^>]*><h4>([^<]+)<\/h4><h4[^>]+>([^<]+)<\/h4/,
     ['label', 'value']
   );
 
   if (uls[2]) {
-    returnVal.enrollmentReq = regexParse(
+    returnVal.enrollmentReq = utils.regexParse(
       uls[2],
       /<li style[^>]*>([^<]+)<\/li>/
     );
   }
 
-  returnVal.path = regexParse(
+  returnVal.path = utils.regexParse(
     text,
     /<a data-role="button" href="([^"]+)"/
   );
@@ -198,7 +77,7 @@ parsers.class = function (text) {
 /**
  * Parse pages corresponding to the terms for a class, extract each term
  */
-parsers.terms = listParserGenerator(
+parsers.terms = utils.listParserGenerator(
   /<li><a href="([^"]+openSections=(\w+)[^"]+crse_id=(\w+)[^"]+)"\s*>([^<]+)/,
   ['path', 'sectionId', 'courseId', 'sectionLabel'],
   'term'
@@ -207,7 +86,7 @@ parsers.terms = listParserGenerator(
 /**
  * Parse pages corresponding to each term for a class, extract sections
  */
-parsers.term = listParserGenerator(
+parsers.term = utils.listParserGenerator(
   /<li><a href="([^"]+strm=(\w+)[^"]+section=(\w+)[^"]+class_nbr=(\w+)[^"]+)">([^<]+)/,
   ['path', 'termId', 'sectionId', 'classNumber'],
   'section'
@@ -221,13 +100,13 @@ parsers.term = listParserGenerator(
 parsers.section = function (text) {
   var returnVal = {};
 
-  returnVal.info = regexParse(
+  returnVal.info = utils.regexParse(
     text,
     /<p><b>([^<]+)<\/b><\/p><p><strong>[^<]+<\/strong>([^<]+)<br\/><strong>[^<]+<\/strong>([^<]+)<br\/><strong>[^<]+<\/strong>([^<]+)<br\/><strong>[^<]+<\/strong>([^<]+)<br\/><strong>[^<]+<\/strong>([^<]+)<br\/>/,
     ['title', 'session', 'classNumber', 'units', 'topic', 'description']
   );
 
-  var temp = regexParse(
+  var temp = utils.regexParse(
     text,
     /<p><strong>[^<]+<\/strong>([^<]+)<br\/><\/p>/
   );
@@ -236,13 +115,13 @@ parsers.section = function (text) {
     returnVal.enrollmentReq = temp;
   }
 
-  returnVal.details = regexGParse(
+  returnVal.details = utils.regexGParse(
     text,
     /<li[^>]*><h4>([^<]+)<\/h4><h4[^>]+>([^<]+)<\/h4/,
     ['label', 'value']
   );
 
-  temp = regexParse(
+  temp = utils.regexParse(
     text,
     /<li[^>]*><a[^>]*href="([^"]+)"><h4>[^<]+<\/h4><h4[^>]+>([^<]+)<\/h4/,
     ['link', 'location']
@@ -260,12 +139,12 @@ parsers.section = function (text) {
  * Parse location page, extract latitude and longitude
  */
 parsers.location = function (text) {
-  var returnVal = regexParse(
+  var returnVal = utils.regexParse(
     text,
     /initialize\(([^,]+),([^\)]+)\);/,
     ['latitude', 'longitude']
   );
   return returnVal;
-}
+};
 
 module.exports = parsers;
