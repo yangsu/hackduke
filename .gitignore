@@ -24,3 +24,5 @@ maces-*.json
 
 # sqlite
 test/config/test.sqlite
+
+data/
