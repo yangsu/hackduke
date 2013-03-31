@@ -23,6 +23,11 @@ var ClassSchema = mongoose.Schema({
   path:       String
 });
 
+ClassSchema.index({
+  department: 1,
+  number: 1
+});
+
 models.Class = mongoose.model('class', ClassSchema);
 
 module.exports = models;
