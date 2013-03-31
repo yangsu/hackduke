@@ -13,16 +13,15 @@ db.Class.find({
     };
   });
 
-  var chunks = utils.toChunks(cs, 50);
+  var chunks = utils.toChunks(cs, 25);
   var chunkIndex = 0;
   var processChunk = function() {
     if (chunkIndex < chunks.length) {
       db.parallel(chunks[chunkIndex++], 'Class', function(err, data) {
         if (err) {
           console.log('ERROR', err);
-        } else {
-          process.nextTick(processChunk);
         }
+        process.nextTick(processChunk);
       });
     } else {
       process.exit(0);
