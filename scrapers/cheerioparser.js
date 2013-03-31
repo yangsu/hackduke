@@ -59,11 +59,10 @@ parsers.class = function(text) {
 
     var attrs = _.map($ul.find('li[data-role!="list-divider"]'), function(li) {
       var $li = $(li);
-      var k, v, arr;
+      var k, v;
       if ($li.children().length <= 1) {
-        arr = $li.text().split(': ');
-        k = arr[0];
-        v  = arr[1];
+        k = 'requirement';
+        v  = $li.text();
       } else {
         k = $li.children().first().text();
         v = $li.children().last().text();
