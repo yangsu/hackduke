@@ -100,8 +100,9 @@ function parallel(collection, model, finalCallback) {
             if (qsData.subject) qsData.department = qsData.subject;
             if (qsData.class) qsData.number = qsData.class;
             if (qsData.openTerms) qsData.course_id = qsData.openTerms;
+            if (qsData.openSections) qsData.term_id = qsData.openSections;
 
-            _.extend(parsed, _.pick(qsData, 'department', 'number', 'course_id'));
+            _.extend(parsed, _.pick(qsData, 'department', 'number', 'course_id', 'term_id'));
 
             var genDbRequest = function (d) {
               return function(cb) {

@@ -97,6 +97,36 @@ parsers.terms = function(text) {
   };
 };
 
+parsers.term = function(text) {
+  var $ = cheerio.load(text);
+
+  var term = $('h3').text().split(' for ').slice(-1)[0];
+  var sections = $('ul[data-role="listview"]');
+
+  var data = _.reduce(sections, function(memo, ul) {
+    var $ul = $(ul);
+    var key = $ul.find('li[data-role="list-divider"]').text();
+
+    var attrs = _.map($ul.find('li[data-role!="list-divider"]'), function(li) {
+      var $li = $(li);
+      return {
+        path: $li.find('a').attr('href')
+      };
+    });
+
+    memo[utils.toKey(key)] = attrs;
+    return memo;
+  }, {});
+
+  var result = {
+    terms: {}
+  };
+  result.terms[utils.toKey(term)] = {
+    campus: data
+  };
+  return result;
+};
+
 _.each(parsers, function(fun, key) {
   parsers[key] = utils.trimOutput(fun);
 });
