@@ -85,7 +85,6 @@ var TermSchema = mongoose.Schema({
   department: String,
   number:     String,
   course_id:  String,
-  term_id:    String,
   title:      String,
   path:       String
 }, {
@@ -95,8 +94,7 @@ var TermSchema = mongoose.Schema({
 TermSchema.index({
   department: 1,
   number: 1,
-  course_id: 1,
-  term_id: 1
+  course_id: 1
 });
 
 db.Term = mongoose.model('Term', TermSchema);
@@ -105,6 +103,34 @@ queryMap.Term = function(q) {
     department: q.department,
     number: q.number,
     course_id: q.course_id
+  };
+};
+
+var SectionSchema = mongoose.Schema({
+  department: String,
+  number:     String,
+  course_id:  String,
+  term_id:    String,
+  title:      String,
+  path:       String
+}, {
+  strict: false
+});
+
+SectionSchema.index({
+  department: 1,
+  number: 1,
+  course_id: 1,
+  term_id: 1
+});
+
+db.Section = mongoose.model('Section', SectionSchema);
+queryMap.Section = function(q) {
+  return {
+    department: q.department,
+    number: q.number,
+    course_id: q.course_id,
+    term_id: q.term_id
   };
 };
 
@@ -127,6 +153,7 @@ function parallel(collection, model, finalCallback) {
             if (qsData.subject) qsData.department = qsData.subject;
             if (qsData.class) qsData.number = qsData.class;
             if (qsData.openTerms) qsData.course_id = qsData.openTerms;
+            if (qsData.crse_id) qsData.course_id = qsData.crse_id;
             if (qsData.openSections) qsData.term_id = qsData.openSections;
 
             qsData = _.pick(qsData, 'department', 'number', 'course_id', 'term_id');

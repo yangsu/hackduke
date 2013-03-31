@@ -3,16 +3,16 @@ var _ = require('lodash');
 var db = require('./db');
 var utils = require('./utils');
 
-db.Class.find({
-  terms: { $exists: true, $ne: null }
-}, 'terms', {}, function (err, terms) {
+db.Term.find({
+  term_id: { $exists: false },
+  title: /2013/
+}, {path:1}, {limit:10}, function(err, terms) {
   var ts = _.flatten(_.map(terms, function(t) {
-    var mostRecent = _.values(t.get('terms'))[0];
     return {
       type: 'term',
-      path: mostRecent.path
-    }
+      path: t.path
+    };
   }));
 
-  db.parallel(ts, 'Class');
+  db.parallel(ts, 'Section');
 });
