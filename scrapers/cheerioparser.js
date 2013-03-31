@@ -104,6 +104,10 @@ parsers.term = function(text) {
   var term = $('h3').text().split(' for ').slice(-1)[0];
   var sections = $('ul[data-role="listview"]');
 
+  if (utils.trim(sections.children().first().text()) == 'No sections found') {
+    return [];
+  }
+
   var data = _.map(sections, function(ul) {
     var $ul = $(ul);
     var key = $ul.find('li[data-role="list-divider"]').text();
