@@ -123,9 +123,9 @@ SectionSchema.index({
   department: 1,
   number: 1,
   course_id: 1,
-  term_id: 1,
-  class_id: 1,
-  section_id: 1
+  term_id: 1
+  // class_id: 1,
+  // section_id: 1
 });
 
 db.Section = mongoose.model('Section', SectionSchema);
@@ -134,9 +134,9 @@ queryMap.Section = function(q) {
     department: q.department,
     number: q.number,
     course_id: q.course_id,
-    term_id: q.term_id,
-    class_id: q.class_id,
-    section_id: q.section_id
+    term_id: q.term_id
+    // class_id: q.class_id,
+    // section_id: q.section_id
   };
 };
 

@@ -179,7 +179,8 @@ parsers.section = function(text) {
 
   if (locationPath) {
     _.extend(data, {
-      locationPath: locationPath
+      locationPath: locationPath,
+      location_id: locationPath.match(/bldg_cd=([^&]+)&/)[1]
     });
   }
 
