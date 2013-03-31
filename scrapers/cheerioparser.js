@@ -3,6 +3,29 @@ var cheerio = require('cheerio');
 
 var parsers = {};
 
+parsers.departments = function(text) {
+  var $ = cheerio.load(text);
+
+  var departments = $('li > a');
+
+  return _.map(departments, function(d) {
+    var $d = $(d);
+
+    var path = $d.attr('href');
+
+    var code = path.match(/subject=(\w+)/)[1];
+
+    // format '<code> - <name>'
+    var title = $d.text().slice(code.length + 3);
+
+    return {
+      path: path,
+      code: code,
+      title: title
+    };
+  });
+};
+
 parsers.department = function(text) {
   var $ = cheerio.load(text);
 
@@ -11,15 +34,12 @@ parsers.department = function(text) {
   return _.map(classes, function(c) {
     var $c = $(c);
     var courseNumber = $c.find('h4').text().split(' ');
-    var department = courseNumber[0];
-    var number = courseNumber.slice(1).join(' ');
-    var title = $c.find('p').text();
-    var path = $c.attr('href');
+
     return {
-      department: department,
-      number: number,
-      title: title,
-      path: path
+      department: courseNumber[0],
+      number: courseNumber.slice(1).join(' '),
+      title: $c.find('p').text(),
+      path: $c.attr('href')
     };
   });
 };

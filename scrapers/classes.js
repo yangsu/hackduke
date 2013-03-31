@@ -2,7 +2,6 @@ var _ = require('lodash');
 var async = require('async');
 
 var parsers = require('./parsers');
-_.extend(parsers, require('./cheerioparser'));
 
 var db = require('./db');
 var utils = require('./utils');
