@@ -47,7 +47,7 @@ parsers.class = function(text) {
   var $ = cheerio.load(text);
 
   // Body Section
-  var body = $('.ui-body').children()
+  var body = $('.ui-body').children();
   var longtitle = utils.trim(body.first().html()).split('<br>')[1];
   var description = body.last().text();
 
@@ -62,7 +62,7 @@ parsers.class = function(text) {
       var k, v;
       if ($li.children().length <= 1) {
         k = 'requirement';
-        v  = $li.text();
+        v = $li.text();
       } else {
         k = $li.children().first().text();
         v = $li.children().last().text();
@@ -123,6 +123,102 @@ parsers.term = function(text) {
   });
 
   return _.flatten(data);
+};
+
+
+parsers.section = function(text) {
+  var $ = cheerio.load(text);
+
+  var body = $('.ui-body');
+  var $p = body.find('p');
+  var longtitle = utils.trim($p.first().text());
+
+  var parse = function(node) {
+    var details = node.html()
+      .replace(/<br>/g, '|')
+      .replace(/<[^>]+>/g, '').split('|');
+
+    return utils.pairsToDict(_.map(_.compact(details), function(kv) {
+      var arr = kv.split(': ');
+      return [ utils.toKey(arr[0]), arr[1] ];
+    }));
+  };
+
+  var attrs = {};
+  var node = $p.next();
+  var text = utils.trim(node.html());
+  while (node && text !== '' && text != utils.trim(node.next().html())) {
+    _.extend(attrs, parse(node));
+    node = node.next();
+    text = utils.trim(node.html());
+  }
+
+  var $ul = $('ul[data-role="listview"]');
+
+  var otherattrs = _.map($ul.find('li[data-role!="list-divider"]'), function(li) {
+    var $li = $(li);
+    var h4s = $li.find('h4');
+
+    if (h4s.length == 2) {
+      var k = h4s.first().text();
+      var v = h4s.last().text();
+      return [ utils.toKey(k), v ];
+    } else {
+      return null;
+    }
+  });
+
+  _.extend(attrs, utils.pairsToDict(_.compact(otherattrs)));
+
+  var data = {
+    info: attrs,
+    longtitle: longtitle
+  };
+
+  var locationPath = $('li > a').attr('href');
+
+  if (locationPath) {
+    _.extend(data, {
+      locationPath: locationPath
+    });
+  }
+
+  var label = $('li[data-role="list-divider"]').last();
+  if (utils.trim(label.html()) == 'Combined Section') {
+    node = label.next();
+    text = utils.trim(node.html());
+    var combinedSections = [];
+
+    while (node && text !== '' && text != utils.trim(node.next().html())) {
+      var sectionInfo = node.find('h4').html().split('<br>');
+      var section = {
+        title: sectionInfo[0],
+        number: sectionInfo[1]
+      };
+
+      var otherInfo = _.chain(node.find('p'))
+        .map(function(p) {
+          return $(p).text();
+        })
+        .compact()
+        .map(function(p) {
+          return p.split(': ');
+        })
+        .value();
+
+      _.extend(section, utils.pairsToDict(otherInfo));
+
+      combinedSections.push(section);
+
+      node = node.next();
+      text = utils.trim(node.html());
+    }
+    _.extend(data, {
+      'combined-sections': combinedSections
+    });
+  }
+
+  return data;
 };
 
 _.each(parsers, function(fun, key) {
