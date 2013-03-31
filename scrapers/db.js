@@ -96,13 +96,21 @@ function parallel(collection, model, finalCallback) {
           // try {
             var parsed = parsers[item.type](text);
 
-            var qsData = qs.parse(item.path);
+            var qsData = qs.parse(item.path.split('?')[1]);
             if (qsData.subject) qsData.department = qsData.subject;
             if (qsData.class) qsData.number = qsData.class;
             if (qsData.openTerms) qsData.course_id = qsData.openTerms;
             if (qsData.openSections) qsData.term_id = qsData.openSections;
 
-            _.extend(parsed, _.pick(qsData, 'department', 'number', 'course_id', 'term_id'));
+            qsData = _.pick(qsData, 'department', 'number', 'course_id', 'term_id');
+
+            if (_.isArray(parsed)) {
+              parsed = _.map(parsed, function(p) {
+                return _.extend(p, qsData);
+              });
+            } else if (_.isObject(parsed)) {
+              _.extend(parsed, qsData);
+            }
 
             var genDbRequest = function (d) {
               return function(cb) {
