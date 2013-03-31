@@ -182,6 +182,7 @@ utils.parallel = function (collection, model, finalCallback) {
                     { upsert: true },
                     cb
                   );
+                  return item;
                 };
               });
 
