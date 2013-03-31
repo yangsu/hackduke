@@ -13,19 +13,5 @@ db.Class.find({
     };
   });
 
-  var chunks = utils.toChunks(cs, 25);
-  var chunkIndex = 0;
-  var processChunk = function() {
-    if (chunkIndex < chunks.length) {
-      db.parallel(chunks[chunkIndex++], 'Class', function(err, data) {
-        if (err) {
-          console.log('ERROR', err);
-        }
-        process.nextTick(processChunk);
-      });
-    } else {
-      process.exit(0);
-    }
-  };
-  processChunk();
+  db.parallel(cs, 'Class');
 });

@@ -3,8 +3,9 @@ var async = require('async');
 var mongoose = require('mongoose');
 var qs = require('querystring');
 
-var db = {};
+var config = require('./config');
 
+var db = {};
 var queryMap = {};
 
 mongoose.connect('localhost', 'aces');
@@ -83,8 +84,9 @@ queryMap.Class = function(q) {
 var parsers = require('./cheerioparser');
 var utils = require('./utils');
 
-db.parallel = function (collection, model, finalCallback) {
+function parallel(collection, model, finalCallback) {
   var count = 0;
+
   var requests = _.map(collection, function(item){
     return function(callback) {
       utils.fetch(item.path, function(error, text, timing) {
@@ -157,6 +159,25 @@ db.parallel = function (collection, model, finalCallback) {
     }
     process.exit(0);
   });
+};
+
+db.parallel = function (collection, model) {
+  var chunks = utils.toChunks(collection, config.CHUNKSIZE);
+  var chunkIndex = 0;
+
+  var processChunk = function() {
+    if (chunkIndex < chunks.length) {
+      parallel(chunks[chunkIndex++], model, function(err, data) {
+        if (err) {
+          console.log('ERROR', err);
+        }
+        process.nextTick(processChunk);
+      });
+    } else {
+      process.exit(0);
+    }
+  };
+  processChunk();
 };
 
 module.exports = db;
