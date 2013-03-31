@@ -85,6 +85,19 @@ parsers.class = function(text) {
   });
 };
 
+parsers.terms = function(text) {
+  var $ = cheerio.load(text);
+
+  var terms = $('li > a');
+
+  return {
+    terms: utils.pairsToDict(_.map(terms, function(c) {
+      var $c = $(c);
+      return [ utils.toKey($c.text()), { path: $c.attr('href') } ];
+    }))
+  };
+};
+
 _.each(parsers, function(fun, key) {
   parsers[key] = utils.trimOutput(fun);
 });

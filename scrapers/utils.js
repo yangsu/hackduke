@@ -140,6 +140,8 @@ function parseCurlTiming(text) {
 
 
 function fetch(path, cb) {
+  if (!path || path.length === 0) cb(path);
+
   path = constructURL(path);
 
   var command = 'curl "' + path + '" --cookie "' + cookie + '"';
