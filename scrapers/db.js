@@ -107,7 +107,10 @@ db.parallel = function (collection, model, finalCallback) {
                   queryMap[model](d),
                   { $set: d },
                   { upsert: true },
-                  cb
+                  function(err, data) {
+                    if (err) err.item = d;
+                    cb(err, data);
+                  }
                 );
                 return d;
               };
