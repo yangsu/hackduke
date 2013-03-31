@@ -140,6 +140,40 @@ queryMap.Section = function(q) {
   };
 };
 
+
+var LocationSchema = mongoose.Schema({
+  id: Number,
+  name: String,
+  lat: Number,
+  long: Number,
+  imageURL: String,
+  school_id: Number,
+  school_building_id: Number,
+  handicap: String,
+  address: String,
+  comment: String,
+  campus_location: String,
+  soundex: String
+}, {
+  strict: false
+});
+
+LocationSchema.index({
+  id: 1,
+  school_id: 1,
+  school_building_id: 1
+});
+
+db.Location = mongoose.model('Location', LocationSchema);
+queryMap.Location = function(q) {
+  return {
+    id: q.id,
+    school_id: q.school_id,
+    school_building_id:q.school_building_id
+  };
+};
+
+
 var parsers = require('./cheerioparser');
 var utils = require('./utils');
 
