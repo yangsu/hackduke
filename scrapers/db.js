@@ -157,7 +157,7 @@ function parallel(collection, model, finalCallback) {
   async.parallel(requests, finalCallback);
 };
 
-db.parallel = function (collection, model) {
+db.parallel = function (collection, model, finalCallback) {
   var chunks = utils.toChunks(collection, config.CHUNKSIZE);
   var chunkIndex = 0;
 
@@ -171,7 +171,11 @@ db.parallel = function (collection, model) {
         process.nextTick(processChunk);
       });
     } else {
-      process.exit(0);
+      if (finalCallback) {
+        finalCallback();
+      } else {
+        process.exit(0);
+      }
     }
   };
   processChunk();
