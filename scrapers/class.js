@@ -3,7 +3,9 @@ var _ = require('lodash');
 var db = require('./db');
 var utils = require('./utils');
 
-db.Class.find({}, 'path', {}, function (err, classes) {
+db.Class.find({
+  longtitle: { $exists: false }
+}, 'path', {}, function (err, classes) {
   var cs = _.map(classes, function(c) {
     return {
       type: 'class',
