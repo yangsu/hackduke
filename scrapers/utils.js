@@ -5,8 +5,7 @@ var exec = require('child_process').exec;
 
 var config = require('./config');
 var db = require('./db');
-var parsers = require('./parsers');
-_.extend(parsers, require('./cheerioparser'));
+var parsers = require('./cheerioparser');
 
 var utils = {};
 
