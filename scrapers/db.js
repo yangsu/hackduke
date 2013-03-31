@@ -4,6 +4,8 @@ var mongoose = require('mongoose');
 
 var db = {};
 
+var queryMap = {};
+
 mongoose.connect('localhost', 'aces');
 
 var CourseNumberMappingSchema = mongoose.Schema({
@@ -27,6 +29,16 @@ db.CourseNumberMapping = mongoose.model(
   CourseNumberMappingSchema
 );
 
+queryMap.CourseNumberMapping = function(q) {
+  return {
+    department: q.department,
+    department_title: q.department_title,
+    course_title: q.course_title,
+    old_number: q.old_number,
+    new_number: q.new_number
+  };
+};
+
 var DepartmentSchema = mongoose.Schema({
   path: String,
   code: String,
@@ -34,10 +46,16 @@ var DepartmentSchema = mongoose.Schema({
 });
 
 DepartmentSchema.index({
-  code: 1,
+  code: 1
 });
 
 db.Department = mongoose.model('department', DepartmentSchema);
+queryMap.Department = function(q) {
+  return {
+    code: q.code,
+    title: q.title
+  };
+};
 
 var ClassSchema = mongoose.Schema({
   department: String,
@@ -52,6 +70,12 @@ ClassSchema.index({
 });
 
 db.Class = mongoose.model('class', ClassSchema);
+queryMap.Class = function(q) {
+  return {
+    department: q.department,
+    number: q.number
+  }
+};
 
 var parsers = require('./cheerioparser');
 var utils = require('./utils');
@@ -70,7 +94,7 @@ db.parallel = function (collection, model, finalCallback) {
               var dbRequests = _.map(parsedItems, function(item) {
                 return function(cb) {
                   db[model].update(
-                    item,
+                    queryMap[model](item),
                     { $set: item },
                     { upsert: true },
                     cb
