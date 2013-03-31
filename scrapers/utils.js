@@ -160,7 +160,59 @@ function fetch(path, cb) {
   });
 };
 
+utils.pairsToDict = function(pairs) {
+  return _.reduce(pairs, function(o, pair) {
+    o[pair[0]] = pair[1];
+    return o;
+  }, {});
+};
+
+utils.mergeObjs = function(objs) {
+  return _.reduce(objs, function(memo, obj) {
+    return _.extend(memo, obj);
+  }, {});
+};
+
+utils.toKey = function(str) {
+  return trim(str).toLowerCase().replace(/\s+/g, '-');
+};
+
+utils.toTitleCase = function(str) {
+  str = str.replace(/-/g, ' ');
+  return str.replace(/\w\S*/g, function(txt){
+    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+  });
+};
+
+function trimValues(obj) {
+  _.each(obj, function(value, key) {
+    obj[key] = trimAll(value);
+  });
+  return obj;
+};
+
+function trimAll(data) {
+  if (_.isObject(data)) {
+    return trimValues(data);
+  } else if (_.isArray(data)) {
+    return _.map(data, trimValues);
+  } else if (_.isString(data)) {
+    return trim(data);
+  } else {
+    return data;
+  }
+};
+
+function trimOutput(fun) {
+  return function(input) {
+    return trimAll(fun(input));
+  };
+};
+
 utils.trim = trim;
+utils.trimValues = trimValues;
+utils.trimAll = trimAll;
+utils.trimOutput = trimOutput;
 
 utils.regexParse = regexParse;
 utils.regexGParse = regexGParse;

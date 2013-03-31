@@ -62,6 +62,8 @@ var ClassSchema = mongoose.Schema({
   number:     String,
   title:      String,
   path:       String
+}, {
+  strict: false
 });
 
 ClassSchema.index({
@@ -89,19 +91,23 @@ db.parallel = function (collection, model, finalCallback) {
           callback(error);
         } else {
           // try {
-            var parsedItems = parsers[item.type](text);
+            var parsed = parsers[item.type](text);
+            var genDbRequest = function (item) {
+              return function(cb) {
+                console.log(item);
+                db[model].update(
+                  queryMap[model](item),
+                  { $set: item },
+                  { upsert: true },
+                  cb
+                );
+                return item;
+              };
+            };
 
-            if (_.isArray(parsedItems)) {
-              var dbRequests = _.map(parsedItems, function(item) {
-                return function(cb) {
-                  db[model].update(
-                    queryMap[model](item),
-                    { $set: item },
-                    { upsert: true },
-                    cb
-                  );
-                  return item;
-                };
+            if (_.isArray(parsed)) {
+              var dbRequests = _.map(parsed, function(item) {
+                return genDbRequest(item);
               });
 
               async.parallel(dbRequests, function(err, data) {
@@ -114,8 +120,16 @@ db.parallel = function (collection, model, finalCallback) {
                 );
                 callback(err, data);
               });
+            } else if (_.isObject(parsed)) {
+              genDbRequest(parsed)(function(err, data) {
+                console.log(
+                  'Fetched and Saved ', item.path,
+                  'in', timing.totaltime, 's'
+                );
+                callback(err, data);
+              })
             } else {
-              callback(parsedItems);
+              callback(parsed);
             }
 
           // } catch (e) {
