@@ -1,21 +1,7 @@
 var _ = require('lodash');
 var async = require('async');
-var mongoose = require('mongoose');
 
-mongoose.connect('localhost', 'aces');
-
-var schema = mongoose.Schema({
-  path: String,
-  code: String,
-  title: String
-});
-
-schema.index({
-  code: 1,
-});
-
-var Department = mongoose.model('department', schema);
-
+var db = require('./db');
 var parsers = require('./parsers');
 var utils = require('./utils');
 
@@ -46,7 +32,7 @@ var requests = _.chain(letters)
                 title: title
               };
               return function(departmentCb) {
-                Department.update(
+                db.Department.update(
                   department,
                   { $set: department },
                   { upsert: true },
