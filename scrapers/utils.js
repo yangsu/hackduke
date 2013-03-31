@@ -196,7 +196,7 @@ utils.parallel = function (collection, model, finalCallback) {
                 callback(err, data);
               });
             } else {
-              callback(err, parsedItems);
+              callback(parsedItems);
             }
 
           // } catch (e) {
