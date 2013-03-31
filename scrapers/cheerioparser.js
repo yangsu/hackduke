@@ -94,7 +94,7 @@ parsers.class = function(text) {
   });
 };
 
-_.each(parsers, function(key, fun) {
+_.each(parsers, function(fun, key) {
   parsers[key] = utils.trimOutput(fun);
 });
 

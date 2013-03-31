@@ -201,7 +201,7 @@ function trimAll(data) {
   if (_.isObject(data)) {
     return trimValues(data);
   } else if (_.isArray(data)) {
-    return _.map(data, trimValues);
+    return _.map(data, trimAll);
   } else if (_.isString(data)) {
     return trim(data);
   } else {
