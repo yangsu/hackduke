@@ -92,40 +92,39 @@ db.parallel = function (collection, model, finalCallback) {
         } else {
           // try {
             var parsed = parsers[item.type](text);
-            var genDbRequest = function (item) {
+            var genDbRequest = function (d) {
               return function(cb) {
-                console.log(item);
                 db[model].update(
-                  queryMap[model](item),
-                  { $set: item },
+                  queryMap[model](d),
+                  { $set: d },
                   { upsert: true },
                   cb
                 );
-                return item;
+                return d;
               };
+            };
+            var logProgress = function(data) {
+              console.log(
+                '(', count++, '/', collection.length, '-',
+                (count/collection.length * 100 + '').slice(0, 4) + '%',')',
+                'Fetched and Saved ', _.isArray(data) ? data.length : 1,
+                ' items from ', item.path,
+                'in', timing.totaltime, 's'
+              );
             };
 
             if (_.isArray(parsed)) {
-              var dbRequests = _.map(parsed, function(item) {
-                return genDbRequest(item);
+              var dbRequests = _.map(parsed, function(d) {
+                return genDbRequest(d);
               });
 
               async.parallel(dbRequests, function(err, data) {
-                console.log(
-                  '(', count++, '/', collection.length, '-',
-                  (count/collection.length * 100 + '').slice(0, 4) + '%',')',
-                  'Fetched and Saved ', data && data.length,
-                  ' items from ', item.path,
-                  'in', timing.totaltime, 's'
-                );
+                logProgress(data);
                 callback(err, data);
               });
             } else if (_.isObject(parsed)) {
               genDbRequest(parsed)(function(err, data) {
-                console.log(
-                  'Fetched and Saved ', item.path,
-                  'in', timing.totaltime, 's'
-                );
+                logProgress(data);
                 callback(err, data);
               })
             } else {
