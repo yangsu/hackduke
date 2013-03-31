@@ -81,7 +81,8 @@ var parsers = require('./cheerioparser');
 var utils = require('./utils');
 
 db.parallel = function (collection, model, finalCallback) {
-  var requests = _.map(collection, function(item, index){
+  var count = 0;
+  var requests = _.map(collection, function(item){
     return function(callback) {
       utils.fetch(item.path, function(error, text, timing) {
         if (error) {
@@ -105,7 +106,8 @@ db.parallel = function (collection, model, finalCallback) {
 
               async.parallel(dbRequests, function(err, data) {
                 console.log(
-                  '(', index, '/', collection.length, ')',
+                  '(', count++, '/', collection.length, '-',
+                  (count/collection.length * 100 + '').slice(0, 4) + '%',')',
                   'Fetched and Saved ', data && data.length,
                   ' items from ', item.path,
                   'in', timing.totaltime, 's'
