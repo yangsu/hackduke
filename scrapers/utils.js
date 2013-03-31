@@ -164,7 +164,7 @@ function fetch(path, cb) {
 };
 
 utils.parallel = function (collection, model, finalCallback) {
-  var requests = _.map(collection, function(item){
+  var requests = _.map(collection, function(item, index){
     return function(callback) {
       utils.fetch(item.path, function(error, text, timing) {
         if (error) {
@@ -187,6 +187,7 @@ utils.parallel = function (collection, model, finalCallback) {
 
               async.parallel(dbRequests, function(err, data) {
                 console.log(
+                  '(', index, '/', collection.length, ')',
                   'Fetched and Saved ', data && data.length,
                   ' items from ', item.path,
                   'in', timing.totaltime, 's'
