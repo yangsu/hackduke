@@ -179,9 +179,15 @@ utils.toKey = function(str) {
 
 utils.toTitleCase = function(str) {
   str = str.replace(/-/g, ' ');
-  return str.replace(/\w\S*/g, function(txt){
-    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+  return str.replace(/\w\S*/g, function(word) {
+    return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase();
   });
+};
+
+utils.toChunks = function(arr, chunkSize) {
+  return _.values(_.groupBy(arr, function(v, i) {
+    return Math.floor(i/chunkSize);
+  }));
 };
 
 function trimValues(obj) {
