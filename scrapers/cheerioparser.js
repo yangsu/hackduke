@@ -89,12 +89,13 @@ parsers.terms = function(text) {
 
   var terms = $('li > a');
 
-  return {
-    terms: utils.pairsToDict(_.map(terms, function(c) {
-      var $c = $(c);
-      return [ utils.toKey($c.text()), { path: $c.attr('href') } ];
-    }))
-  };
+  return _.map(terms, function(c) {
+    var $c = $(c);
+    return {
+      title: $c.text(),
+      path: $c.attr('href')
+    };
+  });
 };
 
 parsers.term = function(text) {

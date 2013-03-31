@@ -5,7 +5,7 @@ var utils = require('./utils');
 
 db.Class.find({
   sectionsPath: { $exists: true, $ne: null }
-}, 'sectionsPath', {}, function (err, classes) {
+}, 'sectionsPath', {}, function(err, classes) {
   var cs = _.map(classes, function(c) {
     return {
       type: 'terms',
@@ -13,5 +13,5 @@ db.Class.find({
     };
   });
 
-  db.parallel(cs, 'Class');
+  db.parallel(cs, 'Term');
 });

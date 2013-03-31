@@ -78,7 +78,34 @@ queryMap.Class = function(q) {
   return {
     department: q.department,
     number: q.number
-  }
+  };
+};
+
+var TermSchema = mongoose.Schema({
+  department: String,
+  number:     String,
+  course_id:  String,
+  term_id:    String,
+  title:      String,
+  path:       String
+}, {
+  strict: false
+});
+
+TermSchema.index({
+  department: 1,
+  number: 1,
+  course_id: 1,
+  term_id: 1
+});
+
+db.Term = mongoose.model('Term', TermSchema);
+queryMap.Term = function(q) {
+  return {
+    department: q.department,
+    number: q.number,
+    course_id: q.course_id
+  };
 };
 
 var parsers = require('./cheerioparser');
@@ -87,7 +114,7 @@ var utils = require('./utils');
 function parallel(collection, model, finalCallback) {
   var count = 0;
 
-  var requests = _.map(collection, function(item){
+  var requests = _.map(collection, function(item) {
     return function(callback) {
       utils.fetch(item.path, function(error, text, timing) {
         if (error) {
