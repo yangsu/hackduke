@@ -35,11 +35,8 @@ parsers.department = function(text) {
 
   return _.map(classes, function(c) {
     var $c = $(c);
-    var courseNumber = $c.find('h4').text().split(' ');
 
     return {
-      department: courseNumber[0],
-      number: courseNumber.slice(1).join(' '),
       title: $c.find('p').text(),
       path: $c.attr('href')
     };
@@ -51,11 +48,7 @@ parsers.class = function(text) {
 
   // Body Section
   var body = $('.ui-body').children()
-  var overview = utils.trim(body.first().html()).split('<br>');
-  var titleAndNumber = overview[0].split(' ');
-  var department = titleAndNumber[0];
-  var number = titleAndNumber.slice(1).join(' ');
-  var longtitle = overview[1];
+  var longtitle = utils.trim(body.first().html()).split('<br>')[1];
   var description = body.last().text();
 
   var sections = $('ul[data-role="listview"]');
@@ -86,8 +79,6 @@ parsers.class = function(text) {
   var sectionsPath = $('a[data-role="button"]').attr('href');
 
   return _.extend(data, {
-    department: department,
-    number: number,
     description: description,
     longtitle: longtitle,
     sectionsPath: sectionsPath

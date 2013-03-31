@@ -1,6 +1,7 @@
 var _ = require('lodash');
 var async = require('async');
 var mongoose = require('mongoose');
+var qs = require('querystring');
 
 var db = {};
 
@@ -92,6 +93,14 @@ db.parallel = function (collection, model, finalCallback) {
         } else {
           // try {
             var parsed = parsers[item.type](text);
+
+            var qsData = qs.parse(item.path);
+            if (qsData.subject) qsData.department = qsData.subject;
+            if (qsData.class) qsData.number = qsData.class;
+            if (qsData.openTerms) qsData.course_id = qsData.openTerms;
+
+            _.extend(parsed, _.pick(qsData, 'department', 'number', 'course_id'));
+
             var genDbRequest = function (d) {
               return function(cb) {
                 db[model].update(
