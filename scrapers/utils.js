@@ -1,11 +1,8 @@
 var _ = require('lodash');
-var async = require('async');
 var querystring = require('querystring');
 var exec = require('child_process').exec;
 
 var config = require('./config');
-var db = require('./db');
-var parsers = require('./cheerioparser');
 
 var utils = {};
 
@@ -160,58 +157,6 @@ function fetch(path, cb) {
     }
 
     cb(error, stdout, timing);
-  });
-};
-
-utils.parallel = function (collection, model, finalCallback) {
-  var requests = _.map(collection, function(item, index){
-    return function(callback) {
-      utils.fetch(item.path, function(error, text, timing) {
-        if (error) {
-          callback(error);
-        } else {
-          // try {
-            var parsedItems = parsers[item.type](text);
-
-            if (_.isArray(parsedItems)) {
-              var dbRequests = _.map(parsedItems, function(item) {
-                return function(cb) {
-                  db[model].update(
-                    item,
-                    { $set: item },
-                    { upsert: true },
-                    cb
-                  );
-                  return item;
-                };
-              });
-
-              async.parallel(dbRequests, function(err, data) {
-                console.log(
-                  '(', index, '/', collection.length, ')',
-                  'Fetched and Saved ', data && data.length,
-                  ' items from ', item.path,
-                  'in', timing.totaltime, 's'
-                );
-                callback(err, data);
-              });
-            } else {
-              callback(parsedItems);
-            }
-
-          // } catch (e) {
-          //   callback(e);
-          // }
-        }
-      });
-    };
-  });
-
-  async.parallel(requests, finalCallback || function(err, data) {
-    if (err) {
-      console.log('ERROR', err);
-    }
-    process.exit(0);
   });
 };
 

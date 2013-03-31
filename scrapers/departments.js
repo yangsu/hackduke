@@ -1,6 +1,6 @@
 var _ = require('lodash');
 
-var utils = require('./utils');
+var db = require('./db');
 
 var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
@@ -11,4 +11,4 @@ var departments = _.map(letters, function(letter) {
   };
 });
 
-utils.parallel(departments, 'Department');
+db.parallel(departments, 'Department');
