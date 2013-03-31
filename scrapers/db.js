@@ -153,12 +153,7 @@ function parallel(collection, model, finalCallback) {
     };
   });
 
-  async.parallel(requests, finalCallback || function(err, data) {
-    if (err) {
-      console.log('ERROR', err);
-    }
-    process.exit(0);
-  });
+  async.parallel(requests, finalCallback);
 };
 
 db.parallel = function (collection, model) {
@@ -166,6 +161,7 @@ db.parallel = function (collection, model) {
   var chunkIndex = 0;
 
   var processChunk = function() {
+    console.log('Processing chunk', chunkIndex, 'of', chunks.length);
     if (chunkIndex < chunks.length) {
       parallel(chunks[chunkIndex++], model, function(err, data) {
         if (err) {
