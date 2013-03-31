@@ -117,7 +117,7 @@ parsers.term = function(text) {
       return {
         title: term,
         campus: key,
-        path: $li.find('a').attr('href')
+        path: $li.find('a').attr('href').replace('§', '&sect')
       };
     });
   });
