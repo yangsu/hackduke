@@ -125,6 +125,10 @@ var cookie = querystring.stringify({
 }, ';', '=');
 
 var constructURL = function (path) {
+  if (/^http/.test(path)) {
+    return path;
+  }
+
   if (path[0] !== '/') {
     path = '/public_page/' + path
   }

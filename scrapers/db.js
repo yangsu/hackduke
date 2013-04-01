@@ -153,6 +153,27 @@ queryMap.Location = function(q) {
   return _.pick(q, 'id', 'school_id', 'school_building_id');
 };
 
+var EvaluationSchema = mongoose.Schema({
+  course_id: String,
+  class_id: String,
+  'instructor-rating': Number,
+  'class-rating': Number,
+  term: String,
+  detailPath: String
+}, {
+  strict: false
+});
+
+EvaluationSchema.index({
+  course_id: 1,
+  class_id: 1
+});
+
+db.Evaluation = mongoose.model('Evaluation', EvaluationSchema);
+queryMap.Evaluation = function(q) {
+  return _.pick(q, 'course_id', 'class_id', 'detailPath');
+};
+
 var parsers = require('./cheerioparser');
 var utils = require('./utils');
 

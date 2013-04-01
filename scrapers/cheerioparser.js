@@ -222,6 +222,28 @@ parsers.section = function(text) {
   return data;
 };
 
+parsers.evaluation = function(text) {
+  var $ = cheerio.load(text);
+  var title = $('p > strong').text();
+
+  if (title) {
+    var rows = $('tr').first().siblings();
+    return _.map(rows, function(r) {
+      var $r = $(r);
+      var tds = $r.find('td');
+      return {
+        title: title,
+        term: $(tds[0]).text(),
+        instructor: $(tds[1]).text(),
+        'class-rating': $(tds[2]).text(),
+        'instructor-rating': $(tds[3]).text(),
+        'detailPath': $r.find('td > a').attr('href')
+      };
+    });
+  } else {
+    return [];
+  }
+};
 _.each(parsers, function(fun, key) {
   parsers[key] = utils.trimOutput(fun);
 });
