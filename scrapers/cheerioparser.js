@@ -224,6 +224,7 @@ parsers.section = function(text) {
 
 parsers.evaluation = function(text) {
   var $ = cheerio.load(text);
+
   var title = $('p > strong').text();
 
   if (title) {

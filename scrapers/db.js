@@ -210,58 +210,64 @@ function parallel(collection, model, finalCallback) {
         if (error) {
           callback(error);
         } else {
-          var parsed = parsers[item.type](text);
+          try {
+            var parsed = parsers[item.type](text);
 
-          var qsData = parseQSData(item.path);
+            var qsData = parseQSData(item.path);
 
-          if (_.isArray(parsed)) {
-            parsed = _.map(parsed, function(p) {
-              return _.extend(p, qsData);
-            });
-          } else if (_.isObject(parsed)) {
-            _.extend(parsed, qsData);
-          }
+            if (_.isArray(parsed)) {
+              parsed = _.map(parsed, function(p) {
+                return _.extend(p, qsData);
+              });
+            } else if (_.isObject(parsed)) {
+              _.extend(parsed, qsData);
+            }
 
-          var genDbRequest = function(d) {
-            return function(cb) {
-              db[model].update(
-                  queryMap[model](d),
-                  { $set: d },
-                  { upsert: true },
-                  function(err, data) {
-                    if (err) err.item = d;
-                    cb(err, data);
-                  }
-              );
-              return d;
+            var genDbRequest = function(d) {
+              return function(cb) {
+                db[model].update(
+                    queryMap[model](d),
+                    { $set: d },
+                    { upsert: true },
+                    function(err, data) {
+                      if (err) err.item = d;
+                      cb(err, data);
+                    }
+                );
+                return d;
+              };
             };
-          };
-          var logProgress = function(data) {
-            var pct = (++count / collection.length * 100 + '').slice(0, 4) + '%';
-            console.log(
-                '(', count, '/', collection.length, '-', pct, ')',
-                'Fetched and Saved ', _.isArray(data) ? data.length : 1,
-                ' items from ', item.path,
-                'in', timing && timing.totaltime, 's'
-            );
-          };
+            var logProgress = function(data) {
+              var pct = (++count / collection.length * 100 + '').slice(0, 4) + '%';
+              console.log(
+                  '(', count, '/', collection.length, '-', pct, ')',
+                  'Fetched and Saved ', _.isArray(data) ? data.length : 1,
+                  ' items from ', item.path,
+                  'in', timing && timing.totaltime, 's'
+              );
+            };
 
-          if (_.isArray(parsed)) {
-            var dbRequests = _.map(parsed, function(d) {
-              return genDbRequest(d);
-            });
+            if (_.isArray(parsed)) {
+              var dbRequests = _.map(parsed, function(d) {
+                return genDbRequest(d);
+              });
 
-            async.parallel(dbRequests, function(err, data) {
-              logProgress(data);
-              callback(err, data);
-            });
-          } else if (_.isObject(parsed)) {
-            genDbRequest(parsed)(function(err, data) {
-              logProgress(data);
-              callback(err, data);
-            });
-          } else {
-            callback(parsed);
+              async.parallel(dbRequests, function(err, data) {
+                logProgress(data);
+                callback(err, data);
+              });
+            } else if (_.isObject(parsed)) {
+              genDbRequest(parsed)(function(err, data) {
+                logProgress(data);
+                callback(err, data);
+              });
+            } else {
+              callback(parsed);
+            }
+          } catch (e) {
+            console.trace(e);
+            console.log('URL', item.path);
+            callback(e);
           }
         }
       });
