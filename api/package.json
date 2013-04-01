@@ -8,7 +8,8 @@
     "mongodb": "~1.1.8",
     "mongoose": "~3.6.2",
     "restify": "~2.3.5",
-    "bunyan": "~0.20.0"
+    "bunyan": "~0.20.0",
+    "async": "~0.2.6"
   },
   "devDependencies": {},
   "scripts": {
