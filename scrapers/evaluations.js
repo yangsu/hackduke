@@ -3,13 +3,12 @@ var _ = require('lodash');
 var db = require('./db');
 var config = require('./config');
 
-db.Term.find({
-  title: /2013/
-}, { course_id: 1 }, { lean: true }, function(err, terms) {
-  var ts = _.map(terms, function(t) {
+db.Term.find({}, { course_id: 1 }, { lean: true }, function(err, terms) {
+  var uniqIds = _.unique(_.pluck(terms, 'course_id'));
+  var ts = _.map(uniqIds, function(t) {
     return {
       type: 'evaluation',
-      path: config.EVALURL + 'list.php?crse_id=' + t.course_id
+      path: config.EVALURL + 'list.php?crse_id=' + t
     };
   });
 

@@ -244,6 +244,46 @@ parsers.evaluation = function(text) {
     return [];
   }
 };
+
+parsers.evaluationdetail = function(text) {
+  var $ = cheerio.load(text);
+
+  var title = $('p > strong').text();
+
+  if (title) {
+    var instructor = $('p > b').text();
+
+    var rows = $('tr').first().siblings();
+    var pairs = _.map(rows, function(r) {
+      var $r = $(r);
+      var cell = $r.find('td').first();
+      var key = utils.toKey(cell.find('a').text());
+
+      var details = cell.find('script').html().match(/= '([^']+)';/)[1];
+
+      if (details) {
+        var trs = $('tr', details);
+        var data = {
+          description: trs.first().find('b').text()
+        };
+
+        var d = _.map(trs.slice(2), function(tr) {
+          var $tds = $(tr).find('td');
+          return [ utils.toKey($tds.first().text()), +($tds.last().text())]
+        });
+        _.extend(data, _.omit(utils.pairsToDict(d), ''));
+      }
+
+      return [ key, data ];
+    });
+    return {
+      details: utils.pairsToDict(pairs)
+    };
+  } else {
+    return [];
+  }
+};
+
 _.each(parsers, function(fun, key) {
   parsers[key] = utils.trimOutput(fun);
 });
