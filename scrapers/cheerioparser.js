@@ -260,21 +260,28 @@ parsers.evaluationdetail = function(text) {
       var key = utils.toKey(cell.find('a').text());
 
       var details = cell.find('script').html().match(/= '([^']+)';/)[1];
+      var description, ratings;
 
       if (details) {
         var trs = $('tr', details);
-        var data = {
-          description: trs.first().find('b').text()
-        };
+        description = trs.first().find('b').text();
 
-        var d = _.map(trs.slice(2), function(tr) {
+        ratings = _.map(trs.slice(2), function(tr) {
           var $tds = $(tr).find('td');
-          return [ utils.toKey($tds.first().text()), +($tds.last().text())]
+          var k = $tds.first().text();
+          if (k) {
+            return {
+              question: k,
+              count: +($tds.last().text())
+            };
+          }
         });
-        _.extend(data, _.omit(utils.pairsToDict(d), ''));
       }
 
-      return [ key, data ];
+      return [key, {
+        description: description,
+        ratings: _.compact(ratings)
+      }];
     });
     return {
       details: utils.pairsToDict(pairs)
