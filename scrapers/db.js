@@ -94,7 +94,7 @@ TermSchema.index({
 
 db.Term = mongoose.model('Term', TermSchema);
 queryMap.Term = function(q) {
-  return _.pick(q, 'department', 'number', 'course_id');
+  return _.pick(q, 'department', 'number', 'course_id', 'path');
 };
 
 var SectionSchema = mongoose.Schema({
@@ -121,7 +121,7 @@ SectionSchema.index({
 
 db.Section = mongoose.model('Section', SectionSchema);
 queryMap.Section = function(q) {
-  return _.pick(q, 'department', 'number', 'course_id', 'term_id');
+  return _.pick(q, 'department', 'number', 'course_id', 'term_id', 'path');
 };
 
 
