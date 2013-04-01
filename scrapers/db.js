@@ -156,6 +156,30 @@ queryMap.Location = function(q) {
 var parsers = require('./cheerioparser');
 var utils = require('./utils');
 
+var parseQSData = function(path) {
+
+  var qsData = qs.parse(path.split('?')[1]);
+
+  if (qsData.subject) qsData.department = qsData.subject;
+  if (qsData.class) qsData.number = qsData.class;
+  if (qsData.openTerms) qsData.course_id = qsData.openTerms;
+  if (qsData.crse_id) qsData.course_id = qsData.crse_id;
+  if (qsData.openSections) qsData.term_id = qsData.openSections;
+  if (qsData.strm) qsData.term_id = qsData.strm;
+  if (qsData.class_nbr) qsData.class_id = qsData.class_nbr;
+  if (qsData.section) qsData.section_id = qsData.section;
+
+  return _.pick(
+      qsData,
+      'department',
+      'number',
+      'course_id',
+      'term_id',
+      'class_id',
+      'section_id'
+  );
+};
+
 function parallel(collection, model, finalCallback) {
   var count = 0;
 
@@ -167,17 +191,7 @@ function parallel(collection, model, finalCallback) {
         } else {
           var parsed = parsers[item.type](text);
 
-          var qsData = qs.parse(item.path.split('?')[1]);
-          if (qsData.subject) qsData.department = qsData.subject;
-          if (qsData.class) qsData.number = qsData.class;
-          if (qsData.openTerms) qsData.course_id = qsData.openTerms;
-          if (qsData.crse_id) qsData.course_id = qsData.crse_id;
-          if (qsData.openSections) qsData.term_id = qsData.openSections;
-          if (qsData.strm) qsData.term_id = qsData.strm;
-          if (qsData.class_nbr) qsData.class_id = qsData.class_nbr;
-          if (qsData.section) qsData.section_id = qsData.section;
-
-          qsData = _.pick(qsData, 'department', 'number', 'course_id', 'term_id', 'class_id', 'section_id');
+          var qsData = parseQSData(item.path);
 
           if (_.isArray(parsed)) {
             parsed = _.map(parsed, function(p) {
