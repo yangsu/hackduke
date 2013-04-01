@@ -216,9 +216,9 @@ function parallel(collection, model, finalCallback) {
             };
           };
           var logProgress = function(data) {
-            var pct = (count / collection.length * 100 + '').slice(0, 4) + '%';
+            var pct = (++count / collection.length * 100 + '').slice(0, 4) + '%';
             console.log(
-                '(', count++, '/', collection.length, '-', pct, ')',
+                '(', count, '/', collection.length, '-', pct, ')',
                 'Fetched and Saved ', _.isArray(data) ? data.length : 1,
                 ' items from ', item.path,
                 'in', timing && timing.totaltime, 's'
@@ -253,14 +253,22 @@ function parallel(collection, model, finalCallback) {
 db.parallel = function(collection, model, finalCallback) {
   var chunks = utils.toChunks(collection, config.CHUNKSIZE);
   var chunkIndex = 0;
+  var totaltime = 0;
 
   var processChunk = function() {
-    console.log('Processing chunk', chunkIndex, 'of', chunks.length);
+    var starttime = Date.now();
+    console.log('Processing chunk', chunkIndex + 1, 'of', chunks.length);
     if (chunkIndex < chunks.length) {
       parallel(chunks[chunkIndex++], model, function(err, data) {
         if (err) {
           console.log('ERROR', err);
         }
+        var ellapsed = (Date.now() - starttime) / 1000;
+        totaltime += ellapsed;
+        console.log(
+            'Completed processing block in ', ellapsed, 's',
+            'eta:', totaltime / chunkIndex * (chunks.length - chunkIndex), 's'
+        );
         process.nextTick(processChunk);
       });
     } else {
