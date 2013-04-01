@@ -4,8 +4,7 @@ var db = require('./db');
 var utils = require('./utils');
 
 db.Term.find({
-  term_id: { $exists: false },
-  title: /2013/
+  title: /2012/
 }, { path: 1 }, {}, function(err, terms) {
   var ts = _.flatten(_.map(terms, function(t) {
     return {

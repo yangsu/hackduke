@@ -59,6 +59,13 @@ exports.class = function(req, res, next) {
       } else {
         cb(null, []);
       }
+    },
+    sections: function(cb) {
+      if (query.department && query.number) {
+        db.Section.find(query, {}, baseOptions, cb);
+      } else {
+        cb(null, []);
+      }
     }
   }, function(err, data) {
     if (err) {
@@ -89,6 +96,39 @@ exports.classes = function(req, res, next) {
       return res.send(err);
     } else {
       return res.json(data);
+    }
+  });
+};
+
+exports.evaluation = function(req, res, next) {
+  var p = req.params;
+
+  var query = {
+    department: p.department,
+    number: p.number
+  };
+
+  var filter = transformers.termFilter;
+
+  db.Section.find(query, filter, baseOptions, function(err, data) {
+    if (err) {
+      res.send(err);
+    } else {
+      data = _.map(data, function(d) {
+        return _.omit(d, 'department', 'number', 'longtitle');
+      });
+      var course_id = _.unique(_.pluck(data, 'course_id'))[0];
+
+      db.Evaluation.find({
+        course_id: course_id,
+        details: { $exists: true }
+      }, transformers.evaluationFilter, baseOptions, function(err, evaluation) {
+        if (err) {
+          res.send(err);
+        } else {
+          res.json(evaluation);
+        }
+      });
     }
   });
 };

@@ -171,7 +171,7 @@ EvaluationSchema.index({
 
 db.Evaluation = mongoose.model('Evaluation', EvaluationSchema);
 queryMap.Evaluation = function(q) {
-  return _.pick(q, 'course_id', 'detailPath');
+  return _.pick(q, 'course_id', 'class_id');
 };
 
 var parsers = require('./cheerioparser');

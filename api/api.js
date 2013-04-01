@@ -37,6 +37,10 @@ server.get('/class.json/department/:department/class/:number', routes.class);
 server.get('/class.json/department/:department', routes.classes);
 server.get('/class.json', routes.classes);
 
+server.get('/evaluation.json/department/:department/class/:number', routes.evaluation);
+// server.get('/evaluation.json/course_id/:cid/class_id/:section', routes.evaluation);
+
+
 server.listen(8080, function() {
   console.log('%s listening at %s', server.name, server.url);
 });
