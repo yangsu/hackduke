@@ -34,8 +34,8 @@ server.get('/department.json', routes.departments);
 server.get('/departmentlist.json', routes.departmentlist);
 
 server.get('/class.json/department/:department/class/:number', routes.class);
-server.get('/class.json/department/:department', routes.class);
-server.get('/class.json', routes.class);
+server.get('/class.json/department/:department', routes.classes);
+server.get('/class.json', routes.classes);
 
 server.listen(8080, function() {
   console.log('%s listening at %s', server.name, server.url);

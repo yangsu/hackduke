@@ -1,12 +1,17 @@
 var _ = require('lodash');
+var async = require('async');
 
 var db = require('../scrapers/db');
+
+var baseOptions = {
+  lean: true
+};
 
 exports.departments = function(req, res, next) {
   db.Department.find({}, {
     code: 1,
     title: 1
-  }, {}, function(err, data) {
+  }, baseOptions, function(err, data) {
     if (err) {
       return res.send(err);
     } else {
@@ -20,7 +25,7 @@ exports.departments = function(req, res, next) {
 exports.departmentlist = function(req, res, next) {
   db.Department.find({}, {
     code: 1
-  }, {}, function(err, data) {
+  }, baseOptions, function(err, data) {
     if (err) {
       return res.send(err);
     } else {
@@ -31,39 +36,53 @@ exports.departmentlist = function(req, res, next) {
   });
 };
 
-var basic = {
-  department: 1,
-  number: 1,
-  title: 1
-};
-
-var detailed = _.extend({}, basic, {
-  description: 1,
-  longtitle: 1,
-  'enrollment-requirements': 1
-});
-
-var classFilters = {
-  basic: basic,
-  detailed: detailed,
-  raw: {}
-};
+var transformers = require('./transformers');
 
 exports.class = function(req, res, next) {
+  var p = req.params;
+  var q = req.query;
+
+  var query = {
+    department: p.department,
+    number: p.number
+  };
+
+  var filter = transformers.classFilters[q.level || 'basic'] || classFilters.basic;
+
+  async.parallel({
+    class: function(cb) {
+      db.Class.findOne(query, filter, baseOptions, cb);
+    },
+    terms: function(cb) {
+      if (query.department && query.number) {
+        db.Term.find(query, {}, baseOptions, cb);
+      } else {
+        cb(null, []);
+      }
+    }
+  }, function(err, data) {
+    if (err) {
+      return res.send(err);
+    } else {
+      return res.json(data);
+    }
+  });
+};
+
+exports.classes = function(req, res, next) {
   var p = req.params;
   var q = req.query;
 
   var query = {};
 
   if (p.department) _.extend(query, { department: p.department });
-  if (p.number) _.extend(query, { number: p.number });
 
-  var filter = classFilters[q.level || 'basic'] || classFilters.basic;
+  var filter = transformers.classFilters[q.level || 'basic'] || classFilters.basic;
 
-  var options = {
+  var options = _.extend({}, baseOptions, {
     limit: q.limit || 100,
     skip: q.skip || 0
-  };
+  });
 
   db.Class.find(query, filter, options, function(err, data) {
     if (err) {
