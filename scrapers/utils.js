@@ -120,7 +120,8 @@ function listParserGenerator(regex, labels, childType) {
 };
 
 var cookie = querystring.stringify({
-  PHPSESSID: config.PHPSESSID
+  PHPSESSID: config.PHPSESSID,
+  'webdev_boris.aas.duke.edu': config.AAS
 }, ';', '=');
 
 var constructURL = function (path) {
