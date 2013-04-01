@@ -7,33 +7,41 @@ var baseOptions = {
   lean: true
 };
 
+var handlerGenerator = function(res, f) {
+  return function(err, data) {
+    if (err) {
+      return res.send(err);
+    } else {
+      return f(data);
+    }
+  };
+};
+
+var defaultHandler = function(res) {
+  return handlerGenerator(res, function(data) {
+    return res.json(data);
+  });
+};
+
 exports.departments = function(req, res, next) {
   db.Department.find({}, {
     code: 1,
     title: 1
-  }, baseOptions, function(err, data) {
-    if (err) {
-      return res.send(err);
-    } else {
-      return res.json(_.map(data, function(d) {
-        return _.pick(d, 'code', 'title');
-      }));
-    }
-  });
+  }, baseOptions, defaultHandler(res));
+};
+
+exports.departmentById = function(req, res, next) {
+  db.Department.findById(req.params.id, {}, baseOptions, defaultHandler(res));
 };
 
 exports.departmentlist = function(req, res, next) {
   db.Department.find({}, {
     code: 1
-  }, baseOptions, function(err, data) {
-    if (err) {
-      return res.send(err);
-    } else {
-      return res.json(_.map(data, function(d) {
-        return d.code;
-      }));
-    }
-  });
+  }, baseOptions, handlerGenerator(res, function(data) {
+    return _.map(data, function(d) {
+      return d.code;
+    });
+  }));
 };
 
 var transformers = require('./transformers');
