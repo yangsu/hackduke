@@ -52,8 +52,22 @@ exports.departmentById = function(req, res, next) {
 exports.listdepartment = function(req, res, next) {
   db.Department.find({}, {
     code: 1
-  }, baseOptions, handlerGenerator(res, function(data) {
+  }, options({
+    sort: { code: 1 }
+  }), handlerGenerator(res, function(data) {
     return _.pluck(data, 'code');
+  }));
+};
+
+exports.listclass = function(req, res, next) {
+  db.Class.find({
+    department: req.params.department
+  }, {
+    number: 1
+  }, options({
+    sort: { number: 1 }
+  }), handlerGenerator(res, function(data) {
+    return _.pluck(data, 'number');
   }));
 };
 

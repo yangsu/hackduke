@@ -32,6 +32,7 @@ server.use(restify.throttle({
 var routes = require('./routes');
 
 server.get('/list.json/department', routes.listdepartment);
+server.get('/list.json/department/:department', routes.listclass);
 
 server.get('/department.json', routes.departments);
 server.get('/department.json/:id', routes.departmentById);
