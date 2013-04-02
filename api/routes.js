@@ -91,12 +91,12 @@ var limitAndSkip = function(query) {
 
 exports.class = function(req, res, next) {
   var query = _.pick(req.params, 'department', 'number');
-  var filter = classFormat(req.params);
+  var filter = classFormat(req.query);
   db.Class.findOne(query, filter, baseOptions, defaultHandler(res));
 };
 
 exports.classById = function(req, res, next) {
-  var filter = classFormat(req.params);
+  var filter = classFormat(req.query);
   db.Class.findById(req.params.id, filter, baseOptions, defaultHandler(res));
 };
 
@@ -109,7 +109,7 @@ exports.classold = function(req, res, next) {
     number: p.number
   };
 
-  var filter = classFormat(req.params);
+  var filter = classFormat(req.query);
 
   async.parallel({
     class: function(cb) {
@@ -140,7 +140,7 @@ exports.classold = function(req, res, next) {
 
 exports.classes = function(req, res, next) {
   var query = _.pick(req.params, 'department', 'title');
-  var filter = classFormat(req.params);
+  var filter = classFormat(req.query);
   var options = limitAndSkip(req.query);
   _.extend(options, {
     sort: {
