@@ -21,6 +21,7 @@ var detailed = _.extend({}, basic, {
 });
 
 exports.classFilters = {
+  short: short,
   basic: basic,
   detailed: detailed,
   raw: {

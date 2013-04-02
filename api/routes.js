@@ -7,7 +7,7 @@ var baseOptions = {
   lean: true
 };
 
-var options = function(opt) {
+var genOptions = function(opt) {
   return _.extend({}, baseOptions, opt);
 };
 
@@ -36,7 +36,7 @@ var listEndpoint = function(collection, queryfields, filterField) {
     var filter = {};
     filter[filterField] = 1;
 
-    db[collection].find(query, filter, options({
+    db[collection].find(query, filter, genOptions({
       sort: filter
     }), handlerGenerator(res, function(data) {
       return _.pluck(data, filterField);
@@ -60,7 +60,7 @@ exports.departments = function(req, res, next) {
   db.Department.find({}, {
     code: 1,
     title: 1
-  }, options({
+  }, genOptions({
     sort: { code: 1 }
   }), defaultHandler(res));
 };
@@ -77,17 +77,26 @@ exports.departmentById = function(req, res, next) {
 
 var transformers = require('./transformers');
 
+var classFormat = function(params) {
+  var filters = transformers.classFilters;
+  return filters[params.format] || filters.basic;
+};
+
+var limitAndSkip = function(query) {
+  return genOptions({
+    limit: query.limit || 100,
+    skip: query.skip || 0
+  });
+};
+
 exports.class = function(req, res, next) {
   var query = _.pick(req.params, 'department', 'number');
-  var filters = transformers.classFilters;
-  var filter = filters[req.params.format] || filters.basic;
-
+  var filter = classFormat(req.params);
   db.Class.findOne(query, filter, baseOptions, defaultHandler(res));
 };
 
 exports.classById = function(req, res, next) {
-  var filters = transformers.classFilters;
-  var filter = filters[req.params.format] || filters.basic;
+  var filter = classFormat(req.params);
   db.Class.findById(req.params.id, filter, baseOptions, defaultHandler(res));
 };
 
@@ -100,7 +109,7 @@ exports.classold = function(req, res, next) {
     number: p.number
   };
 
-  var filter = transformers.classFilters[q.level || 'basic'] || classFilters.basic;
+  var filter = classFormat(req.params);
 
   async.parallel({
     class: function(cb) {
@@ -130,27 +139,17 @@ exports.classold = function(req, res, next) {
 };
 
 exports.classes = function(req, res, next) {
-  var p = req.params;
-  var q = req.query;
-
-  var query = {};
-
-  if (p.department) _.extend(query, { department: p.department });
-
-  var filter = transformers.classFilters[q.level || 'basic'] || classFilters.basic;
-
-  var options = _.extend({}, baseOptions, {
-    limit: q.limit || 100,
-    skip: q.skip || 0
-  });
-
-  db.Class.find(query, filter, options, function(err, data) {
-    if (err) {
-      return res.send(err);
-    } else {
-      return res.json(data);
+  var query = _.pick(req.params, 'department', 'title');
+  var filter = classFormat(req.params);
+  var options = limitAndSkip(req.query);
+  _.extend(options, {
+    sort: {
+      department: 1,
+      number: 1
     }
   });
+
+  db.Class.find(query, filter, options, defaultHandler(res));
 };
 
 // =============================================================================
