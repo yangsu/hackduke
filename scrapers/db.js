@@ -5,12 +5,15 @@ var qs = require('querystring');
 
 var config = require('./config');
 
+var Schema = mongoose.Schema;
+var ObjectId = Schema.Types.ObjectId;
+
 var db = {};
 var queryMap = {};
 
 mongoose.connect('localhost', 'aces');
 
-var CourseNumberMappingSchema = mongoose.Schema({
+var CourseNumberMappingSchema = Schema({
   department: String,
   department_title: String,
   course_title: String,
@@ -42,7 +45,7 @@ queryMap.CourseNumberMapping = function(q) {
   );
 };
 
-var DepartmentSchema = mongoose.Schema({
+var DepartmentSchema = Schema({
   path: String,
   code: String,
   title: String
@@ -57,11 +60,12 @@ queryMap.Department = function(q) {
   return _.pick(q, 'code', 'title');
 };
 
-var ClassSchema = mongoose.Schema({
+var ClassSchema = Schema({
   department: String,
   number: String,
   title: String,
-  path: String
+  path: String,
+  terms: [{ type: ObjectId, ref: 'Term' }]
 }, {
   strict: false
 });
@@ -76,12 +80,14 @@ queryMap.Class = function(q) {
   return _.pick(q, 'departments', 'number');
 };
 
-var TermSchema = mongoose.Schema({
+var TermSchema = Schema({
   department: String,
   number: String,
   course_id: String,
   title: String,
-  path: String
+  path: String,
+  class: { type: ObjectId, ref: 'Class' },
+  sections: [{ type: ObjectId, ref: 'Term' }]
 }, {
   strict: false
 });
@@ -97,7 +103,7 @@ queryMap.Term = function(q) {
   return _.pick(q, 'department', 'number', 'course_id', 'path');
 };
 
-var SectionSchema = mongoose.Schema({
+var SectionSchema = Schema({
   department: String,
   number: String,
   course_id: String,
@@ -105,7 +111,9 @@ var SectionSchema = mongoose.Schema({
   class_id: String,
   section_id: String,
   title: String,
-  path: String
+  path: String,
+  class: { type: ObjectId, ref: 'Class' },
+  term: { type: ObjectId, ref: 'Term' }
 }, {
   strict: false
 });
@@ -125,7 +133,7 @@ queryMap.Section = function(q) {
 };
 
 
-var LocationSchema = mongoose.Schema({
+var LocationSchema = Schema({
   id: Number,
   name: String,
   lat: Number,
@@ -153,7 +161,7 @@ queryMap.Location = function(q) {
   return _.pick(q, 'id', 'school_id', 'school_building_id');
 };
 
-var EvaluationSchema = mongoose.Schema({
+var EvaluationSchema = Schema({
   course_id: String,
   class_id: String,
   'instructor-rating': Number,
