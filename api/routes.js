@@ -23,17 +23,7 @@ var handlerGenerator = function(res, f) {
 };
 
 var defaultHandler = function(res) {
-  return handlerGenerator(res, function(data) {
-    if (_.isArray(data)) {
-      return _.map(data, function(d) {
-        return _.omit(d, 'path', 'detailPath', 'sectionsPath');
-      });
-    } else if (_.isObject(data)) {
-      return _.omit(data, 'path', 'detailPath', 'sectionsPath');
-    } else {
-      return data;
-    }
-  });
+  return handlerGenerator(res, _.identity);
 };
 
 // =============================================================================
@@ -76,7 +66,9 @@ exports.departments = function(req, res, next) {
 };
 
 exports.departmentById = function(req, res, next) {
-  db.Department.findById(req.params.id, {}, baseOptions, defaultHandler(res));
+  db.Department.findById(req.params.id, {
+    path: 0
+  }, baseOptions, defaultHandler(res));
 };
 
 // =============================================================================
