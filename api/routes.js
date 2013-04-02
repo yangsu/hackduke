@@ -36,19 +36,9 @@ var defaultHandler = function(res) {
   });
 };
 
-exports.departments = function(req, res, next) {
-  db.Department.find({}, {
-    code: 1,
-    title: 1
-  }, options({
-    sort: { code: 1 }
-  }), defaultHandler(res));
-};
-
-exports.departmentById = function(req, res, next) {
-  db.Department.findById(req.params.id, {}, baseOptions, defaultHandler(res));
-};
-
+// =============================================================================
+// list.json
+// =============================================================================
 
 var listEndpoint = function(collection, queryfields, filterField) {
   return function(req, res, next) {
@@ -71,6 +61,27 @@ exports.listclass = listEndpoint('Class', ['department'], 'number');
 exports.listterm = listEndpoint('Term', ['department', 'number'], 'title');
 
 exports.listsection = listEndpoint('Section', ['department', 'number', 'title'], 'section_id');
+
+// =============================================================================
+// department.json
+// =============================================================================
+
+exports.departments = function(req, res, next) {
+  db.Department.find({}, {
+    code: 1,
+    title: 1
+  }, options({
+    sort: { code: 1 }
+  }), defaultHandler(res));
+};
+
+exports.departmentById = function(req, res, next) {
+  db.Department.findById(req.params.id, {}, baseOptions, defaultHandler(res));
+};
+
+// =============================================================================
+// class.json
+// =============================================================================
 
 var transformers = require('./transformers');
 
@@ -135,6 +146,10 @@ exports.classes = function(req, res, next) {
     }
   });
 };
+
+// =============================================================================
+// evaluation.json
+// =============================================================================
 
 exports.evaluation = function(req, res, next) {
   var p = req.params;
