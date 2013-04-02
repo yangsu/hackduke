@@ -7,6 +7,10 @@ var baseOptions = {
   lean: true
 };
 
+var options = function(opt) {
+  return _.extend({}, baseOptions, opt);
+};
+
 var handlerGenerator = function(res, f) {
   return function(err, data) {
     if (err) {
@@ -36,7 +40,9 @@ exports.departments = function(req, res, next) {
   db.Department.find({}, {
     code: 1,
     title: 1
-  }, baseOptions, defaultHandler(res));
+  }, options({
+    sort: { code: 1 }
+  }), defaultHandler(res));
 };
 
 exports.departmentById = function(req, res, next) {
