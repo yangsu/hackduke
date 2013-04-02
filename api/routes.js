@@ -70,6 +70,8 @@ exports.listclass = listEndpoint('Class', ['department'], 'number');
 
 exports.listterm = listEndpoint('Term', ['department', 'number'], 'title');
 
+exports.listsection = listEndpoint('Section', ['department', 'number', 'title'], 'section_id');
+
 var transformers = require('./transformers');
 
 exports.class = function(req, res, next) {
