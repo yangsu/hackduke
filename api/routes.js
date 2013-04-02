@@ -49,27 +49,26 @@ exports.departmentById = function(req, res, next) {
   db.Department.findById(req.params.id, {}, baseOptions, defaultHandler(res));
 };
 
-exports.listdepartment = function(req, res, next) {
-  db.Department.find({}, {
-    code: 1
-  }, options({
-    sort: { code: 1 }
-  }), handlerGenerator(res, function(data) {
-    return _.pluck(data, 'code');
-  }));
+
+var listEndpoint = function(collection, queryfields, filterField) {
+  return function(req, res, next) {
+    var query = _.pick.apply(_, [req.params].concat(queryfields));
+    var filter = {};
+    filter[filterField] = 1;
+
+    db[collection].find(query, filter, options({
+      sort: filter
+    }), handlerGenerator(res, function(data) {
+      return _.pluck(data, filterField);
+    }));
+  };
 };
 
-exports.listclass = function(req, res, next) {
-  db.Class.find({
-    department: req.params.department
-  }, {
-    number: 1
-  }, options({
-    sort: { number: 1 }
-  }), handlerGenerator(res, function(data) {
-    return _.pluck(data, 'number');
-  }));
-};
+exports.listdepartment = listEndpoint('Department', [], 'code');
+
+exports.listclass = listEndpoint('Class', ['department'], 'number');
+
+exports.listterm = listEndpoint('Term', ['department', 'number'], 'title');
 
 var transformers = require('./transformers');
 
