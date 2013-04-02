@@ -41,7 +41,8 @@ server.get('/department.json/:id', routes.departmentById);
 
 server.get('/class.json/department/:department/class/:number', routes.class);
 server.get('/class.json/department/:department/class/:number/:format', routes.class);
-server.get('/class.json/department/:department', routes.classes);
+server.get('/class.json/:id', routes.classById);
+server.get('/class.json/:id/:format', routes.classById);
 server.get('/class.json', routes.classes);
 
 server.get('/evaluation.json/department/:department/class/:number', routes.evaluation);

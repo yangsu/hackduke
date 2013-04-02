@@ -78,15 +78,17 @@ exports.departmentById = function(req, res, next) {
 var transformers = require('./transformers');
 
 exports.class = function(req, res, next) {
-  var p = req.params;
-  var q = req.query;
+  var query = _.pick(req.params, 'department', 'number');
   var filters = transformers.classFilters;
-
-  var query = _.pick(p, 'department', 'number');
-
-  var filter = filters[p.format] || filters.basic;
+  var filter = filters[req.params.format] || filters.basic;
 
   db.Class.findOne(query, filter, baseOptions, defaultHandler(res));
+};
+
+exports.classById = function(req, res, next) {
+  var filters = transformers.classFilters;
+  var filter = filters[req.params.format] || filters.basic;
+  db.Class.findById(req.params.id, filter, baseOptions, defaultHandler(res));
 };
 
 exports.classold = function(req, res, next) {
