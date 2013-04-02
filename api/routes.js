@@ -80,6 +80,18 @@ var transformers = require('./transformers');
 exports.class = function(req, res, next) {
   var p = req.params;
   var q = req.query;
+  var filters = transformers.classFilters;
+
+  var query = _.pick(p, 'department', 'number');
+
+  var filter = filters[p.format] || filters.basic;
+
+  db.Class.findOne(query, filter, baseOptions, defaultHandler(res));
+};
+
+exports.classold = function(req, res, next) {
+  var p = req.params;
+  var q = req.query;
 
   var query = {
     department: p.department,

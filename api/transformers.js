@@ -1,21 +1,32 @@
 var _ = require('lodash');
 
-var basic = {
+var short = {
   department: 1,
   number: 1,
   title: 1
 };
 
-var detailed = _.extend({}, basic, {
+var basic = _.extend({}, short, {
   description: 1,
-  longtitle: 1,
+  longtitle: 1
+});
+
+var detailed = _.extend({}, basic, {
+  'course-details.grading-basis': 1,
+  'course-details.component': 1,
+  'course-offering.academic-group': 1,
+  'course-offering.academic-organization': 1,
+  'course-offering.career': 1,
   'enrollment-requirements': 1
 });
 
 exports.classFilters = {
   basic: basic,
   detailed: detailed,
-  raw: {}
+  raw: {
+    path: 0,
+    sectionsPath: 0
+  }
 };
 
 exports.termFilter = {
