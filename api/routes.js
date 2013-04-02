@@ -10,16 +10,25 @@ var baseOptions = {
 var handlerGenerator = function(res, f) {
   return function(err, data) {
     if (err) {
-      return res.send(err);
+      return res.send(400);
+      // return res.send(err);
     } else {
-      return f(data);
+      return res.json(f(data));
     }
   };
 };
 
 var defaultHandler = function(res) {
   return handlerGenerator(res, function(data) {
-    return res.json(data);
+    if (_.isArray(data)) {
+      return _.map(data, function(d) {
+        return _.omit(d, 'path', 'detailPath', 'sectionsPath');
+      });
+    } else if (_.isObject(data)) {
+      return _.omit(data, 'path', 'detailPath', 'sectionsPath');
+    } else {
+      return data;
+    }
   });
 };
 
@@ -34,13 +43,11 @@ exports.departmentById = function(req, res, next) {
   db.Department.findById(req.params.id, {}, baseOptions, defaultHandler(res));
 };
 
-exports.departmentlist = function(req, res, next) {
+exports.listdepartment = function(req, res, next) {
   db.Department.find({}, {
     code: 1
   }, baseOptions, handlerGenerator(res, function(data) {
-    return _.map(data, function(d) {
-      return d.code;
-    });
+    return _.pluck(data, 'code');
   }));
 };
 
