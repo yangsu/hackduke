@@ -293,7 +293,7 @@ parsers.evaluationdetail = function(text) {
 };
 
 _.each(parsers, function(fun, key) {
-  parsers[key] = utils.trimOutput(fun);
+  parsers[key] = utils.trimFunctionOutput(fun);
 });
 
 module.exports = parsers;
