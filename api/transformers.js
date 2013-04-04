@@ -86,8 +86,10 @@ exports.Section.detailed = _.extend({}, Section.basic, {
 });
 
 exports.Section.raw = {
+  'info.class-number': 0,
+  class: 0,
   path: 0,
-  'info.class-number': 0
+  term: 0
 };
 
 // =============================================================================

@@ -36,6 +36,15 @@ var limitAndSkip = function(query) {
   });
 };
 
+var includeFilter = function(filter, key) {
+  if (filter[key] === 0) {
+    return _.omit(filter, key);
+  } else {
+    filter[key] = 1;
+    return filter;
+  }
+};
+
 // =============================================================================
 // list.json
 // =============================================================================
@@ -170,9 +179,35 @@ exports.termById = byId('Term');
 
 exports.sectionById = byId('Section');
 
+exports.classHistoryById = function(req, res, next) {
+  var filter = getFormat('Class', req.query.format);
+  filter = includeFilter(filter, 'terms');
+
+  var termFilter = getFormat('Term', req.query.format);
+  termFilter = includeFilter(termFilter, 'sections');
+
+  var sectionFilter = getFormat('Section', req.query.format);
+
+  db.Class
+    .findById(req.params.id, filter, {})
+    .populate({
+        path: 'terms',
+        select: termFilter
+      })
+    .exec(function(err, docs) {
+        var opts = {
+          path: 'sections',
+          select: sectionFilter
+        };
+        db.Term.populate(docs.terms, opts, function(err, data) {
+          res.json(docs);
+        });
+      });
+};
+
 exports.classes = function(req, res, next) {
   var query = _.pick(req.params, 'department', 'title');
-  var filter = getFormat('Class', req.query);
+  var filter = getFormat('Class', req.query.format);
   var options = limitAndSkip(req.query);
   _.extend(options, {
     sort: {
