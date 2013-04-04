@@ -15,7 +15,7 @@ parsers.departments = function(text) {
 
     var path = $d.attr('href');
 
-    var code = path.match(/subject=(\w+)/)[1];
+    var code = path.match(/subject=([^&]+)&/)[1];
 
     // format '<code> - <name>'
     var title = $d.text().slice(code.length + 3);
