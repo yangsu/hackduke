@@ -1,5 +1,4 @@
 var _ = require('lodash');
-var querystring = require('querystring');
 var exec = require('child_process').exec;
 
 var config = require('./config');
@@ -125,11 +124,6 @@ function listParserGenerator(regex, labels, childType) {
   };
 }
 
-var cookie = querystring.stringify({
-  PHPSESSID: config.PHPSESSID,
-  'webdev_boris.aas.duke.edu': config.AAS
-}, ';', '=');
-
 var constructURL = function(path) {
   if (/^http/.test(path)) {
     return path;
@@ -159,7 +153,7 @@ function fetch(path, cb) {
 
   path = constructURL(path);
 
-  var command = 'curl "' + path + '" --cookie "' + cookie + '"';
+  var command = 'curl "' + path + '" --cookie "' + config.COOKIE + '"';
 
   command += genCurlTimingFlag();
 
