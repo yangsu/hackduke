@@ -1,17 +1,31 @@
 var _ = require('lodash');
 
-var short = {
-  department: 1,
-  number: 1,
+// =============================================================================
+// Department
+// =============================================================================
+
+exports.Department = {};
+
+exports.Department.basic = {
+  code: 1,
   title: 1
 };
 
-var basic = _.extend({}, short, {
-  description: 1,
-  longtitle: 1
-});
+// =============================================================================
+// Class
+// =============================================================================
+var Class = {};
+exports.Class = Class;
 
-var detailed = _.extend({}, basic, {
+exports.Class.basic = {
+  department: 1,
+  number: 1,
+  description: 1,
+  title: 1,
+  longtitle: 1
+};
+
+exports.Class.detailed = _.extend({}, Class.basic, {
   'course-details.grading-basis': 1,
   'course-details.component': 1,
   'course-offering.academic-group': 1,
@@ -20,18 +34,25 @@ var detailed = _.extend({}, basic, {
   'enrollment-requirements': 1
 });
 
-exports.classFilters = {
-  short: short,
-  basic: basic,
-  detailed: detailed,
-  raw: {
-    terms: 0,
-    path: 0,
-    sectionsPath: 0
-  }
+exports.Class.raw = {
+  terms: 0,
+  path: 0,
+  sectionsPath: 0
 };
 
-exports.termFilter = {
+// =============================================================================
+// Term
+// =============================================================================
+
+exports.Term = {};
+
+// =============================================================================
+// Section
+// =============================================================================
+
+exports.Section = {};
+
+exports.Section.basic = {
   class_id: 1,
   course_id: 1,
   department: 1,
@@ -43,7 +64,13 @@ exports.termFilter = {
   title: 1
 };
 
-exports.evaluationFilter = {
+// =============================================================================
+// Evaluation
+// =============================================================================
+
+exports.Evaluation = {};
+
+exports.Evaluation.basic = {
   'class-rating': 1,
   class_id: 1,
   course_id: 1,

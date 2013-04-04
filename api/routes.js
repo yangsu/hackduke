@@ -26,6 +26,16 @@ var defaultHandler = function(res) {
   return handlerGenerator(res, _.identity);
 };
 
+
+var transformers = require('./transformers');
+
+var limitAndSkip = function(query) {
+  return genOptions({
+    limit: query.limit || 100,
+    skip: query.skip || 0
+  });
+};
+
 // =============================================================================
 // list.json
 // =============================================================================
@@ -53,6 +63,22 @@ exports.listterm = listEndpoint('Term', ['department', 'number'], 'title');
 exports.listsection = listEndpoint('Section', ['department', 'number', 'title'], 'section_id');
 
 // =============================================================================
+// ById
+// =============================================================================
+
+var getFormat = function(collection, format) {
+  var filters = transformers[collection];
+  return filters[format] || filters.basic || {};
+};
+
+var byId = function(collection) {
+  return function(req, res, next) {
+    var filter = getFormat(collection, req.query.format);
+    db[collection].findById(req.params.id, filter, defaultHandler(res));
+  };
+};
+
+// =============================================================================
 // department.json
 // =============================================================================
 
@@ -65,42 +91,23 @@ exports.departments = function(req, res, next) {
   }), defaultHandler(res));
 };
 
-exports.departmentById = function(req, res, next) {
-  db.Department.findById(req.params.id, {
-    path: 0
-  }, baseOptions, defaultHandler(res));
-};
+exports.departmentById = byId('Department');
 
 // =============================================================================
 // class.json
 // =============================================================================
 
-var transformers = require('./transformers');
-
-var classFormat = function(params) {
-  var filters = transformers.classFilters;
-  return filters[params.format] || filters.basic;
-};
-
-var limitAndSkip = function(query) {
-  return genOptions({
-    limit: query.limit || 100,
-    skip: query.skip || 0
-  });
-};
-
 exports.class = function(req, res, next) {
   var query = _.pick(req.params, 'department', 'number');
-  var filter = classFormat(req.query);
+  var filter = getFormat('Class', req.query.format);
   db.Class.findOne(query, filter, baseOptions, defaultHandler(res));
 };
 
-exports.classById = function(req, res, next) {
-  var filter = classFormat(req.query);
-  db.Class
-    .findById(req.params.id, filter, baseOptions)
-    .exec(defaultHandler(res));
-};
+exports.classById = byId('Class');
+
+exports.termById = byId('Term');
+
+exports.sectionById = byId('Section');
 
 exports.classold = function(req, res, next) {
   var p = req.params;
