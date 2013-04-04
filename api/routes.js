@@ -46,6 +46,12 @@ var distinct = function(collection, field) {
   };
 };
 
+exports.listDepartment = distinct('Department', 'code');
+exports.listTerm = distinct('Term', 'title');
+exports.listAcademicOrgs = distinct('Class', 'course-offering.academic-organization');
+exports.listSchools = distinct('Class', 'course-offering.academic-group');
+exports.listPrograms = distinct('Class', 'course-offering.career');
+
 var listEndpoint = function(collection, queryfields, filterField) {
   return function(req, res, next) {
     var query = _.pick.apply(_, [req.params].concat(queryfields));
@@ -59,9 +65,6 @@ var listEndpoint = function(collection, queryfields, filterField) {
     }));
   };
 };
-
-exports.listDepartment = distinct('Department', 'code');
-exports.listTerm = distinct('Term', 'title');
 
 exports.listclass = listEndpoint('Class', ['department'], 'number');
 

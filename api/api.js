@@ -32,18 +32,21 @@ server.use(restify.throttle({
 var routes = require('./routes');
 
 server.get('/list/department', routes.listDepartment);
-server.get('/list/terms', routes.listTerm);
+server.get('/list/term', routes.listTerm);
+server.get('/list/academic-organization', routes.listAcademicOrgs);
+server.get('/list/school', routes.listSchools);
+server.get('/list/program', routes.listPrograms);
 
 server.get('/list/department/:department', routes.listclass);
 server.get('/list/department/:department/class/:number', routes.listterm);
 server.get('/list/department/:department/class/:number/term/:title', routes.listsection);
 
-server.get('/departments', routes.departments);
-server.get('/department/:id', routes.departmentById);
+server.get('/department', routes.departments);
 
 server.get('/class/department/:department/class/:number', routes.class);
-server.get('/class/:id', routes.classById);
 
+server.get('/department/:id', routes.departmentById);
+server.get('/class/:id', routes.classById);
 server.get('/term/:id', routes.termById);
 server.get('/section/:id', routes.sectionById);
 
