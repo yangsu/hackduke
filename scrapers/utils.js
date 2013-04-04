@@ -3,8 +3,6 @@ var exec = require('child_process').exec;
 
 var config = require('./config');
 
-var utils = {};
-
 
 /**
  * Convert a regex to string that can be used to create another regex with different flags
@@ -25,7 +23,7 @@ function regexToStr(regex) {
  * @param  {string} str input string.
  * @return {string}     trimmed string.
  */
-function trim(str) {
+exports.trim = function trim(str) {
   if (str) {
     return str
       .replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g, '')
@@ -34,7 +32,7 @@ function trim(str) {
   } else {
     return '';
   }
-}
+};
 
 
 /**
@@ -65,14 +63,14 @@ function extractMatches(matches, labels) {
  * @param  {array}  labels array of labels corresponding to the matches.
  * @return {object}        object containing label => matches.
  */
-function regexParse(text, regex, labels) {
-  // ignore case, multiline
+exports.regexParse = function regexParse(text, regex, labels) {
+  // i - ignore case, m - multiline
   var reg = new RegExp(regexToStr(regex), 'im'),
       matches = reg.exec(text),
       returnVal = extractMatches(matches, labels);
 
   return returnVal;
-}
+};
 
 
 /**
@@ -83,7 +81,7 @@ function regexParse(text, regex, labels) {
  * @param  {int}    limit  limit on the number of matches returned.
  * @return {object}        object containing label => matches.
  */
-function regexGParse(text, regex, labels, limit) {
+exports.regexGParse = function regexGParse(text, regex, labels, limit) {
   // g - match all, i - ignore case, m - multiline
   var reg = new RegExp(regexToStr(regex), 'gim'),
       returnVal = [],
@@ -103,7 +101,7 @@ function regexGParse(text, regex, labels, limit) {
   }
 
   return returnVal;
-}
+};
 
 
 /**
@@ -113,7 +111,7 @@ function regexGParse(text, regex, labels, limit) {
  * @param  {string} childType type of the parsed results.
  * @return {array}            object containing label => matches.
  */
-function listParserGenerator(regex, labels, childType) {
+exports.listParserGenerator = function listParserGenerator(regex, labels, childType) {
   return function(text) {
     var result = regexGParse(text, regex, labels);
     return _.map(result, function(item) {
@@ -122,9 +120,15 @@ function listParserGenerator(regex, labels, childType) {
       });
     });
   };
-}
+};
 
-var constructURL = function(path) {
+
+/**
+ * [constructURL description]
+ * @param  {[type]} path [description].
+ * @return {[type]}      [description].
+ */
+function constructURL(path) {
   if (/^http/.test(path)) {
     return path;
   }
@@ -133,7 +137,7 @@ var constructURL = function(path) {
     path = '/public_page/' + path;
   }
   return config.BASEURL + path;
-};
+}
 
 function genCurlTimingFlag() {
   return ' -w curltiming:%{speed_download}:%{time_total}:%{time_appconnect}';
@@ -148,7 +152,14 @@ function parseCurlTiming(text) {
 }
 
 
-function fetch(path, cb) {
+/**
+ * Fetch a url using curl with internal cookie headers in a child process
+ * @param  {String}   path url.
+ * @param  {Function} cb   callback function to receive the results of fetch
+ *                         (err, text, timingInfo).
+ * @return {ChildProcess}  ChildProcess executing the curl command.
+ */
+exports.fetch = function(path, cb) {
   if (!path || path.length === 0) cb(path);
 
   path = constructURL(path);
@@ -169,38 +180,69 @@ function fetch(path, cb) {
 
     cb(error, stdout, timing);
   });
-}
+};
 
-utils.pairsToDict = function(pairs) {
+
+/**
+ * Convert a list of [key, value] pairs into an object
+ * @param  {Array} pairs Array of 0 or more [key, value] pairs.
+ * @return {Object}      Object containing the key value pairings.
+ */
+exports.pairsToDict = function(pairs) {
   return _.reduce(pairs, function(o, pair) {
     o[pair[0]] = pair[1];
     return o;
   }, {});
 };
 
-utils.mergeObjs = function(objs) {
-  return _.reduce(objs, function(memo, obj) {
-    return _.extend(memo, obj);
-  }, {});
+
+/**
+ * Convert a string to a valid mongoDB key name with the following replacements
+ *   \s+  => -
+ *   $    => ''
+ *   .    => :
+ * @param  {String} str Any String.
+ * @return {String}     Valid Key.
+ */
+exports.toKey = function(str) {
+  return trim(str).toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/\$/g, '')
+    .replace(/\./g, ':');
 };
 
-utils.toKey = function(str) {
-  return trim(str).toLowerCase().replace(/\s+/g, '-');
-};
 
-utils.toTitleCase = function(str) {
+/**
+ * Convert a string to Title Case
+ * @param  {String} str any string.
+ * @return {String}     Any String.
+ */
+exports.toTitleCase = function(str) {
   str = str.replace(/-/g, ' ');
   return str.replace(/\w\S*/g, function(word) {
     return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase();
   });
 };
 
-utils.toChunks = function(arr, chunkSize) {
+
+/**
+ * Split an array into chunks
+ * @param  {Array} arr     an array.
+ * @param  {Int} chunkSize chunk size.
+ * @return {Array}         an array of chunks.
+ */
+exports.toChunks = function(arr, chunkSize) {
   return _.values(_.groupBy(arr, function(v, i) {
     return Math.floor(i / chunkSize);
   }));
 };
 
+
+/**
+ * trim values in an object
+ * @param  {Object} obj an object.
+ * @return {Object}     trimmed object.
+ */
 function trimValues(obj) {
   _.each(obj, function(value, key) {
     obj[key] = trimAll(value);
@@ -208,6 +250,12 @@ function trimValues(obj) {
   return obj;
 }
 
+
+/**
+ * trim any data type
+ * @param  {Any} data anything.
+ * @return {Any}      trimmed input.
+ */
 function trimAll(data) {
   if (_.isObject(data)) {
     return trimValues(data);
@@ -220,19 +268,14 @@ function trimAll(data) {
   }
 }
 
-function trimOutput(fun) {
+
+/**
+ * Wrap function to trim its output
+ * @param  {Function} fun any function.
+ * @return {Function}     wrapped function.
+ */
+exports.trimFunctionOutput = function(fun) {
   return function(input) {
     return trimAll(fun(input));
   };
-}
-
-utils.trim = trim;
-utils.trimFunctionOutput = trimFunctionOutput;
-
-utils.regexParse = regexParse;
-utils.regexGParse = regexGParse;
-utils.listParserGenerator = listParserGenerator;
-
-utils.fetch = fetch;
-
-module.exports = utils;
+};
