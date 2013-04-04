@@ -43,11 +43,16 @@ server.get('/list/department/:department/class/:number', routes.listterm);
 server.get('/list/department/:department/class/:number/term/:title', routes.listsection);
 
 server.get('/department', routes.departments);
-
-server.get('/class/department/:department/class/:number', routes.class);
-
 server.get('/department/:id', routes.departmentById);
+
+
+server.get('/class', routes.classes);
 server.get('/class/:id', routes.classById);
+server.get('/class/department/:department', routes.classes);
+server.get('/class/department/:department/number/:number', routes.class);
+server.get('/class/department/:department/number/:number/term', routes.classTerm);
+server.get('/class/department/:department/number/:number/term/:title', routes.classSection);
+
 server.get('/term/:id', routes.termById);
 server.get('/section/:id', routes.sectionById);
 

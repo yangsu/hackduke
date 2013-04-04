@@ -17,7 +17,7 @@ var handlerGenerator = function(res, f) {
       return res.send(400);
       // return res.send(err);
     } else {
-      return res.json(f(data));
+      return res.json(f(data || []));
     }
   };
 };
@@ -116,6 +116,40 @@ exports.class = function(req, res, next) {
 
 exports.classById = byId('Class');
 
+exports.classTerm = function(req, res, next) {
+  var query = _.pick(req.params, 'department', 'number');
+  var filter = getFormat('Term', req.query.format);
+  _.extend(filter, {
+    department: 0,
+    number: 0,
+    course_id: 0
+  });
+  db.Term
+    .find(query, filter, baseOptions)
+    .exec(defaultHandler(res));
+};
+
+exports.classSection = function(req, res, next) {
+  var query = _.pick(req.params, 'department', 'number', 'title');
+  var filter = getFormat('Section', req.query.format);
+  db.Section
+    .find(query, filter, baseOptions)
+    .exec(handlerGenerator(res, function(docs) {
+        var response = _.map(docs, function(doc) {
+          return _.omit(
+              doc,
+              'department',
+              'number',
+              'course_id',
+              'longtitle',
+              'title',
+              'term_id'
+          );
+        });
+        res.json(response);
+      }));
+};
+
 exports.termById = byId('Term');
 
 exports.sectionById = byId('Section');
@@ -160,7 +194,7 @@ exports.classold = function(req, res, next) {
 
 exports.classes = function(req, res, next) {
   var query = _.pick(req.params, 'department', 'title');
-  var filter = classFormat(req.query);
+  var filter = getFormat('Class', req.query);
   var options = limitAndSkip(req.query);
   _.extend(options, {
     sort: {

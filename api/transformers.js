@@ -46,11 +46,18 @@ exports.Class.raw = {
 
 exports.Term = {};
 
+exports.Term.basic = {
+  class: 0,
+  path: 0,
+  sections: 0
+};
+
 // =============================================================================
 // Section
 // =============================================================================
 
-exports.Section = {};
+var Section = {};
+exports.Section = Section;
 
 exports.Section.basic = {
   class_id: 1,
@@ -61,7 +68,26 @@ exports.Section.basic = {
   number: 1,
   section_id: 1,
   term_id: 1,
-  title: 1
+  title: 1,
+  'info.dates': 1,
+  'info.instructor': 1,
+  'info.meets': 1
+};
+
+exports.Section.detailed = _.extend({}, Section.basic, {
+  'info.session': 1,
+  'info.description': 1,
+  'info.class-component': 1,
+  'info.status': 1,
+  'info.seats-taken': 1,
+  'info.seats-open': 1,
+  'info.class-capacity': 1,
+  'info.waitlist-total': 1
+});
+
+exports.Section.raw = {
+  path: 0,
+  'info.class-number': 0
 };
 
 // =============================================================================
