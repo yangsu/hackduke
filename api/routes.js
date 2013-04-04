@@ -42,15 +42,16 @@ var limitAndSkip = function(query) {
 
 var distinct = function(collection, field) {
   return function(req, res, next) {
-    db[collection].distinct(field, {}, defaultHandler(res));
+    db[collection].distinct(field).exec(defaultHandler(res));
   };
 };
 
-exports.listDepartment = distinct('Department', 'code');
-exports.listTerm = distinct('Term', 'title');
 exports.listAcademicOrgs = distinct('Class', 'course-offering.academic-organization');
-exports.listSchools = distinct('Class', 'course-offering.academic-group');
+exports.listDepartment = distinct('Department', 'title');
+exports.listDepartmentCode = distinct('Department', 'code');
 exports.listPrograms = distinct('Class', 'course-offering.career');
+exports.listSchools = distinct('Class', 'course-offering.academic-group');
+exports.listTerm = distinct('Term', 'title');
 
 var listEndpoint = function(collection, queryfields, filterField) {
   return function(req, res, next) {

@@ -31,11 +31,12 @@ server.use(restify.throttle({
 
 var routes = require('./routes');
 
-server.get('/list/department', routes.listDepartment);
-server.get('/list/term', routes.listTerm);
 server.get('/list/academic-organization', routes.listAcademicOrgs);
-server.get('/list/school', routes.listSchools);
+server.get('/list/department', routes.listDepartment);
+server.get('/list/departmentCode', routes.listDepartmentCode);
 server.get('/list/program', routes.listPrograms);
+server.get('/list/school', routes.listSchools);
+server.get('/list/term', routes.listTerm);
 
 server.get('/list/department/:department', routes.listclass);
 server.get('/list/department/:department/class/:number', routes.listterm);
