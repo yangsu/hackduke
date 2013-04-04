@@ -14,8 +14,8 @@ var genOptions = function(opt) {
 var handlerGenerator = function(res, f) {
   return function(err, data) {
     if (err) {
-      return res.send(400);
-      // return res.send(err);
+      // return res.send(400);
+      return res.send(err);
     } else {
       return res.json(f(data || []));
     }
