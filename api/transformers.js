@@ -25,6 +25,7 @@ exports.classFilters = {
   basic: basic,
   detailed: detailed,
   raw: {
+    terms: 0,
     path: 0,
     sectionsPath: 0
   }

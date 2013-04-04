@@ -97,7 +97,9 @@ exports.class = function(req, res, next) {
 
 exports.classById = function(req, res, next) {
   var filter = classFormat(req.query);
-  db.Class.findById(req.params.id, filter, baseOptions, defaultHandler(res));
+  db.Class
+    .findById(req.params.id, filter, baseOptions)
+    .exec(defaultHandler(res));
 };
 
 exports.classold = function(req, res, next) {
