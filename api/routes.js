@@ -150,47 +150,25 @@ exports.classSection = function(req, res, next) {
       }));
 };
 
+exports.classByTerm = function(req, res, next) {
+  var query = _.pick(req.params, 'title');
+  var filter = getFormat('Class', req.query.format);
+  var options = limitAndSkip(req.query);
+
+  db.Term
+    .find(query, { class: 1}, options)
+    .populate({
+        path: 'class',
+        select: filter
+      })
+    .exec(handlerGenerator(res, function(docs) {
+        return _.pluck(docs, 'class');
+      }));
+};
+
 exports.termById = byId('Term');
 
 exports.sectionById = byId('Section');
-
-exports.classold = function(req, res, next) {
-  var p = req.params;
-  var q = req.query;
-
-  var query = {
-    department: p.department,
-    number: p.number
-  };
-
-  var filter = classFormat(req.query);
-
-  async.parallel({
-    class: function(cb) {
-      db.Class.findOne(query, filter, baseOptions, cb);
-    },
-    terms: function(cb) {
-      if (query.department && query.number) {
-        db.Term.find(query, {}, baseOptions, cb);
-      } else {
-        cb(null, []);
-      }
-    },
-    sections: function(cb) {
-      if (query.department && query.number) {
-        db.Section.find(query, {}, baseOptions, cb);
-      } else {
-        cb(null, []);
-      }
-    }
-  }, function(err, data) {
-    if (err) {
-      return res.send(err);
-    } else {
-      return res.json(data);
-    }
-  });
-};
 
 exports.classes = function(req, res, next) {
   var query = _.pick(req.params, 'department', 'title');

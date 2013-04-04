@@ -45,7 +45,6 @@ server.get('/list/department/:department/class/:number/term/:title', routes.list
 server.get('/department', routes.departments);
 server.get('/department/:id', routes.departmentById);
 
-
 server.get('/class', routes.classes);
 server.get('/class/:id', routes.classById);
 server.get('/class/department/:department', routes.classes);
@@ -56,8 +55,7 @@ server.get('/class/department/:department/number/:number/term/:title', routes.cl
 server.get('/term/:id', routes.termById);
 server.get('/section/:id', routes.sectionById);
 
-server.get('/classes', routes.classes);
-server.get('/classes/department/:department', routes.classes);
+server.get('/class/term/:title', routes.classByTerm);
 
 server.get('/evaluation/department/:department/class/:number', routes.evaluation);
 // server.get('/evaluation/course_id/:cid/class_id/:section', routes.evaluation);

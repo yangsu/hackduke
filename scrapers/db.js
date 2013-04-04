@@ -55,7 +55,7 @@ DepartmentSchema.index({
   code: 1
 });
 
-db.Department = mongoose.model('department', DepartmentSchema);
+db.Department = mongoose.model('Department', DepartmentSchema);
 queryMap.Department = function(q) {
   return _.pick(q, 'code', 'title');
 };
@@ -75,7 +75,7 @@ ClassSchema.index({
   number: 1
 });
 
-db.Class = mongoose.model('class', ClassSchema);
+db.Class = mongoose.model('Class', ClassSchema);
 queryMap.Class = function(q) {
   return _.pick(q, 'departments', 'number');
 };
@@ -87,7 +87,7 @@ var TermSchema = Schema({
   title: String,
   path: String,
   class: { type: ObjectId, ref: 'Class' },
-  sections: [{ type: ObjectId, ref: 'Term' }]
+  sections: [{ type: ObjectId, ref: 'Section' }]
 }, {
   strict: false
 });
