@@ -31,7 +31,9 @@ server.use(restify.throttle({
 
 var routes = require('./routes');
 
-server.get('/list/department', routes.listdepartment);
+server.get('/list/department', routes.listDepartment);
+server.get('/list/terms', routes.listTerm);
+
 server.get('/list/department/:department', routes.listclass);
 server.get('/list/department/:department/class/:number', routes.listterm);
 server.get('/list/department/:department/class/:number/term/:title', routes.listsection);

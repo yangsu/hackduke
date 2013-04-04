@@ -40,6 +40,12 @@ var limitAndSkip = function(query) {
 // list.json
 // =============================================================================
 
+var distinct = function(collection, field) {
+  return function(req, res, next) {
+    db[collection].distinct(field, {}, defaultHandler(res));
+  };
+};
+
 var listEndpoint = function(collection, queryfields, filterField) {
   return function(req, res, next) {
     var query = _.pick.apply(_, [req.params].concat(queryfields));
@@ -54,7 +60,8 @@ var listEndpoint = function(collection, queryfields, filterField) {
   };
 };
 
-exports.listdepartment = listEndpoint('Department', [], 'code');
+exports.listDepartment = distinct('Department', 'code');
+exports.listTerm = distinct('Term', 'title');
 
 exports.listclass = listEndpoint('Class', ['department'], 'number');
 
