@@ -38,6 +38,7 @@ server.get('/list/program', routes.listPrograms);
 server.get('/list/school', routes.listSchools);
 server.get('/list/term', routes.listTerm);
 server.get('/list/event-type', routes.listEventType);
+server.get('/list/event-venue', routes.listEventVenue);
 
 server.get('/list/department/:department', routes.listclass);
 server.get('/list/department/:department/class/:number', routes.listterm);
