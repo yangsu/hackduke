@@ -1,9 +1,7 @@
 var _ = require('lodash');
 var async = require('async');
 
-var catalog = require('./catalog_renumbering').catalog;
-
-var db = require('./db');
+var db = require('../db');
 
 var wrapError = function(cb) {
   return function(err, data) {
