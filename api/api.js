@@ -31,6 +31,23 @@ server.use(restify.throttle({
 
 var routes = require('./routes');
 
+// server.get('/', restify.serveStatic({
+//   directory: './swagger-ui/dist/',
+// }));
+// server.get(/\/.+\.(js|json)/, restify.serveStatic({
+//   directory: './swagger-ui/dist/'
+// }));
+server.get(/\/[A-Za-z0-9\.\-\_\/]*/, restify.serveStatic({
+  directory: './swagger-ui/dist/',
+  default: 'index.html'
+}));
+// server.get(/\/css\/.+\.css/, restify.serveStatic({
+//   directory: './swagger-ui/dist/'
+// }));
+// server.get(/\/images\/.+\.(png|gif)/, restify.serveStatic({
+//   directory: './swagger-ui/dist/'
+// }));
+
 server.get('/list/academic-organization', routes.listAcademicOrgs);
 server.get('/list/department', routes.listDepartment);
 server.get('/list/department-code', routes.listDepartmentCode);
