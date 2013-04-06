@@ -18,7 +18,11 @@ server.pre(restify.pre.userAgentConnection());
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser({ mapParams: false }));
 server.use(restify.bodyParser({ mapParams: false }));
-server.use(restify.gzipResponse());
+// server.use(restify.gzipResponse());
+server.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+})
 
 server.use(restify.throttle({
   burst: 100,
@@ -31,22 +35,19 @@ server.use(restify.throttle({
 
 var routes = require('./routes');
 
-// server.get('/', restify.serveStatic({
-//   directory: './swagger-ui/dist/',
-// }));
-// server.get(/\/.+\.(js|json)/, restify.serveStatic({
-//   directory: './swagger-ui/dist/'
-// }));
-server.get(/\/[A-Za-z0-9\.\-\_\/]*/, restify.serveStatic({
-  directory: './swagger-ui/dist/',
+server.get('/', restify.serveStatic({
+  directory: './docs/',
   default: 'index.html'
 }));
-// server.get(/\/css\/.+\.css/, restify.serveStatic({
-//   directory: './swagger-ui/dist/'
-// }));
-// server.get(/\/images\/.+\.(png|gif)/, restify.serveStatic({
-//   directory: './swagger-ui/dist/'
-// }));
+server.get(/\/.+\.(js|json)/, restify.serveStatic({
+  directory: './docs/'
+}));
+server.get(/\/css\/.+\.css/, restify.serveStatic({
+  directory: './docs/'
+}));
+server.get(/\/images\/.+\.(png|gif)/, restify.serveStatic({
+  directory: './docs/'
+}));
 
 server.get('/list/academic-organization', routes.listAcademicOrgs);
 server.get('/list/department', routes.listDepartment);
@@ -114,6 +115,6 @@ server.get('/directory/netid/:netid', routes.directoryByNetId);
 server.get('/directory/phone/:phone', routes.directoryByPhone);
 server.get('/directory/affiliation/:affiliation', routes.directoryByAffiliation);
 
-server.listen(8080, function() {
+server.listen(80, function() {
   console.log('%s listening at %s', server.name, server.url);
 });
