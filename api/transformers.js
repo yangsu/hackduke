@@ -117,3 +117,46 @@ Evaluation.detailed = _.extend({}, Evaluation.basic, {
 Evaluation.raw = {
   detailPath: 0
 };
+
+// =============================================================================
+// Event
+// =============================================================================
+
+var Event = {};
+exports.Event = Event;
+
+Event.basic = {
+  description: 1,
+  'end.shortdate': 1,
+  'end.time': 1,
+  image: 1,
+  'location.address': 1,
+  'location.subaddress': 1,
+  'location.link': 1,
+  'start.shortdate': 1,
+  'start.time': 1,
+  summary: 1
+};
+
+Event.detailed = _.extend({}, Event.basic, {
+  'categories.category.description': 1,
+  contact: 1,
+  cost: 1,
+  guid: 1,
+  'location.marker': 1,
+  'start.date' : 1,
+  'end.date' : 1
+});
+
+Event.raw = {
+  access: 0,
+  calendar: 0,
+  color: 0,
+  deleted: 0,
+  editable: 0,
+  entityType: 0,
+  isAnnotation: 0,
+  scheduleMethod: 0,
+  'xproperties.X_BEDEWORK_ALIAS': 0,
+  'xproperties.X_BEDEWORK_IMAGE': 0
+};

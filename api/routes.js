@@ -280,3 +280,21 @@ exports.evaluation = function(req, res, next) {
 };
 
 exports.evaluationById = byId('Evaluation');
+
+// =============================================================================
+// event
+// =============================================================================
+
+exports.event = function(req, res, next) {
+  var query = _.pick(req.params);
+  var filter = getFormat('Event', req.query.format);
+  var options = limitAndSkip(req.query);
+
+  db.Event.find(query, filter, options, handlerGenerator(res, function(data) {
+    return _.map(data, function(doc) {
+      var cats = doc.categories && doc.categories.category;
+      doc.categories = _.compact(_.pluck(cats, 'description'));
+      return doc;
+    });
+  }));
+};

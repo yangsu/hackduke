@@ -63,6 +63,8 @@ server.get('/history/department/:department/number/:number', routes.classHistory
 server.get('/evaluation/:id', routes.evaluationById);
 server.get('/evaluation/department/:department/class/:number', routes.evaluation);
 
+server.get('/event', routes.event);
+
 
 server.listen(8080, function() {
   console.log('%s listening at %s', server.name, server.url);
