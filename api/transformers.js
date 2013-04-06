@@ -110,7 +110,9 @@ Evaluation.basic = {
 };
 
 Evaluation.detailed = _.extend({}, Evaluation.basic, {
-  'details.course-quality.description': 1,
-  'details.course-quality.ratings.question': 1,
-  'details.course-quality.ratings.count': 1,
+  'details': 1
 });
+
+Evaluation.raw = {
+  detailPath: 0
+};

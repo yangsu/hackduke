@@ -194,15 +194,15 @@ exports.classHistoryById = function(req, res, next) {
         path: 'terms',
         select: termFilter
       })
-    .exec(function(err, docs) {
+    .exec(handlerGenerator(res, function(docs) {
         var opts = {
           path: 'sections',
           select: sectionFilter
         };
-        db.Term.populate(docs.terms, opts, function(err, data) {
+        db.Term.populate(docs.terms, opts, handlerGenerator(res, function(d) {
           res.json(docs);
-        });
-      });
+        }));
+      }));
 };
 
 exports.classes = function(req, res, next) {
@@ -234,25 +234,20 @@ exports.evaluation = function(req, res, next) {
   var filter = getFormat('Section', req.query.format);
   var evalfilter = getFormat('Evaluation', req.query.format);
 
-  db.Section.find(query, filter, baseOptions, function(err, data) {
-    if (err) {
-      res.send(err);
-    } else {
-      data = _.map(data, function(d) {
-        return _.omit(d, 'department', 'number', 'longtitle');
-      });
-      var course_id = _.unique(_.pluck(data, 'course_id'))[0];
+  db.Section.find(query, filter, baseOptions, handlerGenerator(res, function(d) {
+    var course_id = _.unique(_.pluck(d, 'course_id'))[0];
 
-      db.Evaluation.find({
-        course_id: course_id,
-        details: { $exists: true }
-      }, {} || evalfilter, baseOptions, function(err, evaluation) {
-        if (err) {
-          res.send(err);
-        } else {
-          res.json(evaluation);
-        }
+    db.Evaluation.find({
+      course_id: course_id,
+      details: { $exists: true }
+    }, evalfilter, baseOptions, handlerGenerator(res, function(data) {
+      var ratings = data.details['course-quality'].ratings;
+      data.details['course-quality'].ratings = _.filter(ratings, function(r) {
+        return r.question == 'Mean' || r.question == 'Median';
       });
-    }
-  });
+      return data;
+    }));
+  }));
 };
+
+exports.evaluationById = byId('Evaluation');

@@ -52,14 +52,14 @@ server.get('/class/department/:department', routes.classes);
 server.get('/class/department/:department/number/:number', routes.class);
 server.get('/class/department/:department/number/:number/term', routes.classTerm);
 server.get('/class/department/:department/number/:number/term/:title', routes.classSection);
+server.get('/class/term/:title', routes.classByTerm);
 
 server.get('/term/:id', routes.termById);
 server.get('/section/:id', routes.sectionById);
 
-server.get('/class/term/:title', routes.classByTerm);
 
 server.get('/evaluation/department/:department/class/:number', routes.evaluation);
-// server.get('/evaluation/course_id/:cid/class_id/:section', routes.evaluation);
+server.get('/evaluation/:id', routes.evaluationById);
 
 
 server.listen(8080, function() {
