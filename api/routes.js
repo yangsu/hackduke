@@ -231,7 +231,8 @@ exports.evaluation = function(req, res, next) {
     number: p.number
   };
 
-  var filter = transformers.termFilter;
+  var filter = getFormat('Section', req.query.format);
+  var evalfilter = getFormat('Evaluation', req.query.format);
 
   db.Section.find(query, filter, baseOptions, function(err, data) {
     if (err) {
@@ -245,7 +246,7 @@ exports.evaluation = function(req, res, next) {
       db.Evaluation.find({
         course_id: course_id,
         details: { $exists: true }
-      }, transformers.evaluationFilter, baseOptions, function(err, evaluation) {
+      }, {} || evalfilter, baseOptions, function(err, evaluation) {
         if (err) {
           res.send(err);
         } else {

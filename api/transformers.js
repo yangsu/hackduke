@@ -96,9 +96,10 @@ exports.Section.raw = {
 // Evaluation
 // =============================================================================
 
-exports.Evaluation = {};
+var Evaluation = {};
+exports.Evaluation = Evaluation;
 
-exports.Evaluation.basic = {
+Evaluation.basic = {
   'class-rating': 1,
   class_id: 1,
   course_id: 1,
@@ -107,3 +108,9 @@ exports.Evaluation.basic = {
   term: 1,
   title: 1
 };
+
+Evaluation.detailed = _.extend({}, Evaluation.basic, {
+  'details.course-quality.description': 1,
+  'details.course-quality.ratings.question': 1,
+  'details.course-quality.ratings.count': 1,
+});
