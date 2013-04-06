@@ -346,3 +346,15 @@ exports.eventToday = function(req, res, next) {
     'start.day': '' + d.getDate()
   }, req, res, next);
 };
+
+var week = 1000 * 3600 * 24 * 7;
+
+exports.eventThisWeek = function(req, res, next) {
+  var current = new Date;
+  var d = new Date(current.getTime() + week);
+
+  eventEndpoint({
+    'start.date': { $gte: current },
+    'end.date': { $lte: d }
+  }, req, res, next);
+};

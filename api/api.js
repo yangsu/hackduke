@@ -72,6 +72,7 @@ server.get('/event/venue/:location', routes.eventByVenue);
 server.get('/event/date/:year/:month', routes.eventByMonth);
 server.get('/event/date/:year/:month/:day', routes.eventByDate);
 server.get('/event/date/today', routes.eventToday);
+server.get('/event/date/this-week', routes.eventThisWeek);
 
 server.listen(8080, function() {
   console.log('%s listening at %s', server.name, server.url);

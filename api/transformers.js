@@ -143,6 +143,7 @@ Event.detailed = _.extend({}, Event.basic, {
   contact: 1,
   cost: 1,
   guid: 1,
+  creator: 1,
   'location.marker': 1,
   'start.date' : 1,
   'end.date' : 1
