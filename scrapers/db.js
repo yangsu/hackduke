@@ -199,6 +199,21 @@ queryMap.Event = function(q) {
   return _.pick(q, 'guid');
 };
 
+var DirectorySchema = Schema({
+  duLDAPKey: String
+}, {
+  strict: false
+});
+
+DirectorySchema.index({
+  duLDAPKey: 1
+});
+
+db.Directory = mongoose.model('Directory', DirectorySchema);
+queryMap.Directory = function(q) {
+  return q;
+};
+
 var EvaluationSchema = Schema({
   course_id: String,
   class_id: String,
