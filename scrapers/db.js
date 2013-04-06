@@ -209,6 +209,8 @@ var parseQSData = function(path) {
   );
 };
 
+db.parseQSData = parseQSData;
+
 function parallel(collection, model, finalCallback) {
   var count = 0;
 
