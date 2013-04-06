@@ -11,15 +11,21 @@ var genOptions = function(opt) {
   return _.extend({}, baseOptions, opt);
 };
 
-var handlerGenerator = function(res, f) {
+var wrapError = function(res, cb) {
   return function(err, data) {
     if (err) {
       // return res.send(400);
-      return res.send(err);
+      res.send(err);
     } else {
-      return res.json(f(data || []));
+      cb(data);
     }
-  };
+  }
+};
+
+var handlerGenerator = function(res, f) {
+  return wrapError(res, function(data) {
+    return res.json(f(data || []));
+  });
 };
 
 var defaultHandler = function(res) {
@@ -194,13 +200,13 @@ exports.classHistoryById = function(req, res, next) {
         path: 'terms',
         select: termFilter
       })
-    .exec(handlerGenerator(res, function(docs) {
+    .exec(wrapError(res, function(docs) {
         var opts = {
           path: 'sections',
           select: sectionFilter
         };
         db.Term.populate(docs.terms, opts, handlerGenerator(res, function(d) {
-          res.json(docs);
+          return docs;
         }));
       }));
 };

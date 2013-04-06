@@ -271,17 +271,17 @@ parsers.evaluationdetail = function(text) {
           var $tds = $(tr).find('td');
           var k = $tds.first().text();
           if (k) {
-            return {
-              question: k,
-              count: +($tds.last().text())
-            };
+            return [utils.toKey(k), +($tds.last().text())];
+          } else {
+            return null;
           }
         });
+        ratings = utils.pairsToDict(_.compact(ratings));
       }
 
       return [key, {
         description: description,
-        ratings: _.compact(ratings)
+        ratings: ratings
       }];
     });
     return {
