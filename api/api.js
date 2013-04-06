@@ -57,9 +57,10 @@ server.get('/term/:id', routes.termById);
 server.get('/section/:id', routes.sectionById);
 
 server.get('/history/:id', routes.classHistoryById);
+server.get('/history/department/:department/number/:number', routes.classHistory);
 
-server.get('/evaluation/department/:department/class/:number', routes.evaluation);
 server.get('/evaluation/:id', routes.evaluationById);
+server.get('/evaluation/department/:department/class/:number', routes.evaluation);
 
 
 server.listen(8080, function() {

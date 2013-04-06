@@ -185,6 +185,34 @@ exports.termById = byId('Term');
 
 exports.sectionById = byId('Section');
 
+exports.classHistory = function(req, res, next) {
+  var query = _.pick(req.params, 'department', 'number');
+
+  var filter = getFormat('Class', req.query.format);
+  filter = includeFilter(filter, 'terms');
+
+  var termFilter = getFormat('Term', req.query.format);
+  termFilter = includeFilter(termFilter, 'sections');
+
+  var sectionFilter = getFormat('Section', req.query.format);
+
+  db.Class
+    .find(query, filter, {})
+    .populate({
+        path: 'terms',
+        select: termFilter
+      })
+    .exec(wrapError(res, function(docs) {
+        var opts = {
+          path: 'sections',
+          select: sectionFilter
+        };
+        db.Term.populate(docs.terms, opts, handlerGenerator(res, function(d) {
+          return docs;
+        }));
+      }));
+};
+
 exports.classHistoryById = function(req, res, next) {
   var filter = getFormat('Class', req.query.format);
   filter = includeFilter(filter, 'terms');
@@ -230,12 +258,7 @@ exports.classes = function(req, res, next) {
 // =============================================================================
 
 exports.evaluation = function(req, res, next) {
-  var p = req.params;
-
-  var query = {
-    department: p.department,
-    number: p.number
-  };
+  var query = _.pick(req.params, 'department', 'number');
 
   var filter = getFormat('Section', req.query.format);
   var evalfilter = getFormat('Evaluation', req.query.format);
