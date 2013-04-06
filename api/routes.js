@@ -291,7 +291,9 @@ var eventEndpoint = function(query) {
       query[k] = req.params[v];
     });
     var filter = getFormat('Event', req.query.format);
-    var options = limitAndSkip(req.query);
+    var options = _.extend(limitAndSkip(req.query), {
+      'start.date': 1
+    });
 
     db.Event.find(query || {}, filter, options, handlerGenerator(res, function(data) {
       return _.map(data, function(doc) {
@@ -314,5 +316,9 @@ exports.eventByCategory = eventEndpoint({
 });
 
 exports.eventByVenue = eventEndpoint({
+  'location.address': 'location'
+});
+
+exports.eventByMonth = eventEndpoint({
   'location.address': 'location'
 });
