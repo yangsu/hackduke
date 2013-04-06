@@ -27,3 +27,4 @@ test/config/test.sqlite
 
 data/
 scrapers/calendar/*.json
+scrapers/directory/*.txt
