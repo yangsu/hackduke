@@ -23,7 +23,7 @@ function regexToStr(regex) {
  * @param  {string} str input string.
  * @return {string}     trimmed string.
  */
-exports.trim = function trim(str) {
+function trim(str) {
   if (str) {
     return str
       .replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g, '')
@@ -32,7 +32,9 @@ exports.trim = function trim(str) {
   } else {
     return '';
   }
-};
+}
+
+exports.trim = trim;
 
 
 /**
