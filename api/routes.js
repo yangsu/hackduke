@@ -443,3 +443,89 @@ exports.markerByCategory = function(req, res, next) {
   }, req, res, next);
 };
 
+// =============================================================================
+// Directory
+// =============================================================================
+
+exports.listEducationalAffiliation = distinct('Directory', 'eduPersonAffiliation');
+// exports.listDirectoryCategory = distinct('Directory', 'categoryName');
+
+var DirectoryEndpoint = function(query, req, res, next) {
+  var filter = getFormat('Directory', req.query.format);
+  var options = limitAndSkip(req.query);
+
+  db.Directory.find(query || {}, filter, options, defaultHandler(res));
+};
+
+exports.directory = function(req, res, next) {
+  var query = _.pick(req.query,
+      'cn',
+      'displayName',
+      'duAcMailboxExists',
+      'duDempoID',
+      'duDempoIDhist',
+      'duLDAPKey',
+      'duMiddleName1',
+      'duPSAcadCareerC1',
+      'duPSAcadCareerDescC1',
+      'duPSAcadProgC1',
+      'duPSCareerSeqNbrC1',
+      'duSAPCompany',
+      'duSAPCompanyDesc',
+      'duSAPOrgUnit',
+      'eduPersonAffiliation',
+      'eduPersonPrimaryAffiliation',
+      'eduPersonPrincipalName',
+      'facsimileTelephoneNumber',
+      'gidNumber',
+      'givenName',
+      'homeDirectory',
+      'loginShell',
+      'mail',
+      'objectClass',
+      'ou',
+      'pager',
+      'postOfficeBox',
+      'postalAddress',
+      'sn',
+      'telephoneNumber',
+      'title',
+      'uid',
+      'uidNumber'
+    );
+  DirectoryEndpoint(query, req, res, next);
+};
+
+exports.directoryById = byId('Directory');
+
+exports.directoryByNetId = function(req, res, next) {
+  DirectoryEndpoint({
+    uid: req.params.netid
+  }, req, res, next);
+};
+
+exports.directoryByPhone = function(req, res, next) {
+  // strip all non numeric chars, turn string into char array
+  var phone = req.params.phone && req.params.phone.replace(/\D+/g, '').split('');
+  // insert 6th space
+  phone.splice(6, 0, ' ');
+  // insert 3rd space
+  phone.splice(3, 0, ' ');
+  // insert prefix
+  phone.splice(0, 0, '+1 ');
+  phone = phone.join('');
+
+  DirectoryEndpoint({
+    $or: [{
+      telephoneNumber: phone
+    }, {
+      facsimileTelephoneNumber: phone
+    }]
+  }, req, res, next);
+};
+
+exports.directoryByAffiliation = function(req, res, next) {
+  DirectoryEndpoint({
+    eduPersonAffiliation: req.params.affiliation
+  }, req, res, next);
+};

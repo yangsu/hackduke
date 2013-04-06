@@ -43,6 +43,7 @@ server.get('/list/event-venue', routes.listEventVenue);
 server.get('/list/location', routes.listLocation);
 server.get('/list/marker', routes.listMarker);
 server.get('/list/marker-category', routes.listMarkerCategory);
+server.get('/list/education-affiliation', routes.listEducationalAffiliation);
 
 server.get('/list/department/:department', routes.listclass);
 server.get('/list/department/:department/class/:number', routes.listterm);
@@ -90,6 +91,11 @@ server.get('/marker/marker-id/:id', routes.markerByMarkerId);
 server.get('/marker/name/:name', routes.markerByName);
 server.get('/marker/category/:category', routes.markerByCategory);
 
+server.get('/directory', routes.directory);
+server.get('/directory/:id', routes.directoryById);
+server.get('/directory/netid/:netid', routes.directoryByNetId);
+server.get('/directory/phone/:phone', routes.directoryByPhone);
+server.get('/directory/affiliation/:affiliation', routes.directoryByAffiliation);
 
 server.listen(8080, function() {
   console.log('%s listening at %s', server.name, server.url);

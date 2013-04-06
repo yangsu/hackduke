@@ -209,3 +209,33 @@ Marker.raw = {
   'defaultState': 0,
   'defaultStates': 0
 };
+
+// =============================================================================
+// Directory
+// =============================================================================
+var Directory = {};
+exports.Directory = Directory;
+
+exports.Directory.basic = {
+  cn: 1,
+  displayName: 1,
+  duPSAcadCareerDescC1: 1,
+  eduPersonPrincipalName: 1,
+  facsimileTelephoneNumber: 1,
+  mail: 1
+};
+
+Directory.detailed = _.extend({}, Directory.basic, {
+  duLDAPKey: 1,
+  eduPersonAffiliation: 1,
+  ou: 1,
+  pager: 1,
+  postalAddress: 1,
+  postOfficeBox: 1,
+  title: 1,
+  uid: 1
+});
+
+Directory.raw = {
+  duEligible: 0
+};
