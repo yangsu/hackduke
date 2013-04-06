@@ -300,3 +300,4 @@ exports.event = function(req, res, next) {
 };
 
 exports.listEventType = distinct('Event', 'categories.category.description');
+exports.eventById = byId('Event');

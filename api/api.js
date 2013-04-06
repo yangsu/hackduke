@@ -65,6 +65,7 @@ server.get('/evaluation/:id', routes.evaluationById);
 server.get('/evaluation/department/:department/class/:number', routes.evaluation);
 
 server.get('/event', routes.event);
+server.get('/event/:id', routes.eventById);
 
 
 server.listen(8080, function() {
