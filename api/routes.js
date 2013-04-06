@@ -318,3 +318,19 @@ exports.eventByCategory = function(req, res, next) {
     });
   }));
 };
+
+exports.eventByVenue = function(req, res, next) {
+  var query = {
+    'location.address': req.params.location
+  };
+  var filter = getFormat('Event', req.query.format);
+  var options = limitAndSkip(req.query);
+
+  db.Event.find(query, filter, options, handlerGenerator(res, function(data) {
+    return _.map(data, function(doc) {
+      var cats = doc.categories && doc.categories.category;
+      doc.categories = _.compact(_.pluck(cats, 'value'));
+      return doc;
+    });
+  }));
+};
