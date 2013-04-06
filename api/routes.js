@@ -301,9 +301,19 @@ var eventEndpoint = function(query, req, res, next) {
 };
 
 exports.event = function(req, res, next) {
-  eventEndpoint({}, req, res, next);
+  var query = {};
+  var q = req.query;
+
+  if (q.category) q['categories.category.value'] = q.category;
+  if (q.end) q['end.date'] = { $lte: new Date(q.end) };
+  if (q.host) q['creator'] = q.host;
+  if (q.start) q['start.date'] = { $gte: new Date(q.start) };
+  if (q.venue) q['location.address'] = q.venue;
+
+  eventEndpoint(query, req, res, next);
 };
 
+exports.listEventHost = distinct('Event', 'creator');
 exports.listEventType = distinct('Event', 'categories.category.value');
 exports.listEventVenue = distinct('Event', 'location.address');
 exports.eventById = byId('Event');
@@ -317,6 +327,12 @@ exports.eventByCategory = function(req, res, next) {
 exports.eventByVenue = function(req, res, next) {
   eventEndpoint({
     'location.address': req.params.location
+  }, req, res, next);
+};
+
+exports.eventByHost = function(req, res, next) {
+  eventEndpoint({
+    'creator': req.params.host
   }, req, res, next);
 };
 

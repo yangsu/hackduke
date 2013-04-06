@@ -37,6 +37,7 @@ server.get('/list/department-code', routes.listDepartmentCode);
 server.get('/list/program', routes.listPrograms);
 server.get('/list/school', routes.listSchools);
 server.get('/list/term', routes.listTerm);
+server.get('/list/event-host', routes.listEventHost);
 server.get('/list/event-type', routes.listEventType);
 server.get('/list/event-venue', routes.listEventVenue);
 
@@ -69,6 +70,7 @@ server.get('/event', routes.event);
 server.get('/event/:id', routes.eventById);
 server.get(/event\/category\/([A-Za-z0-9\/]+)/, routes.eventByCategory);
 server.get('/event/venue/:location', routes.eventByVenue);
+server.get('/event/host/:host', routes.eventByHost);
 server.get('/event/date/:year/:month', routes.eventByMonth);
 server.get('/event/date/:year/:month/:day', routes.eventByDate);
 server.get('/event/date/today', routes.eventToday);

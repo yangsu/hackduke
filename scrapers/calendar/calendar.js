@@ -43,7 +43,7 @@ try {
       if (xprop && xprop.X_BEDEWORK_IMAGE) {
         e.image = xprop.X_BEDEWORK_IMAGE.values.text;
       }
-
+      e.creator = e.creator.replace(/\/principals\/users\/agrp(_+)/, '');
       e.start.date = parseDate(e.start.utcdate);
       e.end.date = parseDate(e.end.utcdate);
 
