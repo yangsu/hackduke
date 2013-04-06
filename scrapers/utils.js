@@ -33,7 +33,6 @@ function trim(str) {
     return '';
   }
 }
-
 exports.trim = trim;
 
 
@@ -65,14 +64,15 @@ function extractMatches(matches, labels) {
  * @param  {array}  labels array of labels corresponding to the matches.
  * @return {object}        object containing label => matches.
  */
-exports.regexParse = function regexParse(text, regex, labels) {
+function regexParse(text, regex, labels) {
   // i - ignore case, m - multiline
   var reg = new RegExp(regexToStr(regex), 'im'),
       matches = reg.exec(text),
       returnVal = extractMatches(matches, labels);
 
   return returnVal;
-};
+}
+exports.regexParse = regexParse;
 
 
 /**
@@ -83,7 +83,7 @@ exports.regexParse = function regexParse(text, regex, labels) {
  * @param  {int}    limit  limit on the number of matches returned.
  * @return {object}        object containing label => matches.
  */
-exports.regexGParse = function regexGParse(text, regex, labels, limit) {
+function regexGParse(text, regex, labels, limit) {
   // g - match all, i - ignore case, m - multiline
   var reg = new RegExp(regexToStr(regex), 'gim'),
       returnVal = [],
@@ -103,7 +103,8 @@ exports.regexGParse = function regexGParse(text, regex, labels, limit) {
   }
 
   return returnVal;
-};
+}
+exports.regexGParse = regexGParse;
 
 
 /**
