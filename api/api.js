@@ -52,6 +52,7 @@ server.get('/class/department/:department/number/:number', routes.class);
 server.get('/class/department/:department/number/:number/term', routes.classTerm);
 server.get('/class/department/:department/number/:number/term/:title', routes.classSection);
 server.get('/class/term/:title', routes.classByTerm);
+server.get('/class/term/:title/department/:department', routes.classByTerm);
 
 server.get('/term/:id', routes.termById);
 server.get('/section/:id', routes.sectionById);

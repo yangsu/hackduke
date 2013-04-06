@@ -166,12 +166,12 @@ exports.classSection = function(req, res, next) {
 };
 
 exports.classByTerm = function(req, res, next) {
-  var query = _.pick(req.params, 'title');
+  var query = _.pick(req.params, 'title', 'department');
   var filter = getFormat('Class', req.query.format);
   var options = limitAndSkip(req.query);
 
   db.Term
-    .find(query, { class: 1}, options)
+    .find(query, { class: 1 }, options)
     .populate({
         path: 'class',
         select: filter
