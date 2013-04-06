@@ -79,6 +79,8 @@ server.get('/event/date/this-week', routes.eventThisWeek);
 
 server.get('/location', routes.location);
 server.get('/location/:id', routes.locationById);
+server.get('/location/building-id/:id', routes.locationByBuildingId);
+server.get('/location/name/:name', routes.locationByName);
 
 server.listen(8080, function() {
   console.log('%s listening at %s', server.name, server.url);

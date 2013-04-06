@@ -381,10 +381,26 @@ exports.eventThisWeek = function(req, res, next) {
 
 exports.listLocation = distinct('Location', 'name');
 
-exports.location = function(req, res, next) {
+var locationEndpoint = function(query, req, res, next) {
   var filter = getFormat('Location', req.query.format);
   var options = limitAndSkip(req.query);
 
-  db.Location.find({}, filter, options, defaultHandler(res));
+  db.Location.find(query || {}, filter, options, defaultHandler(res));
+};
+
+exports.location = function(req, res, next) {
+  locationEndpoint({}, req, res, next);
 };
 exports.locationById = byId('Location');
+
+exports.locationByBuildingId = function(req, res, next) {
+  locationEndpoint({
+    school_building_id: +req.params.id
+  }, req, res, next);
+};
+
+exports.locationByName = function(req, res, next) {
+  locationEndpoint({
+    name: req.params.name
+  }, req, res, next);
+};
