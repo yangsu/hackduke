@@ -135,11 +135,11 @@ Event.basic = {
   'location.link': 1,
   'start.shortdate': 1,
   'start.time': 1,
+  'categories.category.value': 1,
   summary: 1
 };
 
 Event.detailed = _.extend({}, Event.basic, {
-  'categories.category.description': 1,
   contact: 1,
   cost: 1,
   guid: 1,

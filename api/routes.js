@@ -286,18 +286,34 @@ exports.evaluationById = byId('Evaluation');
 // =============================================================================
 
 exports.event = function(req, res, next) {
-  var query = _.pick(req.params);
+  var filter = getFormat('Event', req.query.format);
+  var options = limitAndSkip(req.query);
+
+  db.Event.find({}, filter, options, handlerGenerator(res, function(data) {
+    return _.map(data, function(doc) {
+      var cats = doc.categories && doc.categories.category;
+      console.log(cats);
+      doc.categories = _.compact(_.pluck(cats, 'value'));
+      return doc;
+    });
+  }));
+};
+
+exports.listEventType = distinct('Event', 'categories.category.value');
+exports.eventById = byId('Event');
+
+exports.eventByCategory = function(req, res, next) {
+  var query = {
+    'categories.category.value': req.params[0]
+  };
   var filter = getFormat('Event', req.query.format);
   var options = limitAndSkip(req.query);
 
   db.Event.find(query, filter, options, handlerGenerator(res, function(data) {
     return _.map(data, function(doc) {
       var cats = doc.categories && doc.categories.category;
-      doc.categories = _.compact(_.pluck(cats, 'description'));
+      doc.categories = _.compact(_.pluck(cats, 'value'));
       return doc;
     });
   }));
 };
-
-exports.listEventType = distinct('Event', 'categories.category.description');
-exports.eventById = byId('Event');

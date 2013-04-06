@@ -66,6 +66,7 @@ server.get('/evaluation/department/:department/class/:number', routes.evaluation
 
 server.get('/event', routes.event);
 server.get('/event/:id', routes.eventById);
+server.get(/event\/category\/([A-Za-z0-9\/]+)/, routes.eventByCategory);
 
 
 server.listen(8080, function() {
