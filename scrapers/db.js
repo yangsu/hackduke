@@ -132,7 +132,6 @@ queryMap.Section = function(q) {
   return _.pick(q, 'department', 'number', 'course_id', 'term_id', 'path');
 };
 
-
 var LocationSchema = Schema({
   id: Number,
   name: String,
@@ -159,6 +158,27 @@ LocationSchema.index({
 db.Location = mongoose.model('Location', LocationSchema);
 queryMap.Location = function(q) {
   return _.pick(q, 'id', 'school_id', 'school_building_id');
+};
+
+var MarkerSchema = Schema({
+  mrkId: Number,
+  markerName: String,
+  crdId: Number,
+  lat: Number,
+  lng: Number,
+  categoryName: String,
+  icon: String
+}, {
+  strict: false
+});
+
+MarkerSchema.index({
+  mrkId: 1
+});
+
+db.Marker = mongoose.model('Marker', MarkerSchema);
+queryMap.Marker = function(q) {
+  return _.pick(q, 'mrkId');
 };
 
 var EvaluationSchema = Schema({
