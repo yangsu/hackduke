@@ -40,6 +40,7 @@ server.get('/list/term', routes.listTerm);
 server.get('/list/event-host', routes.listEventHost);
 server.get('/list/event-type', routes.listEventType);
 server.get('/list/event-venue', routes.listEventVenue);
+server.get('/list/location', routes.listLocation);
 
 server.get('/list/department/:department', routes.listclass);
 server.get('/list/department/:department/class/:number', routes.listterm);
@@ -75,6 +76,9 @@ server.get('/event/date/:year/:month', routes.eventByMonth);
 server.get('/event/date/:year/:month/:day', routes.eventByDate);
 server.get('/event/date/today', routes.eventToday);
 server.get('/event/date/this-week', routes.eventThisWeek);
+
+server.get('/location', routes.location);
+server.get('/location/:id', routes.locationById);
 
 server.listen(8080, function() {
   console.log('%s listening at %s', server.name, server.url);

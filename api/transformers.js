@@ -161,3 +161,27 @@ Event.raw = {
   'xproperties.X_BEDEWORK_ALIAS': 0,
   'xproperties.X_BEDEWORK_IMAGE': 0
 };
+
+// =============================================================================
+// Location
+// =============================================================================
+var Location = {};
+exports.Location = Location;
+
+exports.Location.basic = {
+  address: 1,
+  campus_location: 1,
+  lat: 1,
+  long: 1,
+  name: 1
+};
+
+Location.detailed = _.extend({}, Location.basic, {
+  imageURL: 1,
+  id: 1,
+  school_building_id: 1
+});
+
+Location.raw = {
+  soundex: 0
+};

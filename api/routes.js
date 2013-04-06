@@ -374,3 +374,17 @@ exports.eventThisWeek = function(req, res, next) {
     'end.date': { $lte: d }
   }, req, res, next);
 };
+
+// =============================================================================
+// location
+// =============================================================================
+
+exports.listLocation = distinct('Location', 'name');
+
+exports.location = function(req, res, next) {
+  var filter = getFormat('Location', req.query.format);
+  var options = limitAndSkip(req.query);
+
+  db.Location.find({}, filter, options, defaultHandler(res));
+};
+exports.locationById = byId('Location');
