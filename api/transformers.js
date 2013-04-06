@@ -18,6 +18,7 @@ var Class = {};
 exports.Class = Class;
 
 exports.Class.basic = {
+  course_id: 1,
   department: 1,
   number: 1,
   description: 1,
