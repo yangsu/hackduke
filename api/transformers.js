@@ -185,3 +185,27 @@ Location.detailed = _.extend({}, Location.basic, {
 Location.raw = {
   soundex: 0
 };
+
+// =============================================================================
+// Marker
+// =============================================================================
+var Marker = {};
+exports.Marker = Marker;
+
+exports.Marker.basic = {
+  lat: 1,
+  long: 1,
+  markerName: 1,
+  mrkId: 1
+};
+
+Marker.detailed = _.extend({}, Marker.basic, {
+  categoryName: 1,
+  icon: 1,
+  crdId: 1
+});
+
+Marker.raw = {
+  'defaultState': 0,
+  'defaultStates': 0
+};

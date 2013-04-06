@@ -404,3 +404,42 @@ exports.locationByName = function(req, res, next) {
     name: req.params.name
   }, req, res, next);
 };
+
+// =============================================================================
+// Marker
+// =============================================================================
+
+exports.listMarker = distinct('Marker', 'markerName');
+exports.listMarkerCategory = distinct('Marker', 'categoryName');
+
+var markerEndpoint = function(query, req, res, next) {
+  var filter = getFormat('Marker', req.query.format);
+  var options = limitAndSkip(req.query);
+
+  db.Marker.find(query || {}, filter, options, defaultHandler(res));
+};
+
+exports.marker = function(req, res, next) {
+  markerEndpoint({}, req, res, next);
+};
+
+exports.markerById = byId('marker');
+
+exports.markerByMarkerId = function(req, res, next) {
+  markerEndpoint({
+    mrkId: +req.params.id
+  }, req, res, next);
+};
+
+exports.markerByName = function(req, res, next) {
+  markerEndpoint({
+    markerName: req.params.name
+  }, req, res, next);
+};
+
+exports.markerByCategory = function(req, res, next) {
+  markerEndpoint({
+    categoryName: req.params.category
+  }, req, res, next);
+};
+

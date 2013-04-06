@@ -41,6 +41,8 @@ server.get('/list/event-host', routes.listEventHost);
 server.get('/list/event-type', routes.listEventType);
 server.get('/list/event-venue', routes.listEventVenue);
 server.get('/list/location', routes.listLocation);
+server.get('/list/marker', routes.listMarker);
+server.get('/list/marker-category', routes.listMarkerCategory);
 
 server.get('/list/department/:department', routes.listclass);
 server.get('/list/department/:department/class/:number', routes.listterm);
@@ -79,8 +81,19 @@ server.get('/event/date/this-week', routes.eventThisWeek);
 
 server.get('/location', routes.location);
 server.get('/location/:id', routes.locationById);
+server.get('/location', routes.location);
+server.get('/location/:id', routes.locationById);
 server.get('/location/building-id/:id', routes.locationByBuildingId);
 server.get('/location/name/:name', routes.locationByName);
+
+server.get('/marker', routes.marker);
+server.get('/marker/:id', routes.markerById);
+server.get('/marker', routes.marker);
+server.get('/marker/:id', routes.markerById);
+server.get('/marker/marker-id/:id', routes.markerByMarkerId);
+server.get('/marker/name/:name', routes.markerByName);
+server.get('/marker/category/:category', routes.markerByCategory);
+
 
 server.listen(8080, function() {
   console.log('%s listening at %s', server.name, server.url);
