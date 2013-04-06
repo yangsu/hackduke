@@ -12,8 +12,62 @@
       "notes": "",
       "responseClass": "Department",
       "nickname": "getDepartments",
-      "parameters": [],
+      "parameters": [{
+        "allowMultiple": false,
+        "dataType": "number",
+        "defaultValue": 100,
+        "description": "Limit the number of responses",
+        "name": "limit",
+        "paramType": "query",
+        "required": false
+      }, {
+        "allowMultiple": false,
+        "dataType": "number",
+        "defaultValue": 0,
+        "description": "Offset the number of responses",
+        "name": "skip",
+        "paramType": "query",
+        "required": false
+      }],
       "errorResponses": []
+    }]
+  }, {
+    "path": "/department/{departmentId}",
+    "description": "Get a department by id",
+    "operations": [{
+      "httpMethod": "GET",
+      "summary": "Get a department by id",
+      "notes": "",
+      "responseClass": "Department",
+      "nickname": "getDepartmentById",
+      "parameters": [{
+        "name": "departmentId",
+        "paramType": "path",
+        "description": "Department Id",
+        "dataType": "String",
+        "required": true,
+        "allowMultiple": false
+      }, {
+        "allowMultiple": false,
+        "dataType": "number",
+        "defaultValue": 100,
+        "description": "Limit the number of responses",
+        "name": "limit",
+        "paramType": "query",
+        "required": false
+      }, {
+        "allowMultiple": false,
+        "dataType": "number",
+        "defaultValue": 0,
+        "description": "Offset the number of responses",
+        "name": "skip",
+        "paramType": "query",
+        "required": false
+      }],
+      "errorResponses": [{
+        "code": 500,
+        "reason": "Invalid ID"
+      }]
     }]
   }, {
     "path": "/pet.{format}",
@@ -25,7 +79,7 @@
       "nickname": "addPet",
       "parameters": [{
         "description": "Pet object that needs to be added to the store",
-        "paramType": "body",
+        "paramType": "query",
         "required": true,
         "allowMultiple": false,
         "dataType": "Pet"
@@ -41,7 +95,7 @@
       "nickname": "updatePet",
       "parameters": [{
         "description": "Pet object that needs to be updated in the store",
-        "paramType": "body",
+        "paramType": "query",
         "required": true,
         "allowMultiple": false,
         "dataType": "Pet"
@@ -117,6 +171,14 @@
           "type": "long"
         },
         "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Department": {
+      "id": "Department",
+      "properties": {
+        "id": {
           "type": "string"
         }
       }
