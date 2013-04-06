@@ -26,3 +26,4 @@ maces-*.json
 test/config/test.sqlite
 
 data/
+scrapers/calendar/*.json

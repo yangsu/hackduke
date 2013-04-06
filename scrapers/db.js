@@ -181,6 +181,24 @@ queryMap.Marker = function(q) {
   return _.pick(q, 'mrkId');
 };
 
+var EventSchema = Schema({
+  guid: String,
+  location: {
+    marker: { type: ObjectId, ref: 'Marker' }
+  }
+}, {
+  strict: false
+});
+
+EventSchema.index({
+  guid: 1
+});
+
+db.Event = mongoose.model('Event', EventSchema);
+queryMap.Event = function(q) {
+  return _.pick(q, 'guid');
+};
+
 var EvaluationSchema = Schema({
   course_id: String,
   class_id: String,
