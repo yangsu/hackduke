@@ -169,6 +169,7 @@ exports.fetch = function(path, cb) {
 
   var command = 'curl "' + path + '" --cookie "' + config.COOKIE + '"';
 
+  command += ' -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1464.0 Safari/537.36"';
   command += genCurlTimingFlag();
 
   return exec(command, function(error, stdout, stderr) {
