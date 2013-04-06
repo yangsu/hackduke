@@ -285,40 +285,44 @@ exports.evaluationById = byId('Evaluation');
 // event
 // =============================================================================
 
-var eventEndpoint = function(query) {
-  return function(req, res, next) {
-    _.each(query, function(v, k) {
-      query[k] = req.params[v];
-    });
-    var filter = getFormat('Event', req.query.format);
-    var options = _.extend(limitAndSkip(req.query), {
-      'start.date': 1
-    });
+var eventEndpoint = function(query, req, res, next) {
+  var filter = getFormat('Event', req.query.format);
+  var options = _.extend(limitAndSkip(req.query), {
+    'start.date': 1
+  });
 
-    db.Event.find(query || {}, filter, options, handlerGenerator(res, function(data) {
-      return _.map(data, function(doc) {
-        var cats = doc.categories && doc.categories.category;
-        doc.categories = _.compact(_.pluck(cats, 'value'));
-        return doc;
-      });
-    }));
-  };
+  db.Event.find(query || {}, filter, options, handlerGenerator(res, function(data) {
+    return _.map(data, function(doc) {
+      var cats = doc.categories && doc.categories.category;
+      doc.categories = _.compact(_.pluck(cats, 'value'));
+      return doc;
+    });
+  }));
 };
 
-exports.event = eventEndpoint();
+exports.event = function(req, res, next) {
+  eventEndpoint({}, req, res, next);
+};
 
 exports.listEventType = distinct('Event', 'categories.category.value');
 exports.listEventVenue = distinct('Event', 'location.address');
 exports.eventById = byId('Event');
 
-exports.eventByCategory = eventEndpoint({
-  'categories.category.value': 0
-});
+exports.eventByCategory = function(req, res, next) {
+  eventEndpoint({
+    'categories.category.value': req.params[0]
+  }, req, res, next);
+};
 
-exports.eventByVenue = eventEndpoint({
-  'location.address': 'location'
-});
+exports.eventByVenue = function(req, res, next) {
+  eventEndpoint({
+    'location.address': req.params.location
+  }, req, res, next);
+};
 
-exports.eventByMonth = eventEndpoint({
-  'location.address': 'location'
-});
+exports.eventByDate = function(req, res, next) {
+  eventEndpoint({
+    'start.year': req.params.year,
+    'start.month': req.params.month
+  }, req, res, next);
+};
