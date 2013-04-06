@@ -3,9 +3,9 @@ var querystring = require('querystring');
 var config = {
   BASEURL: 'https://m.siss.duke.edu',
   EVALURL: 'http://assessment.aas.duke.edu/evaluations/saces/',
-  CHUNKSIZE: 25,
-  PHPSESSID: 'bp409mr6q8na27t8v33b0t88n4',
-  AAS: '"AAAAAQAAARzggAIo2ZLRSN%2fnFITXm4uad9R6YPOmOwPTga2BxAyVEuthYhXz0jKldsN25U35qMlqiJxceVPkm%2br2kqpNffQ27Mjwv5a8ZFgGErD0iz43WY3Swoi4yMrwjwQVyFd2%2b66R3UL4RSlYdqncMsxVhtJrBg%2fhxF0ZGw9gW9kuXcl165UhwWT0ku%2bXo0%2fyN5r1Gg5PRoHMDMejLlyBKAZRmFjCeSzfJ4vXpwpyJ9oN%2f6dQwRGzLs3OUjbyM%2fKN7IfYJkHE6fC%2fJmreBiIIum8tafgFJMqx2WxSCGh9KU%2b%2fpXCzl8rPPdMacmLzP4uC%2bHmp8C404XKS8ekgIJrCT4ySWgVTQdROwIveU264W3YG7h0axjas%2b%2fXvC2cim%2bly5gAAAESs26%2bG17d9c5eOTLCXavR3JeL3suVKSmSoP9apiVz39iEMDLTzar%2fLsZ4NfIKuHytwS0RA1m2lN93bk5lgQ1ZVdOZ5NgAA"'
+  CHUNKSIZE: 5,
+  PHPSESSID: 'or0fb1q6a2v4mfs5861hpsg6v2',
+  AAS: '"AAAAAQAAAQzkgyLEn%2fBmIjkH6Oheql1vRfC1E6pM7Gt%2fAAwrdea9v8Jib%2fVYuApCMNFNQQUPdjr35oBDJS%2fMrHBRBMvnuMPGaDRzJ41UOS7sxIuqoedjGT0s1ynmQkbEruEWBI01BnRKqbT0GmsScwUp15Q4nN4zI%2bPi9BrU3nmIJJ8y1syc9fbUtcttpuJuCF7ObF3iQlj4SfEDIIIZ7ZrlFIVn32%2bL4CueGr0zaCo7axhaAk43pw5ZBjCeNsqo%2fwwNfc25dyJEtnXXZAhUxZ7o5QdYh2i9wjiXLih8gwuZAv%2fO0lYstlJuaGUT5Tdnkj%2f%2bKHy5veA6fN3QkWaVrxrP4qjL4oXtac7XtS8wSwHxPGowAAAARDkcMBh50CPCpezSFkbx29AhIQob%2f%2fiAenPyTWwjazHrZmdiRnK7yMDVF2lXq8LfOT13RjM4VWcRlDP%2fh%2bVStP05llt%2bAAAA"'
 };
 
 config.COOKIE = querystring.stringify({
