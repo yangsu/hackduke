@@ -285,52 +285,34 @@ exports.evaluationById = byId('Evaluation');
 // event
 // =============================================================================
 
-exports.event = function(req, res, next) {
-  var filter = getFormat('Event', req.query.format);
-  var options = limitAndSkip(req.query);
-
-  db.Event.find({}, filter, options, handlerGenerator(res, function(data) {
-    return _.map(data, function(doc) {
-      var cats = doc.categories && doc.categories.category;
-      console.log(cats);
-      doc.categories = _.compact(_.pluck(cats, 'value'));
-      return doc;
+var eventEndpoint = function(query) {
+  return function(req, res, next) {
+    _.each(query, function(v, k) {
+      query[k] = req.params[v];
     });
-  }));
+    var filter = getFormat('Event', req.query.format);
+    var options = limitAndSkip(req.query);
+
+    db.Event.find(query || {}, filter, options, handlerGenerator(res, function(data) {
+      return _.map(data, function(doc) {
+        var cats = doc.categories && doc.categories.category;
+        doc.categories = _.compact(_.pluck(cats, 'value'));
+        return doc;
+      });
+    }));
+  };
 };
+
+exports.event = eventEndpoint();
 
 exports.listEventType = distinct('Event', 'categories.category.value');
 exports.listEventVenue = distinct('Event', 'location.address');
 exports.eventById = byId('Event');
 
-exports.eventByCategory = function(req, res, next) {
-  var query = {
-    'categories.category.value': req.params[0]
-  };
-  var filter = getFormat('Event', req.query.format);
-  var options = limitAndSkip(req.query);
+exports.eventByCategory = eventEndpoint({
+  'categories.category.value': 0
+});
 
-  db.Event.find(query, filter, options, handlerGenerator(res, function(data) {
-    return _.map(data, function(doc) {
-      var cats = doc.categories && doc.categories.category;
-      doc.categories = _.compact(_.pluck(cats, 'value'));
-      return doc;
-    });
-  }));
-};
-
-exports.eventByVenue = function(req, res, next) {
-  var query = {
-    'location.address': req.params.location
-  };
-  var filter = getFormat('Event', req.query.format);
-  var options = limitAndSkip(req.query);
-
-  db.Event.find(query, filter, options, handlerGenerator(res, function(data) {
-    return _.map(data, function(doc) {
-      var cats = doc.categories && doc.categories.category;
-      doc.categories = _.compact(_.pluck(cats, 'value'));
-      return doc;
-    });
-  }));
-};
+exports.eventByVenue = eventEndpoint({
+  'location.address': 'location'
+});

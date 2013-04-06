@@ -69,7 +69,7 @@ server.get('/event', routes.event);
 server.get('/event/:id', routes.eventById);
 server.get(/event\/category\/([A-Za-z0-9\/]+)/, routes.eventByCategory);
 server.get('/event/venue/:location', routes.eventByVenue);
-
+// server.get('/event/month/:month', routes.eventByMonth);
 
 server.listen(8080, function() {
   console.log('%s listening at %s', server.name, server.url);
