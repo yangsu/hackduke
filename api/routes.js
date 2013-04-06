@@ -321,8 +321,28 @@ exports.eventByVenue = function(req, res, next) {
 };
 
 exports.eventByDate = function(req, res, next) {
-  eventEndpoint({
+  var query = {
+    'start.year': req.params.year,
+    'start.month': req.params.month,
+    'start.day': req.params.day
+  };
+  eventEndpoint(query, req, res, next);
+};
+
+exports.eventByMonth = function(req, res, next) {
+  var query = {
     'start.year': req.params.year,
     'start.month': req.params.month
+  };
+  eventEndpoint(query, req, res, next);
+};
+
+exports.eventToday = function(req, res, next) {
+  var d = new Date;
+
+  eventEndpoint({
+    'start.year': '' + d.getFullYear(),
+    'start.month': '' + (d.getMonth() + 1),
+    'start.day': '' + d.getDate()
   }, req, res, next);
 };
