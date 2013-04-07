@@ -115,6 +115,6 @@ server.get('/directory/netid/:netid', routes.directoryByNetId);
 server.get('/directory/phone/:phone', routes.directoryByPhone);
 server.get('/directory/affiliation/:affiliation', routes.directoryByAffiliation);
 
-server.listen(80, function() {
+server.listen(8080, function() {
   console.log('%s listening at %s', server.name, server.url);
 });

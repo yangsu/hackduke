@@ -1,7 +1,7 @@
 {
   "apiVersion": "0.2",
   "swaggerVersion": "1.1",
-  "basePath": "http://0.0.0.0/",
+  "basePath": "http://0.0.0.0:8080/",
   "resourcePath": "/department",
   "apis": [{
     "path": "/department",
