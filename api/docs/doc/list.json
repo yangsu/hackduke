@@ -1,69 +1,97 @@
 {
   "apiVersion": "0.2",
   "swaggerVersion": "1.1",
-  "basePath": "http://colab-sbx-03.oit.duke.edu:8080/",
+  "basePath": "http://0.0.0.0:8080/",
   "resourcePath": "/list",
   "apis": [{
-    "path": "/list",
-    "description": "Get a list of list",
+    "path": "/list/academic-organization",
+    "description": "Get a list of academic organizations",
     "operations": [{
       "httpMethod": "GET",
-      "summary": "Get a list of list",
-      "notes": "",
+      "summary": "Get a list of academic organizations",
       "responseClass": "List",
-      "nickname": "getList",
-      "parameters": [{
-        "allowMultiple": false,
-        "dataType": "number",
-        "description": "Limit the number of responses",
-        "name": "limit",
-        "paramType": "query",
-        "required": false
-      }, {
-        "allowMultiple": false,
-        "dataType": "number",
-        "description": "Offset the number of responses",
-        "name": "skip",
-        "paramType": "query",
-        "required": false
-      }],
-      "errorResponses": []
+      "nickname": "getAcademicOrganizations"
     }]
   }, {
-    "path": "/list/{classId}",
-    "description": "Get a list by id",
+    "path": "/list/department",
+    "description": "Get a list of departments",
     "operations": [{
       "httpMethod": "GET",
-      "summary": "Get a list by id",
-      "notes": "",
+      "summary": "Get a list of departments",
       "responseClass": "List",
-      "nickname": "getListById",
-      "parameters": [{
-        "name": "classId",
-        "paramType": "path",
-        "description": "List Id",
-        "dataType": "String",
-        "required": true,
-        "allowMultiple": false
-      }, {
-        "allowMultiple": false,
-        "dataType": "number",
-        "description": "Limit the number of responses",
-        "name": "limit",
-        "paramType": "query",
-        "required": false
-      }, {
-        "allowMultiple": false,
-        "dataType": "number",
-        "description": "Offset the number of responses",
-        "name": "skip",
-        "paramType": "query",
-        "required": false
-      }],
-      "errorResponses": [{
-        "code": 500,
-        "reason": "Invalid ID"
-      }]
+      "nickname": "getDepartments"
+    }]
+  }, {
+    "path": "/list/program",
+    "description": "Get a list of programs",
+    "operations": [{
+      "httpMethod": "GET",
+      "summary": "Get a list of programs",
+      "responseClass": "List",
+      "nickname": "getPrograms"
+    }]
+  }, {
+    "path": "/list/school",
+    "description": "Get a list of schools",
+    "operations": [{
+      "httpMethod": "GET",
+      "summary": "Get a list of schools",
+      "responseClass": "List",
+      "nickname": "getSchools"
+    }]
+  }, {
+    "path": "/list/event-host",
+    "description": "Get a list of event hosts",
+    "operations": [{
+      "httpMethod": "GET",
+      "summary": "Get a list of event hosts",
+      "responseClass": "List",
+      "nickname": "getEventHosts"
+    }]
+  }, {
+    "path": "/list/event-category",
+    "description": "Get a list of event categories",
+    "operations": [{
+      "httpMethod": "GET",
+      "summary": "Get a list of event categories",
+      "responseClass": "List",
+      "nickname": "getEventCategories"
+    }]
+  }, {
+    "path": "/list/event-venue",
+    "description": "Get a list of event venues",
+    "operations": [{
+      "httpMethod": "GET",
+      "summary": "Get a list of event venues",
+      "responseClass": "List",
+      "nickname": "getEventVenue"
+    }]
+  }, {
+    "path": "/list/marker",
+    "description": "Get a list of markers",
+    "operations": [{
+      "httpMethod": "GET",
+      "summary": "Get a list of markers",
+      "responseClass": "List",
+      "nickname": "getMarker"
+    }]
+  }, {
+    "path": "/list/marker-category",
+    "description": "Get a list of marker categories",
+    "operations": [{
+      "httpMethod": "GET",
+      "summary": "Get a list of marker categories",
+      "responseClass": "List",
+      "nickname": "getMarkerCategory"
+    }]
+  }, {
+    "path": "/list/education-affiliation",
+    "description": "Get a list of education affiliations",
+    "operations": [{
+      "httpMethod": "GET",
+      "summary": "Get a list of education affiliations",
+      "responseClass": "List",
+      "nickname": "getEducationAffiliation"
     }]
   }],
   "models": {
