@@ -194,7 +194,7 @@ exports.Marker = Marker;
 
 exports.Marker.basic = {
   lat: 1,
-  long: 1,
+  lng: 1,
   markerName: 1,
   mrkId: 1
 };

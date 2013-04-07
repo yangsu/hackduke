@@ -30,7 +30,7 @@
       "errorResponses": []
     }]
   }, {
-    "path": "/location/{locationId}",
+    "path": "/location/{id}",
     "description": "Get a location by id",
     "operations": [{
       "httpMethod": "GET",
@@ -39,7 +39,7 @@
       "responseClass": "Location",
       "nickname": "getLocationById",
       "parameters": [{
-        "name": "locationId",
+        "name": "id",
         "paramType": "path",
         "description": "Location Id",
         "dataType": "String",
@@ -70,7 +70,7 @@
       }],
       "errorResponses": [{
         "code": 500,
-        "reason": "Invalid ID"
+        "reason": "Invalid Building ID"
       }]
     }]
   }, {
@@ -278,7 +278,7 @@
       }],
       "errorResponses": [{
         "code": 500,
-        "reason": "Invalid ID"
+        "reason": "Invalid Name"
       }]
     }]
   }],
