@@ -1,7 +1,7 @@
 {
   "apiVersion": "0.2",
   "swaggerVersion": "1.1",
-  "basePath": "http://0.0.0.0:8080/",
+  "basePath": "http://colab-sbx-03.oit.duke.edu:8080/",
   "resourcePath": "/location",
   "apis": [{
     "path": "/location",
