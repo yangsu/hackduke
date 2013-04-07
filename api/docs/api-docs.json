@@ -18,9 +18,6 @@
     "path": "/doc/event.json",
     "description": "Event endpoints"
   }, {
-    "path": "/doc/history.json",
-    "description": "History endpoints"
-  }, {
     "path": "/doc/list.json",
     "description": "List endpoints"
   }, {
