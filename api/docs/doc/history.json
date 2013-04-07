@@ -4,15 +4,22 @@
   "basePath": "http://0.0.0.0:8080/",
   "resourcePath": "/history",
   "apis": [{
-    "path": "/history",
-    "description": "Get a list of course history",
+    "path": "/history/{historyId}",
+    "description": "Get a history by id",
     "operations": [{
       "httpMethod": "GET",
-      "summary": "Get a list of course history",
+      "summary": "Get a history by id",
       "notes": "",
       "responseClass": "History",
-      "nickname": "getHistory",
+      "nickname": "getHistoryById",
       "parameters": [{
+        "name": "historyId",
+        "paramType": "path",
+        "description": "History Id",
+        "dataType": "String",
+        "required": true,
+        "allowMultiple": false
+      }, {
         "allowMultiple": false,
         "dataType": "number",
         "description": "Limit the number of responses",
@@ -27,21 +34,31 @@
         "paramType": "query",
         "required": false
       }],
-      "errorResponses": []
+      "errorResponses": [{
+        "code": 500,
+        "reason": "Invalid ID"
+      }]
     }]
   }, {
-    "path": "/history/{historyId}",
-    "description": "Get a history by id",
+    "path": "/history/department/{department}/number/{number}",
+    "description": "Get a history by class number",
     "operations": [{
       "httpMethod": "GET",
-      "summary": "Get a history by id",
+      "summary": "Get a history by class number",
       "notes": "",
       "responseClass": "History",
-      "nickname": "getHistoryById",
+      "nickname": "getHistoryByClassNumber",
       "parameters": [{
-        "name": "historyId",
+        "name": "department",
         "paramType": "path",
-        "description": "History Id",
+        "description": "Class Department",
+        "dataType": "String",
+        "required": true,
+        "allowMultiple": false
+      }, {
+        "name": "number",
+        "paramType": "path",
+        "description": "Class Number",
         "dataType": "String",
         "required": true,
         "allowMultiple": false
