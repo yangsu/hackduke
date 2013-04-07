@@ -1,6 +1,6 @@
 $(function() {
   window.swaggerUi = new SwaggerUi({
-    discoveryUrl: '/api-docs.json',
+    discoveryUrl: 'http://0.0.0.0/api-docs.json',
     apiKey: '',
     dom_id: 'swagger-ui-container',
     supportHeaderParams: false,
