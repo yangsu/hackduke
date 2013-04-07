@@ -65,6 +65,126 @@
         "reason": "Invalid ID"
       }]
     }]
+  }, {
+    "path": "/directory/netid/{netId}",
+    "description": "Get a directory by netId",
+    "operations": [{
+      "httpMethod": "GET",
+      "summary": "Get a directory by netId",
+      "notes": "",
+      "responseClass": "Directory",
+      "nickname": "getDirectoryByNetId",
+      "parameters": [{
+        "name": "netId",
+        "paramType": "path",
+        "description": "Net Id",
+        "dataType": "String",
+        "required": true,
+        "allowMultiple": false
+      }, {
+        "allowMultiple": false,
+        "dataType": "number",
+        "description": "Limit the number of responses",
+        "name": "limit",
+        "paramType": "query",
+        "required": false
+      }, {
+        "allowMultiple": false,
+        "dataType": "number",
+        "description": "Offset the number of responses",
+        "name": "skip",
+        "paramType": "query",
+        "required": false
+      }],
+      "errorResponses": [{
+        "code": 500,
+        "reason": "Invalid Net ID"
+      }]
+    }]
+  }, {
+    "path": "/directory/phone/{phone}",
+    "description": "Get a directory by phone number",
+    "operations": [{
+      "httpMethod": "GET",
+      "summary": "Get a directory by phone number",
+      "notes": "",
+      "responseClass": "Directory",
+      "nickname": "getDirectoryByPhone",
+      "parameters": [{
+        "name": "phone",
+        "paramType": "path",
+        "description": "Phone Number",
+        "dataType": "String",
+        "required": true,
+        "allowMultiple": false
+      }, {
+        "allowMultiple": false,
+        "dataType": "number",
+        "description": "Limit the number of responses",
+        "name": "limit",
+        "paramType": "query",
+        "required": false
+      }, {
+        "allowMultiple": false,
+        "dataType": "number",
+        "description": "Offset the number of responses",
+        "name": "skip",
+        "paramType": "query",
+        "required": false
+      }],
+      "errorResponses": [{
+        "code": 500,
+        "reason": "Invalid Phone Number"
+      }]
+    }]
+  }, {
+    "path": "/directory/affiliation/{affiliation}",
+    "description": "Get a directory by affiliation",
+    "operations": [{
+      "httpMethod": "GET",
+      "summary": "Get a directory by affiliation",
+      "notes": "Affiliations can be found under /list/education-affiliation",
+      "responseClass": "Directory",
+      "nickname": "getDirectoryByAffiliation",
+      "parameters": [{
+        "name": "affiliation",
+        "paramType": "path",
+        "description": "Affiliation",
+        "defaultValue": "student",
+        "allowableValues": {
+          "values": [
+            "alumni",
+            "faculty",
+            "affiliate",
+            "staff",
+            "student",
+            "emeritus"
+          ],
+          "valueType": "LIST"
+        },
+        "dataType": "String",
+        "required": true,
+        "allowMultiple": false
+      }, {
+        "allowMultiple": false,
+        "dataType": "number",
+        "description": "Limit the number of responses",
+        "name": "limit",
+        "paramType": "query",
+        "required": false
+      }, {
+        "allowMultiple": false,
+        "dataType": "number",
+        "description": "Offset the number of responses",
+        "name": "skip",
+        "paramType": "query",
+        "required": false
+      }],
+      "errorResponses": [{
+        "code": 500,
+        "reason": "Invalid Affiliation"
+      }]
+    }]
   }],
   "models": {
     "Directory": {
