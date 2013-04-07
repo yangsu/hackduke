@@ -1,0 +1,83 @@
+{
+  "apiVersion": "0.2",
+  "swaggerVersion": "1.1",
+  "basePath": "http://0.0.0.0/",
+  "resourcePath": "/department",
+  "apis": [{
+    "path": "/department",
+    "description": "Get a list of departments",
+    "operations": [{
+      "httpMethod": "GET",
+      "summary": "Get a list of departments",
+      "notes": "",
+      "responseClass": "Department",
+      "nickname": "getDepartments",
+      "parameters": [{
+        "allowMultiple": false,
+        "dataType": "number",
+        "defaultValue": 100,
+        "description": "Limit the number of responses",
+        "name": "limit",
+        "paramType": "query",
+        "required": false
+      }, {
+        "allowMultiple": false,
+        "dataType": "number",
+        "defaultValue": 0,
+        "description": "Offset the number of responses",
+        "name": "skip",
+        "paramType": "query",
+        "required": false
+      }],
+      "errorResponses": []
+    }]
+  }, {
+    "path": "/department/{departmentId}",
+    "description": "Get a department by id",
+    "operations": [{
+      "httpMethod": "GET",
+      "summary": "Get a department by id",
+      "notes": "",
+      "responseClass": "Department",
+      "nickname": "getDepartmentById",
+      "parameters": [{
+        "name": "departmentId",
+        "paramType": "path",
+        "description": "Department Id",
+        "dataType": "String",
+        "required": true,
+        "allowMultiple": false
+      }, {
+        "allowMultiple": false,
+        "dataType": "number",
+        "defaultValue": 100,
+        "description": "Limit the number of responses",
+        "name": "limit",
+        "paramType": "query",
+        "required": false
+      }, {
+        "allowMultiple": false,
+        "dataType": "number",
+        "defaultValue": 0,
+        "description": "Offset the number of responses",
+        "name": "skip",
+        "paramType": "query",
+        "required": false
+      }],
+      "errorResponses": [{
+        "code": 500,
+        "reason": "Invalid ID"
+      }]
+    }]
+  }],
+  "models": {
+    "Department": {
+      "id": "Department",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
