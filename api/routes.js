@@ -198,7 +198,7 @@ exports.classHistory = function(req, res, next) {
   var sectionFilter = getFormat('Section', req.query.format);
 
   db.Class
-    .find(query, filter, {})
+    .find(query, filter, baseOptions)
     .populate({
         path: 'terms',
         select: termFilter
@@ -206,9 +206,10 @@ exports.classHistory = function(req, res, next) {
     .exec(wrapError(res, function(docs) {
         var opts = {
           path: 'sections',
-          select: sectionFilter
+          select: sectionFilter,
+          model: 'Section'
         };
-        db.Term.populate(docs.terms, opts, handlerGenerator(res, function(d) {
+        db.Term.populate(_.pluck(docs, 'terms'), opts, handlerGenerator(res, function(d) {
           return docs;
         }));
       }));
@@ -224,7 +225,7 @@ exports.classHistoryById = function(req, res, next) {
   var sectionFilter = getFormat('Section', req.query.format);
 
   db.Class
-    .findById(req.params.id, filter, {})
+    .findById(req.params.id, filter, baseOptions)
     .populate({
         path: 'terms',
         select: termFilter
