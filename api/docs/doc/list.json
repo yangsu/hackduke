@@ -2,16 +2,16 @@
   "apiVersion": "0.2",
   "swaggerVersion": "1.1",
   "basePath": "http://0.0.0.0:8080/",
-  "resourcePath": "/department",
+  "resourcePath": "/list",
   "apis": [{
-    "path": "/department",
-    "description": "Get a list of departments",
+    "path": "/list",
+    "description": "Get a list of list",
     "operations": [{
       "httpMethod": "GET",
-      "summary": "Get a list of departments",
+      "summary": "Get a list of list",
       "notes": "",
-      "responseClass": "Department",
-      "nickname": "getDepartments",
+      "responseClass": "List",
+      "nickname": "getList",
       "parameters": [{
         "allowMultiple": false,
         "dataType": "number",
@@ -30,18 +30,18 @@
       "errorResponses": []
     }]
   }, {
-    "path": "/department/{departmentId}",
-    "description": "Get a department by id",
+    "path": "/list/{classId}",
+    "description": "Get a list by id",
     "operations": [{
       "httpMethod": "GET",
-      "summary": "Get a department by id",
+      "summary": "Get a list by id",
       "notes": "",
-      "responseClass": "Department",
-      "nickname": "getDepartmentById",
+      "responseClass": "List",
+      "nickname": "getListById",
       "parameters": [{
-        "name": "departmentId",
+        "name": "classId",
         "paramType": "path",
-        "description": "Department Id",
+        "description": "List Id",
         "dataType": "String",
         "required": true,
         "allowMultiple": false
@@ -67,8 +67,8 @@
     }]
   }],
   "models": {
-    "Department": {
-      "id": "Department",
+    "List": {
+      "id": "List",
       "properties": {
         "id": {
           "type": "string"

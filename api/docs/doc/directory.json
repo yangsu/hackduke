@@ -2,16 +2,16 @@
   "apiVersion": "0.2",
   "swaggerVersion": "1.1",
   "basePath": "http://0.0.0.0:8080/",
-  "resourcePath": "/department",
+  "resourcePath": "/directory",
   "apis": [{
-    "path": "/department",
-    "description": "Get a list of departments",
+    "path": "/directory",
+    "description": "Get a list of directory",
     "operations": [{
       "httpMethod": "GET",
-      "summary": "Get a list of departments",
+      "summary": "Get a list of directory",
       "notes": "",
-      "responseClass": "Department",
-      "nickname": "getDepartments",
+      "responseClass": "Directory",
+      "nickname": "getDirectory",
       "parameters": [{
         "allowMultiple": false,
         "dataType": "number",
@@ -30,18 +30,18 @@
       "errorResponses": []
     }]
   }, {
-    "path": "/department/{departmentId}",
-    "description": "Get a department by id",
+    "path": "/directory/{directoryId}",
+    "description": "Get a directory by id",
     "operations": [{
       "httpMethod": "GET",
-      "summary": "Get a department by id",
+      "summary": "Get a directory by id",
       "notes": "",
-      "responseClass": "Department",
-      "nickname": "getDepartmentById",
+      "responseClass": "Directory",
+      "nickname": "getDirectoryById",
       "parameters": [{
-        "name": "departmentId",
+        "name": "directoryId",
         "paramType": "path",
-        "description": "Department Id",
+        "description": "Directory Id",
         "dataType": "String",
         "required": true,
         "allowMultiple": false
@@ -67,8 +67,8 @@
     }]
   }],
   "models": {
-    "Department": {
-      "id": "Department",
+    "Directory": {
+      "id": "Directory",
       "properties": {
         "id": {
           "type": "string"

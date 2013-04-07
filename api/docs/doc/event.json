@@ -2,16 +2,16 @@
   "apiVersion": "0.2",
   "swaggerVersion": "1.1",
   "basePath": "http://0.0.0.0:8080/",
-  "resourcePath": "/department",
+  "resourcePath": "/event",
   "apis": [{
-    "path": "/department",
-    "description": "Get a list of departments",
+    "path": "/event",
+    "description": "Get a list of events",
     "operations": [{
       "httpMethod": "GET",
-      "summary": "Get a list of departments",
+      "summary": "Get a list of events",
       "notes": "",
-      "responseClass": "Department",
-      "nickname": "getDepartments",
+      "responseClass": "Event",
+      "nickname": "getEvents",
       "parameters": [{
         "allowMultiple": false,
         "dataType": "number",
@@ -30,18 +30,18 @@
       "errorResponses": []
     }]
   }, {
-    "path": "/department/{departmentId}",
-    "description": "Get a department by id",
+    "path": "/event/{eventId}",
+    "description": "Get a event by id",
     "operations": [{
       "httpMethod": "GET",
-      "summary": "Get a department by id",
+      "summary": "Get a event by id",
       "notes": "",
-      "responseClass": "Department",
-      "nickname": "getDepartmentById",
+      "responseClass": "Event",
+      "nickname": "getEventById",
       "parameters": [{
-        "name": "departmentId",
+        "name": "eventId",
         "paramType": "path",
-        "description": "Department Id",
+        "description": "Event Id",
         "dataType": "String",
         "required": true,
         "allowMultiple": false
@@ -67,8 +67,8 @@
     }]
   }],
   "models": {
-    "Department": {
-      "id": "Department",
+    "Event": {
+      "id": "Event",
       "properties": {
         "id": {
           "type": "string"

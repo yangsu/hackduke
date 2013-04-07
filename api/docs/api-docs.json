@@ -3,7 +3,31 @@
   "swaggerVersion": "1.1",
   "basePath": "http://0.0.0.0:8080/",
   "apis": [{
+    "path": "/doc/class.json",
+    "description": "Class endpoints"
+  }, {
     "path": "/doc/department.json",
     "description": "Department endpoints"
+  }, {
+    "path": "/doc/directory.json",
+    "description": "Directory endpoints"
+  }, {
+    "path": "/doc/evaluation.json",
+    "description": "Evaluation endpoints"
+  }, {
+    "path": "/doc/event.json",
+    "description": "Event endpoints"
+  }, {
+    "path": "/doc/history.json",
+    "description": "History endpoints"
+  }, {
+    "path": "/doc/list.json",
+    "description": "List endpoints"
+  }, {
+    "path": "/doc/location.json",
+    "description": "Location endpoints"
+  }, {
+    "path": "/doc/marker.json",
+    "description": "Marker endpoints"
   }]
 }

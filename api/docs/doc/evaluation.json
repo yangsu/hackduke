@@ -2,16 +2,16 @@
   "apiVersion": "0.2",
   "swaggerVersion": "1.1",
   "basePath": "http://0.0.0.0:8080/",
-  "resourcePath": "/department",
+  "resourcePath": "/evaluation",
   "apis": [{
-    "path": "/department",
-    "description": "Get a list of departments",
+    "path": "/evaluation",
+    "description": "Get a list of course evaluations",
     "operations": [{
       "httpMethod": "GET",
-      "summary": "Get a list of departments",
+      "summary": "Get a list of course evaluations",
       "notes": "",
-      "responseClass": "Department",
-      "nickname": "getDepartments",
+      "responseClass": "Evaluation",
+      "nickname": "getEvaluations",
       "parameters": [{
         "allowMultiple": false,
         "dataType": "number",
@@ -30,18 +30,18 @@
       "errorResponses": []
     }]
   }, {
-    "path": "/department/{departmentId}",
-    "description": "Get a department by id",
+    "path": "/evaluation/{evaluationId}",
+    "description": "Get a evaluation by id",
     "operations": [{
       "httpMethod": "GET",
-      "summary": "Get a department by id",
+      "summary": "Get a evaluation by id",
       "notes": "",
-      "responseClass": "Department",
-      "nickname": "getDepartmentById",
+      "responseClass": "Evaluation",
+      "nickname": "getEvaluationById",
       "parameters": [{
-        "name": "departmentId",
+        "name": "evaluationId",
         "paramType": "path",
-        "description": "Department Id",
+        "description": "Evaluation Id",
         "dataType": "String",
         "required": true,
         "allowMultiple": false
@@ -67,8 +67,8 @@
     }]
   }],
   "models": {
-    "Department": {
-      "id": "Department",
+    "Evaluation": {
+      "id": "Evaluation",
       "properties": {
         "id": {
           "type": "string"
