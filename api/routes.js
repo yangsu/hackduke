@@ -315,7 +315,7 @@ exports.event = function(req, res, next) {
 };
 
 exports.listEventHost = distinct('Event', 'creator');
-exports.listEventType = distinct('Event', 'categories.category.value');
+exports.listEventCategory = distinct('Event', 'categories.category.value');
 exports.listEventVenue = distinct('Event', 'location.address');
 exports.eventById = byId('Event');
 

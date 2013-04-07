@@ -56,7 +56,7 @@ server.get('/list/program', routes.listPrograms);
 server.get('/list/school', routes.listSchools);
 server.get('/list/term', routes.listTerm);
 server.get('/list/event-host', routes.listEventHost);
-server.get('/list/event-type', routes.listEventType);
+server.get('/list/event-category', routes.listEventCategory);
 server.get('/list/event-venue', routes.listEventVenue);
 server.get('/list/location', routes.listLocation);
 server.get('/list/marker', routes.listMarker);
