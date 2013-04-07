@@ -74,19 +74,16 @@ server.get('/class', routes.classes);
 server.get('/class/:id', routes.classById);
 server.get('/class/department/:department', routes.classes);
 server.get('/class/department/:department/number/:number', routes.class);
+server.get('/class/department/:department/number/:number/evaluation', routes.evaluation);
 server.get('/class/department/:department/number/:number/term', routes.classTerm);
 server.get('/class/department/:department/number/:number/term/:title', routes.classSection);
 server.get('/class/term/:title', routes.classByTerm);
 server.get('/class/term/:title/department/:department', routes.classByTerm);
+server.get('/class/evaluation/:id', routes.evaluationById);
 server.get('/class/term/:id', routes.termById);
 server.get('/class/section/:id', routes.sectionById);
 server.get('/class/history/:id', routes.classHistoryById);
 server.get('/class/history/department/:department/number/:number', routes.classHistory);
-
-
-
-server.get('/evaluation/:id', routes.evaluationById);
-server.get('/evaluation/department/:department/class/:number', routes.evaluation);
 
 server.get('/event', routes.event);
 server.get('/event/:id', routes.eventById);

@@ -12,9 +12,6 @@
     "path": "/doc/directory.json",
     "description": "Directory endpoints"
   }, {
-    "path": "/doc/evaluation.json",
-    "description": "Evaluation endpoints"
-  }, {
     "path": "/doc/event.json",
     "description": "Event endpoints"
   }, {
