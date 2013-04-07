@@ -265,17 +265,24 @@ exports.evaluation = function(req, res, next) {
   var filter = getFormat('Section', req.query.format);
   var evalfilter = getFormat('Evaluation', req.query.format);
 
-  db.Section.find(query, filter, baseOptions, handlerGenerator(res, function(d) {
+  db.Section.find(query, filter, baseOptions, wrapError(res, function(d) {
     var course_id = _.unique(_.pluck(d, 'course_id'))[0];
 
     db.Evaluation.find({
       course_id: course_id,
       details: { $exists: true }
     }, evalfilter, baseOptions, handlerGenerator(res, function(data) {
-      var ratings = data.details['course-quality'].ratings;
-      data.details['course-quality'].ratings = _.filter(ratings, function(r) {
-        return r.question == 'Mean' || r.question == 'Median';
-      });
+      if (_.isArray(data) && req.query.format == 'detailed') {
+        data = _.map(data, function(d) {
+          var details = d.details;
+          _.each(details, function(v, k) {
+            details[k] = _.filter(v.ratings, function(r) {
+              return r.question == 'Mean' || r.question == 'Median';
+            });
+          });
+          return d;
+        });
+      }
       return data;
     }));
   }));
