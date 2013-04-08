@@ -372,4 +372,18 @@ db.parallel = function(collection, model, finalCallback) {
   processChunk();
 };
 
+db.schemaToJSON = function(Model) {
+  var schema = db[Model].schema;
+  var json = { id: Model };
+
+  json.properties = _.reduce(schema.paths, function(memo, prop, field) {
+    if (prop.instance && field != '__v') {
+      memo[field] = { type: prop.instance };
+    }
+    return memo;
+  }, {});
+
+  return json;
+};
+
 module.exports = db;
