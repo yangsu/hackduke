@@ -58,7 +58,7 @@ var formatParam = listParam({
   required: false
 }, ['basic', 'detailed', 'raw']);
 
-var baseOpt = [formatParam, {
+var limitSkip = [{
   name: 'limit',
   description: 'Limit the number of responses',
   dataType: 'Number',
@@ -71,6 +71,8 @@ var baseOpt = [formatParam, {
   paramType: 'query',
   required: false
 }];
+
+var formatLimitSkip = [formatParam].concat(limitSkip);
 
 module.exports = function(callback) {
   console.log('Loading Documentation Data...');
@@ -136,7 +138,7 @@ module.exports = function(callback) {
           description: 'Get a list of classes',
           name: 'getClasses',
           responseClass: 'LIST[Class]',
-          parameters: baseOpt
+          parameters: formatLimitSkip
         }),
         get({
           path: '/class/{id}',
@@ -161,28 +163,28 @@ module.exports = function(callback) {
           description: 'Get a class by class number',
           name: 'getClassByClassNumber',
           responseClass: 'Class',
-          parameters: [departmentParam, numberParam].concat(baseOpt)
+          parameters: [departmentParam, numberParam].concat(formatLimitSkip)
         }),
         get({
           path: '/class/department/{department}/number/{number}/evaluation',
           description: 'Get class evaluation by class number',
           name: 'getClassByClassNumber',
           responseClass: 'Class',
-          parameters: [departmentParam, numberParam].concat(baseOpt)
+          parameters: [departmentParam, numberParam].concat(formatLimitSkip)
         }),
         get({
           path: '/class/department/{department}/number/{number}/term',
           description: 'Get class terms by class number',
           name: 'getTermsByClassNumber',
           responseClass: 'LIST[Term]',
-          parameters: [departmentParam, numberParam].concat(baseOpt)
+          parameters: [departmentParam, numberParam].concat(formatLimitSkip)
         }),
         get({
           path: '/class/department/{department}/number/{number}/term/{term}',
           description: 'Get class sections by class number and term',
           name: 'getSectionsByClassNumberAndTerm',
           responseClass: 'LIST[Section]',
-          parameters: [departmentParam, numberParam, termParam].concat(baseOpt)
+          parameters: [departmentParam, numberParam, termParam].concat(formatLimitSkip)
         }),
         get({
           path: '/class/history/department/{department}/number/{number}',
@@ -198,14 +200,14 @@ module.exports = function(callback) {
           description: 'Get classes offered in a given class term or semester',
           name: 'getClassesByTerm',
           responseClass: 'LIST[Class]',
-          parameters: [termParam].concat(baseOpt)
+          parameters: [termParam].concat(formatLimitSkip)
         }),
         get({
           path: '/class/term/{term}/department/{department}',
           description: 'Get classes by class term and department',
           name: 'getClassesByTermAndDepartment',
           responseClass: 'LIST[Class]',
-          parameters: [termParam, departmentParam].concat(baseOpt)
+          parameters: [termParam, departmentParam].concat(formatLimitSkip)
         }),
         get({
           path: '/evaluation/{id}',
@@ -252,7 +254,7 @@ module.exports = function(callback) {
           description: 'Get a list of departments',
           name: 'getDepartments',
           responseClass: 'LIST[Department]',
-          parameters: baseOpt
+          parameters: formatLimitSkip
         }),
         get({
           path: '/department/{id}',
@@ -278,7 +280,7 @@ module.exports = function(callback) {
           description: 'Get a list of directory entries',
           name: 'getDirectory',
           responseClass: 'LIST[Directory]',
-          parameters: baseOpt
+          parameters: formatLimitSkip
         }),
         get({
           path: '/directory/{id}',
@@ -301,7 +303,7 @@ module.exports = function(callback) {
             description: 'Net Id',
             dataType: 'String',
             required: true
-          }].concat(baseOpt),
+          }].concat(formatLimitSkip),
           errorResponses: errRes({
             500: 'Invalid Net ID'
           })
@@ -317,7 +319,7 @@ module.exports = function(callback) {
             description: 'Phone Number',
             dataType: 'String',
             required: true
-          }].concat(baseOpt)
+          }].concat(formatLimitSkip)
         }),
         get({
           path: '/directory/affiliation/{affiliation}',
@@ -331,7 +333,7 @@ module.exports = function(callback) {
             description: 'Affiliation',
             dataType: 'String',
             required: true
-          }, values.affiliations)].concat(baseOpt)
+          }, values.affiliations)].concat(formatLimitSkip)
         })
       ],
       models: {
@@ -371,7 +373,7 @@ module.exports = function(callback) {
           description: 'Get a list of events',
           name: 'getEvent',
           responseClass: 'LIST[Event]',
-          parameters: baseOpt
+          parameters: formatLimitSkip
         }),
         get({
           path: '/event/{id}',
@@ -394,7 +396,7 @@ module.exports = function(callback) {
             description: 'event category',
             dataType: 'String',
             required: true
-          }, values.eventCategories.sort())].concat(baseOpt)
+          }, values.eventCategories.sort())].concat(formatLimitSkip)
         }),
         get({
           path: '/event/host/{host}',
@@ -407,7 +409,7 @@ module.exports = function(callback) {
             description: 'event host',
             dataType: 'String',
             required: true
-          }, values.eventHosts.sort())].concat(baseOpt)
+          }, values.eventHosts.sort())].concat(formatLimitSkip)
         }),
         get({
           path: '/event/venue/{venue}',
@@ -420,7 +422,7 @@ module.exports = function(callback) {
             description: 'event venue',
             dataType: 'String',
             required: true
-          }, values.eventVenues.sort())].concat(baseOpt),
+          }, values.eventVenues.sort())].concat(formatLimitSkip),
           errorResponses: errRes({
             500: 'Invalid Net ID'
           })
@@ -437,35 +439,35 @@ module.exports = function(callback) {
             description: 'Affiliation',
             dataType: 'String',
             required: true
-          }, values.affiliations)].concat(baseOpt)
+          }, values.affiliations)].concat(formatLimitSkip)
         }),
         get({
           path: '/event/date/{year}/{month}',
           description: 'Get events by year and month',
           name: 'getEventByYearAndMonth',
           responseClass: 'LIST[Event]',
-          parameters: [yearParam, monthParam].concat(baseOpt)
+          parameters: [yearParam, monthParam].concat(formatLimitSkip)
         }),
         get({
           path: '/event/date/{year}/{month}/{day}',
           description: 'Get events by date',
           name: 'getEventByDate',
           responseClass: 'LIST[Event]',
-          parameters: [yearParam, monthParam, dayParam].concat(baseOpt)
+          parameters: [yearParam, monthParam, dayParam].concat(formatLimitSkip)
         }),
         get({
           path: '/event/date/today',
           description: 'Get events from today',
           name: 'getEventFromToday',
           responseClass: 'LIST[Event]',
-          parameters: baseOpt
+          parameters: formatLimitSkip
         }),
         get({
           path: '/event/date/this-week',
           description: 'Get events from this week',
           name: 'getEventFromThisWeek',
           responseClass: 'LIST[Event]',
-          parameters: baseOpt
+          parameters: formatLimitSkip
         })
       ],
       models: {
@@ -473,12 +475,78 @@ module.exports = function(callback) {
       }
     });
 
+    var listApi = extend({
+      resourcePath: '/list',
+      apis: [
+        get({
+          path: '/list/academic-organization',
+          description: 'Get a list of academic organizations',
+          name: 'getAcademicOrganizations',
+          responseClass: 'LIST'
+        }),
+        get({
+          path: '/list/department',
+          description: 'Get a list of departments',
+          name: 'getDepartments',
+          responseClass: 'LIST'
+        }),
+        get({
+          path: '/list/program',
+          description: 'Get a list of programs',
+          name: 'getPrograms',
+          responseClass: 'LIST'
+        }),
+        get({
+          path: '/list/school',
+          description: 'Get a list of schools',
+          name: 'getSchools',
+          responseClass: 'LIST'
+        }),
+        get({
+          path: '/list/event-host',
+          description: 'Get a list of event hosts',
+          name: 'getEventHosts',
+          responseClass: 'LIST'
+        }),
+        get({
+          path: '/list/event-category',
+          description: 'Get a list of event categories',
+          name: 'getEventCategories',
+          responseClass: 'LIST'
+        }),
+        get({
+          path: '/list/event-venue',
+          description: 'Get a list of event venues',
+          name: 'getEventVenues',
+          responseClass: 'LIST'
+        }),
+        get({
+          path: '/list/marker',
+          description: 'Get a list of map markers',
+          name: 'getMarkers',
+          responseClass: 'LIST'
+        }),
+        get({
+          path: '/list/marker-category',
+          description: 'Get a list of map marker categories',
+          name: 'getMarkerCategories',
+          responseClass: 'LIST'
+        }),
+        get({
+          path: '/list/education-affiliation',
+          description: 'Get a list of education affiliations',
+          name: 'getEducationAffiliation',
+          responseClass: 'LIST'
+        })
+      ]
+    });
+
     var apis = _.map([
       'class',
       'department',
       'directory',
       'event',
-      // 'list',
+      'list',
       // 'location',
       // 'marker'
     ], function(api) { return { path: '/apidoc/' + api }; });
@@ -490,7 +558,8 @@ module.exports = function(callback) {
       class: classApi,
       department: departmentApi,
       directory: directoryApi,
-      event: eventApi
+      event: eventApi,
+      list: listApi
     });
   });
 };
