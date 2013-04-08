@@ -1,6 +1,6 @@
 $(function() {
   window.swaggerUi = new SwaggerUi({
-    discoveryUrl: 'http://colab-sbx-03.oit.duke.edu:8080/api-docs.json',
+    discoveryUrl: 'http://colab-sbx-03.oit.duke.edu:8080/apidoc',
     apiKey: '',
     dom_id: 'swagger-ui-container',
     supportHeaderParams: false,
