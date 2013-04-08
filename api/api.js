@@ -1,16 +1,15 @@
 var bunyan = require('bunyan')
   , restify = require('restify');
 
-var name = 'Duke API';
-var version = '0.1.0';
+var config = require('./config');
 
 var log = bunyan.createLogger({
-  name: name
+  name: config.name
 });
 
 var server = restify.createServer({
-  name: name,
-  version: version
+  name: config.name,
+  version: config.version
 });
 
 server.pre(restify.pre.userAgentConnection());
@@ -48,6 +47,15 @@ server.get(/\/css\/.+\.css/, restify.serveStatic({
 server.get(/\/images\/.+\.(png|gif)/, restify.serveStatic({
   directory: './docs/'
 }));
+
+require('./apidoc')(function(err, apidoc) {
+  server.get('/apidoc', function(req, res, next) {
+    return res.json(apidoc);
+  });
+  server.get('/apidoc/class', function(req, res, next) {
+    return res.json(apidoc.class);
+  });
+});
 
 server.get('/list/academic-organization', routes.listAcademicOrgs);
 server.get('/list/department', routes.listDepartment);
