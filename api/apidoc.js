@@ -105,6 +105,11 @@ module.exports = function(callback) {
       db.Marker.distinct('categoryName').exec(cb);
     }
   }, function(err, values) {
+
+    _.each(values, function(data, key) {
+      values[key] = data.sort();
+    });
+
     console.log('Documentation Data Loaded');
 
     var idParam = {
@@ -137,7 +142,7 @@ module.exports = function(callback) {
       description: 'class term',
       dataType: 'String',
       required: true
-    }, values.terms.sort());
+    }, values.terms);
 
     var classApi = extend({
       resourcePath: '/class',
@@ -405,7 +410,7 @@ module.exports = function(callback) {
             description: 'event category',
             dataType: 'String',
             required: true
-          }, values.eventCategories.sort())].concat(formatLimitSkip)
+          }, values.eventCategories)].concat(formatLimitSkip)
         }),
         get({
           path: '/event/host/{host}',
@@ -418,7 +423,7 @@ module.exports = function(callback) {
             description: 'event host',
             dataType: 'String',
             required: true
-          }, values.eventHosts.sort())].concat(formatLimitSkip)
+          }, values.eventHosts)].concat(formatLimitSkip)
         }),
         get({
           path: '/event/venue/{venue}',
@@ -431,7 +436,7 @@ module.exports = function(callback) {
             description: 'event venue',
             dataType: 'String',
             required: true
-          }, values.eventVenues.sort())].concat(formatLimitSkip),
+          }, values.eventVenues)].concat(formatLimitSkip),
           errorResponses: errRes({
             500: 'Invalid Net ID'
           })
