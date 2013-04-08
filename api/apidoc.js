@@ -94,6 +94,15 @@ module.exports = function(callback) {
     },
     eventVenues: function(cb) {
       db.Event.distinct('location.address').exec(cb);
+    },
+    locationNames: function(cb) {
+      db.Location.distinct('name').exec(cb);
+    },
+    markerNames: function(cb) {
+      db.Marker.distinct('markerName').exec(cb);
+    },
+    markerCategories: function(cb) {
+      db.Marker.distinct('categoryName').exec(cb);
     }
   }, function(err, values) {
     console.log('Documentation Data Loaded');
@@ -521,6 +530,12 @@ module.exports = function(callback) {
           responseClass: 'LIST'
         }),
         get({
+          path: '/list/location',
+          description: 'Get a list of building locations',
+          name: 'getLocations',
+          responseClass: 'LIST'
+        }),
+        get({
           path: '/list/marker',
           description: 'Get a list of map markers',
           name: 'getMarkers',
@@ -541,14 +556,141 @@ module.exports = function(callback) {
       ]
     });
 
+
+    var locationApi = extend({
+      resourcePath: '/location',
+      apis: [
+        get({
+          path: '/location',
+          description: 'Get a list of locations',
+          name: 'getLocations',
+          responseClass: 'LIST[Location]',
+          parameters: formatLimitSkip
+        }),
+        get({
+          path: '/location/{id}',
+          description: 'Get a location by id',
+          name: 'getLocationById',
+          responseClass: 'Location',
+          parameters: [idParam, formatParam],
+          errorResponses: errRes({
+            500: 'Invalid ID'
+          })
+        }),
+        get({
+          path: '/location/building-id/{buildingId}',
+          description: 'Get a location by building id',
+          name: 'getLocationByBuildingId',
+          responseClass: 'Location',
+          parameters: [{
+            name: 'buildingId',
+            paramType: 'path',
+            description: 'Building ID',
+            dataType: 'Number',
+            required: true
+          }, formatParam],
+          errorResponses: errRes({
+            500: 'Invalid Building ID'
+          })
+        }),
+        get({
+          path: '/location/name/{name}',
+          description: 'Get a location by name',
+          notes: 'location names can be found at /list/location',
+          name: 'getLocationByName',
+          responseClass: 'Location',
+          parameters: [listParam({
+            name: 'name',
+            paramType: 'path',
+            description: 'Location Name',
+            dataType: 'String',
+            required: true
+          }, values.locationNames), formatParam]
+        })
+      ],
+      models: {
+        Location: db.schemaToJSON('Location')
+      }
+    });
+
+    var markerApi = extend({
+      resourcePath: '/marker',
+      apis: [
+        get({
+          path: '/marker',
+          description: 'Get a list of markers',
+          name: 'getMarkers',
+          responseClass: 'LIST[Marker]',
+          parameters: formatLimitSkip
+        }),
+        get({
+          path: '/marker/{id}',
+          description: 'Get marker by id',
+          name: 'getMarkerById',
+          responseClass: 'Marker',
+          parameters: [idParam, formatParam],
+          errorResponses: errRes({
+            500: 'Invalid ID'
+          })
+        }),
+        get({
+          path: '/marker/marker-id/{markerId}',
+          description: 'Get marker by marker id',
+          name: 'getMarkerByMarkerId',
+          responseClass: 'Marker',
+          parameters: [{
+            name: 'markerId',
+            paramType: 'path',
+            description: 'Marker ID',
+            dataType: 'Number',
+            required: true
+          }, formatParam],
+          errorResponses: errRes({
+            500: 'Invalid Marker ID'
+          })
+        }),
+        get({
+          path: '/marker/name/{name}',
+          description: 'Get marker by name',
+          notes: 'marker names can be found at /list/marker',
+          name: 'getMarkerByName',
+          responseClass: 'Marker',
+          parameters: [listParam({
+            name: 'name',
+            paramType: 'path',
+            description: 'Marker Name',
+            dataType: 'String',
+            required: true
+          }, values.markerNames), formatParam]
+        }),
+        get({
+          path: '/marker/category/{category}',
+          description: 'Get marker by category',
+          notes: 'Categories can be found under /list/marker-category',
+          name: 'getMarkerByCategory',
+          responseClass: 'LIST[Marker]',
+          parameters: [listParam({
+            name: 'category',
+            paramType: 'path',
+            description: 'Marker category',
+            dataType: 'String',
+            required: true
+          }, values.markerCategories), formatParam]
+        })
+      ],
+      models: {
+        Marker: db.schemaToJSON('Marker')
+      }
+    });
+
     var apis = _.map([
       'class',
       'department',
       'directory',
       'event',
       'list',
-      // 'location',
-      // 'marker'
+      'location',
+      'marker'
     ], function(api) { return { path: '/apidoc/' + api }; });
 
     callback(err, {
@@ -559,7 +701,9 @@ module.exports = function(callback) {
       department: departmentApi,
       directory: directoryApi,
       event: eventApi,
-      list: listApi
+      list: listApi,
+      location: locationApi,
+      marker: markerApi
     });
   });
 };
