@@ -73,6 +73,7 @@ var baseOpt = [formatParam, {
 }];
 
 module.exports = function(callback) {
+  console.log('Loading Documentation Data...');
   async.parallel({
     departments: function(cb) {
       db.Department.distinct('code').exec(cb);
@@ -82,8 +83,18 @@ module.exports = function(callback) {
     },
     affiliations: function(cb) {
       db.Directory.distinct('eduPersonAffiliation').exec(cb);
+    },
+    eventCategories: function(cb) {
+      db.Event.distinct('categories.category.value').exec(cb);
+    },
+    eventHosts: function(cb) {
+      db.Event.distinct('creator').exec(cb);
+    },
+    eventVenues: function(cb) {
+      db.Event.distinct('location.address').exec(cb);
     }
   }, function(err, values) {
+    console.log('Documentation Data Loaded');
 
     var idParam = {
       name: 'id',
@@ -328,11 +339,145 @@ module.exports = function(callback) {
       }
     });
 
+    var yearParam = listParam({
+      name: 'year',
+      paramType: 'path',
+      description: 'Year (YYYY)',
+      dataType: 'Number',
+      required: true
+    }, _.range(2012, 2015));
+
+    var monthParam = listParam({
+      name: 'month',
+      paramType: 'path',
+      description: 'Month (non zero padded)',
+      dataType: 'Number',
+      required: true
+    }, _.range(1, 12));
+
+    var dayParam = listParam({
+      name: 'day',
+      paramType: 'path',
+      description: 'Day (non zero padded)',
+      dataType: 'Number',
+      required: true
+    }, _.range(1, 32));
+
+    var eventApi = extend({
+      resourcePath: '/event',
+      apis: [
+        get({
+          path: '/event',
+          description: 'Get a list of events',
+          name: 'getEvent',
+          responseClass: 'LIST[Event]',
+          parameters: baseOpt
+        }),
+        get({
+          path: '/event/{id}',
+          description: 'Get a event entry by id',
+          name: 'getEventById',
+          responseClass: 'Event',
+          parameters: [idParam, formatParam],
+          errorResponses: errRes({
+            500: 'Invalid ID'
+          })
+        }),
+        get({
+          path: '/event/category/{category}',
+          description: 'Get events by category',
+          name: 'getEventByCategory',
+          responseClass: 'LIST[Event]',
+          parameters: [listParam({
+            name: 'category',
+            paramType: 'path',
+            description: 'event category',
+            dataType: 'String',
+            required: true
+          }, values.eventCategories.sort())].concat(baseOpt)
+        }),
+        get({
+          path: '/event/host/{host}',
+          description: 'Get events by host',
+          name: 'getEventByHost',
+          responseClass: 'LIST[Event]',
+          parameters: [listParam({
+            name: 'host',
+            paramType: 'path',
+            description: 'event host',
+            dataType: 'String',
+            required: true
+          }, values.eventHosts.sort())].concat(baseOpt)
+        }),
+        get({
+          path: '/event/venue/{venue}',
+          description: 'Get events by venue',
+          name: 'getEventByVenue',
+          responseClass: 'LIST[Event]',
+          parameters: [listParam({
+            name: 'venue',
+            paramType: 'path',
+            description: 'event venue',
+            dataType: 'String',
+            required: true
+          }, values.eventVenues.sort())].concat(baseOpt),
+          errorResponses: errRes({
+            500: 'Invalid Net ID'
+          })
+        }),
+        get({
+          path: '/event/affiliation/{affiliation}',
+          description: 'Get events by phone number',
+          notes: 'Affiliations can be found under /list/education-affiliation',
+          name: 'getEventByAffiliation',
+          responseClass: 'LIST[Event]',
+          parameters: [listParam({
+            name: 'affiliation',
+            paramType: 'path',
+            description: 'Affiliation',
+            dataType: 'String',
+            required: true
+          }, values.affiliations)].concat(baseOpt)
+        }),
+        get({
+          path: '/event/date/{year}/{month}',
+          description: 'Get events by year and month',
+          name: 'getEventByYearAndMonth',
+          responseClass: 'LIST[Event]',
+          parameters: [yearParam, monthParam].concat(baseOpt)
+        }),
+        get({
+          path: '/event/date/{year}/{month}/{day}',
+          description: 'Get events by date',
+          name: 'getEventByDate',
+          responseClass: 'LIST[Event]',
+          parameters: [yearParam, monthParam, dayParam].concat(baseOpt)
+        }),
+        get({
+          path: '/event/date/today',
+          description: 'Get events from today',
+          name: 'getEventFromToday',
+          responseClass: 'LIST[Event]',
+          parameters: baseOpt
+        }),
+        get({
+          path: '/event/date/this-week',
+          description: 'Get events from this week',
+          name: 'getEventFromThisWeek',
+          responseClass: 'LIST[Event]',
+          parameters: baseOpt
+        })
+      ],
+      models: {
+        Event: db.schemaToJSON('Event')
+      }
+    });
+
     var apis = _.map([
       'class',
       'department',
       'directory',
-      // 'event',
+      'event',
       // 'list',
       // 'location',
       // 'marker'
@@ -344,7 +489,8 @@ module.exports = function(callback) {
       }),
       class: classApi,
       department: departmentApi,
-      directory: directoryApi
+      directory: directoryApi,
+      event: eventApi
     });
   });
 };

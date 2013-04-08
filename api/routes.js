@@ -362,8 +362,15 @@ exports.eventByMonth = function(req, res, next) {
   eventEndpoint(query, req, res, next);
 };
 
+
+function timeInEDT(d) {
+  d = d || new Date;
+  var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+  return new Date(utc + (3600000 * -4));
+}
+
 exports.eventToday = function(req, res, next) {
-  var d = new Date;
+  var d = timeInEDT();
 
   eventEndpoint({
     'start.year': '' + d.getFullYear(),
@@ -375,7 +382,7 @@ exports.eventToday = function(req, res, next) {
 var week = 1000 * 3600 * 24 * 7;
 
 exports.eventThisWeek = function(req, res, next) {
-  var current = new Date;
+  var current = timeInEDT();
   var d = new Date(current.getTime() + week);
 
   eventEndpoint({
