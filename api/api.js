@@ -48,12 +48,12 @@ server.get(/\/images\/.+\.(png|gif)/, restify.serveStatic({
   directory: './docs/'
 }));
 
-require('./apidoc')(function(err, apidoc) {
+require('./apidoc')(function(err, docs) {
   server.get('/apidoc', function(req, res, next) {
-    return res.json(apidoc);
+    return res.json(docs.api);
   });
   server.get('/apidoc/:resource', function(req, res, next) {
-    return res.json(apidoc[req.params.resource]);
+    return res.json(docs[req.params.resource]);
   });
 });
 

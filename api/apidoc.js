@@ -79,6 +79,9 @@ module.exports = function(callback) {
     },
     terms: function(cb) {
       db.Term.distinct('title').exec(cb);
+    },
+    affiliations: function(cb) {
+      db.Directory.distinct('eduPersonAffiliation').exec(cb);
     }
   }, function(err, values) {
 
@@ -237,7 +240,7 @@ module.exports = function(callback) {
           path: '/department',
           description: 'Get a list of departments',
           name: 'getDepartments',
-          responseClass: 'Department',
+          responseClass: 'LIST[Department]',
           parameters: baseOpt
         }),
         get({
@@ -256,24 +259,92 @@ module.exports = function(callback) {
       }
     });
 
-    callback(err, extend({
-      apis: [{
-        path: '/apidoc/class'
-      }, {
-        path: '/apidoc/department'
-      // }, {
-      //   path: '/doc/directory'
-      // }, {
-      //   path: '/doc/event'
-      // }, {
-      //   path: '/doc/list'
-      // }, {
-      //   path: '/doc/location'
-      // }, {
-      //   path: '/doc/marker'
-      }],
+    var directoryApi = extend({
+      resourcePath: '/directory',
+      apis: [
+        get({
+          path: '/directory',
+          description: 'Get a list of directory entries',
+          name: 'getDirectory',
+          responseClass: 'LIST[Directory]',
+          parameters: baseOpt
+        }),
+        get({
+          path: '/directory/{id}',
+          description: 'Get a directory entry by id',
+          name: 'getDirectoryById',
+          responseClass: 'Directory',
+          parameters: [idParam, formatParam],
+          errorResponses: errRes({
+            500: 'Invalid ID'
+          })
+        }),
+        get({
+          path: '/directory/netid/{netId}',
+          description: 'Get directory entries by netId',
+          name: 'getDirectoryByNetId',
+          responseClass: 'Directory',
+          parameters: [{
+            name: 'netId',
+            paramType: 'path',
+            description: 'Net Id',
+            dataType: 'String',
+            required: true
+          }].concat(baseOpt),
+          errorResponses: errRes({
+            500: 'Invalid Net ID'
+          })
+        }),
+        get({
+          path: '/directory/phone/{phone}',
+          description: 'Get directory entries by phone number',
+          name: 'getDirectoryByPhone',
+          responseClass: 'Directory',
+          parameters: [{
+            name: 'phone',
+            paramType: 'path',
+            description: 'Phone Number',
+            dataType: 'String',
+            required: true
+          }].concat(baseOpt)
+        }),
+        get({
+          path: '/directory/affiliation/{affiliation}',
+          description: 'Get directory entries by phone number',
+          notes: 'Affiliations can be found under /list/education-affiliation',
+          name: 'getDirectoryByAffiliation',
+          responseClass: 'Directory',
+          parameters: [listParam({
+            name: 'affiliation',
+            paramType: 'path',
+            description: 'Affiliation',
+            dataType: 'String',
+            required: true
+          }, values.affiliations)].concat(baseOpt)
+        })
+      ],
+      models: {
+        Directory: db.schemaToJSON('Directory')
+      }
+    });
+
+    var apis = _.map([
+      'class',
+      'department',
+      'directory',
+      // 'event',
+      // 'list',
+      // 'location',
+      // 'marker'
+    ], function(api) { return { path: '/apidoc/' + api }; });
+
+    callback(err, {
+      api: extend({
+        apis: apis
+      }),
       class: classApi,
-      department: departmentApi
-    }));
+      department: departmentApi,
+      directory: directoryApi
+    });
   });
 };
