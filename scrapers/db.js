@@ -377,7 +377,7 @@ db.schemaToJSON = function(Model) {
   var json = { id: Model };
 
   json.properties = _.reduce(schema.paths, function(memo, prop, field) {
-    if (prop.instance && field != '__v') {
+    if (prop.instance && field != '__v' && !/path/i.test(field)) {
       memo[field] = { type: prop.instance };
     }
     return memo;

@@ -52,8 +52,8 @@ require('./apidoc')(function(err, apidoc) {
   server.get('/apidoc', function(req, res, next) {
     return res.json(apidoc);
   });
-  server.get('/apidoc/class', function(req, res, next) {
-    return res.json(apidoc.class);
+  server.get('/apidoc/:resource', function(req, res, next) {
+    return res.json(apidoc[req.params.resource]);
   });
 });
 

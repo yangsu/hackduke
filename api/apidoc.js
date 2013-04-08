@@ -119,14 +119,14 @@ module.exports = function(callback) {
       apis: [
         get({
           path: '/class',
-          description: 'Get a list of class',
+          description: 'Get a list of classes',
           name: 'getClasses',
-          responseClass: 'Class',
+          responseClass: 'LIST[Class]',
           parameters: baseOpt
         }),
         get({
           path: '/class/{id}',
-          description: 'Get a class by id',
+          description: 'Get class by id',
           name: 'getClassById',
           responseClass: 'Class',
           parameters: [idParam, formatParam],
@@ -136,7 +136,7 @@ module.exports = function(callback) {
         }),
         get({
           path: '/class/department/{department}',
-          description: 'Get a list of class from a department',
+          description: 'Get a list of classes from a department',
           name: 'getClassFromDepartment',
           notes: 'department codes can be found at /list/department-code',
           responseClass: 'LIST[Class]',
@@ -230,11 +230,37 @@ module.exports = function(callback) {
       }
     });
 
+    var departmentApi = extend({
+      resourcePath: '/department',
+      apis: [
+        get({
+          path: '/department',
+          description: 'Get a list of departments',
+          name: 'getDepartments',
+          responseClass: 'Department',
+          parameters: baseOpt
+        }),
+        get({
+          path: '/department/{id}',
+          description: 'Get a department by id',
+          name: 'getDepartmentById',
+          responseClass: 'Department',
+          parameters: [idParam, formatParam],
+          errorResponses: errRes({
+            500: 'Invalid ID'
+          })
+        })
+      ],
+      models: {
+        Department: db.schemaToJSON('Department')
+      }
+    });
+
     callback(err, extend({
       apis: [{
         path: '/apidoc/class'
-      // }, {
-      //   path: '/doc/department'
+      }, {
+        path: '/apidoc/department'
       // }, {
       //   path: '/doc/directory'
       // }, {
@@ -246,7 +272,8 @@ module.exports = function(callback) {
       // }, {
       //   path: '/doc/marker'
       }],
-      class: classApi
+      class: classApi,
+      department: departmentApi
     }));
   });
 };
