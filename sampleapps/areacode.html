@@ -23,6 +23,7 @@ body {
 
 </style>
 <body>
+    <h2 id="header"></h2>
 <script src='http://d3js.org/d3.v3.min.js'></script>
 <script src='http://cdnjs.cloudflare.com/ajax/libs/lodash.js/1.1.1/lodash.underscore.min.js'></script>
 <script src='//cdnjs.cloudflare.com/ajax/libs/async/1.22/async.min.js'></script>
@@ -81,7 +82,9 @@ function getAreaCodeCounts(cb) {
 
       numbers[k] = v;
     })
-      console.log(numbers);
+    var total = _.reduce(numbers, function(memo, n){ return memo + n.sum; }, 0);
+
+    document.getElementById('header').innerHTML = total + ' US phone numbers found';
     cb(numbers);
   });
 }
