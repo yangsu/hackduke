@@ -300,6 +300,7 @@ module.exports = function(callback) {
       required: true
     }, values.academicPrograms);
 
+    var classes = _.uniq(_.invoke(values.graduationTerms, 'slice', 0, 4));
     var directoryApi = extend({
       resourcePath: '/directory',
       apis: [
@@ -370,6 +371,19 @@ module.exports = function(callback) {
           name: 'getDirectoryByProgram',
           responseClass: 'LIST[Directory]',
           parameters: [programParam].concat(formatLimitSkip)
+        }),
+        get({
+          path: '/directory/program/{program}/class/{class}',
+          description: 'Get directory entries by program class',
+          name: 'getDirectoryByProgramClass',
+          responseClass: 'LIST[Directory]',
+          parameters: [programParam, listParam({
+            name: 'class',
+            paramType: 'path',
+            description: 'Graduation Class',
+            dataType: 'String',
+            required: true
+          }, classes)].concat(formatLimitSkip)
         }),
         get({
           path: '/directory/program/{program}/graduation-term/{term}',

@@ -229,6 +229,10 @@ exports.Directory.basic = {
 Directory.detailed = _.extend({}, Directory.basic, {
   duLDAPKey: 1,
   eduPersonAffiliation: 1,
+  duPSAcadProgC1: 1,
+  duPSExpGradTermC1: 1,
+  duPSAcadProgC1: 1,
+  duPSAcadCareerDescC1: 1,
   ou: 1,
   pager: 1,
   postalAddress: 1,

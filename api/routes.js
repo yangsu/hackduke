@@ -552,6 +552,12 @@ exports.directoryByProgram = function(req, res, next) {
     duPSAcadCareerDescC1: decodeURIComponent(req.params.program)
   }, req, res, next);
 };
+exports.directoryByProgramClass = function(req, res, next) {
+  DirectoryEndpoint({
+    duPSAcadCareerDescC1: decodeURIComponent(req.params.program),
+    duPSExpGradTermC1: new RegExp(req.params.class)
+  }, req, res, next);
+};
 exports.directoryByProgramGraduation = function(req, res, next) {
   DirectoryEndpoint({
     duPSAcadCareerDescC1: decodeURIComponent(req.params.program),

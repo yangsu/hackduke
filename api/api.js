@@ -123,6 +123,7 @@ server.get('/directory/netid/:netid', routes.directoryByNetId);
 server.get('/directory/phone/:phone', routes.directoryByPhone);
 server.get('/directory/affiliation/:affiliation', routes.directoryByAffiliation);
 server.get('/directory/program/:program', routes.directoryByProgram);
+server.get('/directory/program/:program/class/:class', routes.directoryByProgramClass);
 server.get('/directory/program/:program/graduation-term/:term', routes.directoryByProgramGraduation);
 
 server.listen(8080, function() {
