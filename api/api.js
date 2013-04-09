@@ -70,6 +70,8 @@ server.get('/list/location', routes.listLocation);
 server.get('/list/marker', routes.listMarker);
 server.get('/list/marker-category', routes.listMarkerCategory);
 server.get('/list/education-affiliation', routes.listEducationalAffiliation);
+server.get('/list/graduation-term', routes.listDirectoryGraduationTerm);
+server.get('/list/academic-programs', routes.listDirectoryProgram);
 
 server.get('/list/department/:department', routes.listclass);
 server.get('/list/department/:department/class/:number', routes.listterm);
@@ -120,6 +122,8 @@ server.get('/directory/:id', routes.directoryById);
 server.get('/directory/netid/:netid', routes.directoryByNetId);
 server.get('/directory/phone/:phone', routes.directoryByPhone);
 server.get('/directory/affiliation/:affiliation', routes.directoryByAffiliation);
+server.get('/directory/program/:program', routes.directoryByProgram);
+server.get('/directory/program/:program/graduation-term/:term', routes.directoryByProgramGraduation);
 
 server.listen(8080, function() {
   console.log('%s listening at %s', server.name, server.url);

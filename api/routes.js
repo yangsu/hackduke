@@ -463,7 +463,6 @@ exports.markerByCategory = function(req, res, next) {
 // =============================================================================
 
 exports.listEducationalAffiliation = distinct('Directory', 'eduPersonAffiliation');
-// exports.listDirectoryCategory = distinct('Directory', 'categoryName');
 
 var DirectoryEndpoint = function(query, req, res, next) {
   var filter = getFormat('Directory', req.query.format);
@@ -542,5 +541,20 @@ exports.directoryByPhone = function(req, res, next) {
 exports.directoryByAffiliation = function(req, res, next) {
   DirectoryEndpoint({
     eduPersonAffiliation: req.params.affiliation
+  }, req, res, next);
+};
+
+exports.listDirectoryGraduationTerm = distinct('Directory', 'duPSExpGradTermC1');
+exports.listDirectoryProgram = distinct('Directory', 'duPSAcadCareerDescC1');
+
+exports.directoryByProgram = function(req, res, next) {
+  DirectoryEndpoint({
+    duPSAcadCareerDescC1: decodeURIComponent(req.params.program)
+  }, req, res, next);
+};
+exports.directoryByProgramGraduation = function(req, res, next) {
+  DirectoryEndpoint({
+    duPSAcadCareerDescC1: decodeURIComponent(req.params.program),
+    duPSExpGradTermC1: decodeURIComponent(req.params.term)
   }, req, res, next);
 };

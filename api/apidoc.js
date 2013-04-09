@@ -103,6 +103,12 @@ module.exports = function(callback) {
     },
     markerCategories: function(cb) {
       db.Marker.distinct('categoryName').exec(cb);
+    },
+    academicPrograms: function(cb) {
+      db.Directory.distinct('duPSAcadCareerDescC1').exec(cb);
+    },
+    graduationTerms: function(cb) {
+      db.Directory.distinct('duPSExpGradTermC1').exec(cb);
     }
   }, function(err, values) {
 
@@ -286,6 +292,14 @@ module.exports = function(callback) {
       }
     });
 
+    var programParam = listParam({
+      name: 'program',
+      paramType: 'path',
+      description: 'Academic program',
+      dataType: 'String',
+      required: true
+    }, values.academicPrograms);
+
     var directoryApi = extend({
       resourcePath: '/directory',
       apis: [
@@ -340,7 +354,7 @@ module.exports = function(callback) {
           description: 'Get directory entries by phone number',
           notes: 'Affiliations can be found under /list/education-affiliation',
           name: 'getDirectoryByAffiliation',
-          responseClass: 'Directory',
+          responseClass: 'LIST[Directory]',
           parameters: [listParam({
             name: 'affiliation',
             paramType: 'path',
@@ -348,12 +362,35 @@ module.exports = function(callback) {
             dataType: 'String',
             required: true
           }, values.affiliations)].concat(formatLimitSkip)
+        }),
+        get({
+          path: '/directory/program/{program}',
+          description: 'Get directory entries by academic program',
+          notes: 'Programs can be found at /list/academic-programs',
+          name: 'getDirectoryByProgram',
+          responseClass: 'LIST[Directory]',
+          parameters: [programParam].concat(formatLimitSkip)
+        }),
+        get({
+          path: '/directory/program/{program}/graduation-term/{term}',
+          description: 'Get directory entries by program and graduation term',
+          notes: 'Programs can be found at /list/academic-programs and graduation terms can be found at /list/graduation-term',
+          name: 'getDirectoryByProgramGraduation',
+          responseClass: 'LIST[Directory]',
+          parameters: [programParam, listParam({
+            name: 'term',
+            paramType: 'path',
+            description: 'Graduation term',
+            dataType: 'String',
+            required: true
+          }, values.graduationTerms)].concat(formatLimitSkip)
         })
       ],
       models: {
         Directory: db.schemaToJSON('Directory')
       }
     });
+
 
     var yearParam = listParam({
       name: 'year',
@@ -556,6 +593,18 @@ module.exports = function(callback) {
           path: '/list/education-affiliation',
           description: 'Get a list of education affiliations',
           name: 'getEducationAffiliation',
+          responseClass: 'LIST'
+        }),
+        get({
+          path: '/list/graduation-term',
+          description: 'Get a list of possible graduation terms',
+          name: 'getGraduationTerm',
+          responseClass: 'LIST'
+        }),
+        get({
+          path: '/list/academic-programs',
+          description: 'Get a list of possible academic programs',
+          name: 'getAcademicPrograms',
           responseClass: 'LIST'
         })
       ]
