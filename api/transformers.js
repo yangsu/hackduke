@@ -129,12 +129,15 @@ Event.basic = {
   description: 1,
   'end.shortdate': 1,
   'end.time': 1,
+  'end.date': 1,
   image: 1,
   'location.address': 1,
+  'location.marker': 1,
   'location.subaddress': 1,
   'location.link': 1,
   'start.shortdate': 1,
   'start.time': 1,
+  'start.date': 1,
   'categories.category.value': 1,
   summary: 1
 };
@@ -144,7 +147,6 @@ Event.detailed = _.extend({}, Event.basic, {
   cost: 1,
   guid: 1,
   creator: 1,
-  'location.marker': 1,
   'start.date' : 1,
   'end.date' : 1
 });

@@ -300,19 +300,33 @@ function timeInEDT(d) {
   return new Date(utc + (3600000 * -4));
 }
 
+function fixCategories(doc) {
+  var cats = doc.categories && doc.categories.category;
+  doc.categories = _.compact(_.pluck(cats, 'value'));
+  return doc;
+}
+
 var eventEndpoint = function(query, req, res, next) {
   var filter = getFormat('Event', req.query.format);
   var options = _.extend(limitAndSkip(req.query), {
     'start.date': 1
   });
 
-  db.Event.find(query || {}, filter, options, handlerGenerator(res, function(data) {
-    return _.map(data, function(doc) {
-      var cats = doc.categories && doc.categories.category;
-      doc.categories = _.compact(_.pluck(cats, 'value'));
-      return doc;
-    });
-  }));
+  if (req.query.location) {
+    var locFilter = getFormat('Marker', req.query.format);
+    db.Event.find(query || {}, filter, options)
+      .populate({
+          path: 'location.marker',
+          select: locFilter
+        })
+      .exec(handlerGenerator(res, function(docs) {
+          return _.map(docs, fixCategories);
+        }));
+  } else {
+    db.Event.find(query || {}, filter, options, handlerGenerator(res, function(docs) {
+      return _.map(docs, fixCategories);
+    }));
+  }
 };
 
 exports.event = function(req, res, next) {
@@ -438,7 +452,7 @@ exports.marker = function(req, res, next) {
   markerEndpoint({}, req, res, next);
 };
 
-exports.markerById = byId('marker');
+exports.markerById = byId('Marker');
 
 exports.markerByMarkerId = function(req, res, next) {
   markerEndpoint({
