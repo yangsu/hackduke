@@ -294,6 +294,12 @@ exports.evaluationById = byId('Evaluation');
 // event
 // =============================================================================
 
+function timeInEDT(d) {
+  d = d || new Date;
+  var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+  return new Date(utc + (3600000 * -4));
+}
+
 var eventEndpoint = function(query, req, res, next) {
   var filter = getFormat('Event', req.query.format);
   var options = _.extend(limitAndSkip(req.query), {
@@ -314,9 +320,9 @@ exports.event = function(req, res, next) {
   var q = req.query;
 
   if (q.category) q['categories.category.value'] = q.category;
-  if (q.end) q['end.date'] = { $lte: new Date(q.end) };
+  if (q.end) q['end.date'] = { $lte: timeInEDT(new Date(q.end)) };
   if (q.host) q['creator'] = q.host;
-  if (q.start) q['start.date'] = { $gte: new Date(q.start) };
+  if (q.start) q['start.date'] = { $gte: timeInEDT(new Date(q.start)) };
   if (q.venue) q['location.address'] = q.venue;
 
   eventEndpoint(query, req, res, next);
@@ -361,13 +367,6 @@ exports.eventByMonth = function(req, res, next) {
   };
   eventEndpoint(query, req, res, next);
 };
-
-
-function timeInEDT(d) {
-  d = d || new Date;
-  var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-  return new Date(utc + (3600000 * -4));
-}
 
 exports.eventToday = function(req, res, next) {
   var d = timeInEDT();
