@@ -50,7 +50,7 @@ var vis = d3.select('#body').append('svg:svg')
   .append('svg:g')
     .attr('transform', 'translate(' + m[3] + ',' + m[0] + ')');
 
-var baseURL = 'http://0.0.0.0:8080/';
+var baseURL = 'http://colab-sbx-03.oit.duke.edu:8080/';
 var start = Date.now();
 d3.json(baseURL + 'list/department-code', function(departments) {
   var reqs = _.reduce(departments, function(memo, department) {

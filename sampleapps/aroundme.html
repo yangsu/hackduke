@@ -68,7 +68,7 @@
         }
       });
 
-      var url = 'http://0.0.0.0:8080/event/date/this-week';
+      var url = 'http://colab-sbx-03.oit.duke.edu:8080/event/date/this-week';
       var options = '?limit=0&location=1';
       $.getJSON(url + options, function(events) {
         var es = _.chain(events)

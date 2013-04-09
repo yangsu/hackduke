@@ -28,7 +28,7 @@ server.use(restify.throttle({
   rate: 100, //per second
   ip: true,
   overrides: {
-    '0.0.0.0': { rate: 0, burst: 0 }
+    'colab-sbx-03.oit.duke.edu': { rate: 0, burst: 0 }
   }
 }));
 
