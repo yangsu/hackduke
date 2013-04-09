@@ -24,8 +24,8 @@ server.use(function(req, res, next) {
 })
 
 server.use(restify.throttle({
-  burst: 100,
-  rate: 50, //per second
+  burst: 200,
+  rate: 100, //per second
   ip: true,
   overrides: {
     '0.0.0.0': { rate: 0, burst: 0 }
