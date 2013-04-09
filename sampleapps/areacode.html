@@ -23,165 +23,211 @@ body {
 
 </style>
 <body>
-    <h2 id="header"></h2>
+<h2 id='header'></h2>
+<p>
+    <button id='color'>By Color</button>
+    <button id='logscale'>By Log Scale</button>
+    <button id='linscale'>By Linear Scale</button>
+</p>
 <script src='http://d3js.org/d3.v3.min.js'></script>
 <script src='http://cdnjs.cloudflare.com/ajax/libs/lodash.js/1.1.1/lodash.underscore.min.js'></script>
+<script src='http://code.jquery.com/jquery-1.9.1.min.js'></script>
 <script src='//cdnjs.cloudflare.com/ajax/libs/async/1.22/async.min.js'></script>
+
+<div id="container"></div>
+
 <script>
 
-var width = 960,
-    height = 500,
-    centered;
+$(function() {
 
-var path = d3.geo.path();
+  var width = 960,
+      height = 500,
+      centered;
 
-var svg = d3.select('body').append('svg')
-    .attr('width', width)
-    .attr('height', height);
+  var path = d3.geo.path();
 
-svg.append('rect')
-    .attr('class', 'background')
-    .attr('width', width)
-    .attr('height', height)
-    .on('click', click);
+  var svg = d3.select('#container').append('svg')
+      .attr('width', width)
+      .attr('height', height);
 
-var g = svg.append('g')
-    .attr('id', 'states');
-
-var colorScale = d3.scale.category10()
-
-var baseURL = 'http://0.0.0.0:8080/directory/program/Undergraduate?limit=16000';
-function getAreaCodeCounts(cb) {
-  d3.json(baseURL, function(data) {
-    var numbers = _.chain(data)
-      .map(function(d) {
-        var number = d.telephoneNumber || '';
-        var matches = number.match(/^(\+1 (\d{3}))/) || [];
-        var year = d.duPSExpGradTermC1 || '';
-        if (matches[2])
-          return [matches[2], year.slice(0, 4)];
-        else
-          return null;
-      })
-      .compact()
-      .groupBy(function(a) {
-        return a[0];
-      })
-      .value();
-    _.each(numbers, function(counts, k) {
-      var v = _.countBy(counts, function(i) {
-        return i[1];
-      });
-
-      var sum = _.reduce(v, function(memo, c) {
-        return memo + c
-      }, 0);
-      _.extend(v, {
-        sum: sum
-      });
-
-      numbers[k] = v;
-    })
-    var total = _.reduce(numbers, function(memo, n){ return memo + n.sum; }, 0);
-
-    document.getElementById('header').innerHTML = total + ' US phone numbers found';
-    cb(numbers);
-  });
-}
-
-function wrapData(cb) {
-  return function(data) {
-    cb(null, data);
-  };
-};
-
-function color(alpha) {
-  return 'rgba(3,48,147,' + alpha + ')';
-};
-
-async.parallel({
-  counts: function(cb) {
-    getAreaCodeCounts(wrapData(cb));
-  },
-  us: function(cb) {
-    d3.json('us.json', wrapData(cb));
-  },
-  areacode: function(cb) {
-    d3.json('areacode.json', wrapData(cb));
-  }
-}, function(err, data) {
-  var map = _.reduce(data.us.features, function(memo, f, i) {
-    memo[f.properties.name] = i;
-    return memo;
-  }, {});
-
-  var areacodeMap = _.reduce(data.areacode, function(memo, codes, state) {
-    _.each(codes, function(code) {
-      memo[code] = state;
-    });
-    return memo;
-  }, {});
-
-  var unknown = [];
-
-  _.each(data.counts, function(count, code) {
-    var state = areacodeMap[code];
-    if (!state) {
-      unknown.push(code);
-    } else {
-      var index = map[state];
-      var feature = data.us.features[index];
-      if (feature) {
-        feature.properties.count = count;
-      }
-    }
-  });
-
-  console.log(unknown);
-
-  var counts = _.pluck(_.values(data.counts), 'sum');
-
-  var alphaScale = d3.scale.log().domain([_.min(counts), _.max(counts)]).range([0, 1]);
-
-  g.selectAll('path')
-      .data(data.us.features)
-    .enter().append('path')
-      .attr('d', path)
-      .style('fill', function(d) {
-        return color(alphaScale(d.properties.count.sum));
-      })
+  svg.append('rect')
+      .attr('class', 'background')
+      .attr('width', width)
+      .attr('height', height)
       .on('click', click);
-});
 
-function click(d) {
-  var x, y, k;
+  var g = svg.append('g')
+      .attr('id', 'states');
 
-  state.innerHTML = d.properties.name;
-  stats.innerHTML = d.properties.count.sum;
+  var logScale;
+  var linScale;
 
-  if (d && centered !== d) {
-    var centroid = path.centroid(d);
-    x = centroid[0];
-    y = centroid[1];
-    k = 4;
-    centered = d;
-  } else {
-    x = width / 2;
-    y = height / 2;
-    k = 1;
-    centered = null;
+
+  var baseURL = 'http://0.0.0.0:8080/directory/program/Undergraduate?limit=16000';
+  function getAreaCodeCounts(cb) {
+    d3.json(baseURL, function(data) {
+      var numbers = _.chain(data)
+        .map(function(d) {
+          var number = d.telephoneNumber || '';
+          var matches = number.match(/^(\+1 (\d{3}))/) || [];
+          var year = d.duPSExpGradTermC1 || '';
+          if (matches[2])
+            return [matches[2], year.slice(0, 4)];
+          else
+            return null;
+        })
+        .compact()
+        .groupBy(function(a) {
+          return a[0];
+        })
+        .value();
+      _.each(numbers, function(counts, k) {
+        var v = _.countBy(counts, function(i) {
+          return i[1];
+        });
+
+        var sum = _.reduce(v, function(memo, c) {
+          return memo + c
+        }, 0);
+        _.extend(v, {
+          sum: sum
+        });
+
+        numbers[k] = v;
+      })
+      var total = _.reduce(numbers, function(memo, n){ return memo + n.sum; }, 0);
+
+      $('#header').html(total + ' US phone numbers found');
+      cb(numbers);
+    });
   }
 
-  g.selectAll('path')
-      .classed('active', centered && function(d) { return d === centered; });
+  function wrapData(cb) {
+    return function(data) {
+      cb(null, data);
+    };
+  };
 
-  g.transition()
+  function color(alpha) {
+    return 'rgba(3,48,147,' + alpha + ')';
+  };
+
+  async.parallel({
+    counts: function(cb) {
+      getAreaCodeCounts(wrapData(cb));
+    },
+    us: function(cb) {
+      d3.json('us.json', wrapData(cb));
+    },
+    areacode: function(cb) {
+      d3.json('areacode.json', wrapData(cb));
+    }
+  }, function(err, data) {
+    var map = _.reduce(data.us.features, function(memo, f, i) {
+      memo[f.properties.name] = i;
+      return memo;
+    }, {});
+
+    var areacodeMap = _.reduce(data.areacode, function(memo, codes, state) {
+      _.each(codes, function(code) {
+        memo[code] = state;
+      });
+      return memo;
+    }, {});
+
+    var unknown = [];
+
+    _.each(data.counts, function(count, code) {
+      var state = areacodeMap[code];
+      if (!state) {
+        unknown.push(code);
+      } else {
+        var index = map[state];
+        var feature = data.us.features[index];
+        if (feature) {
+          feature.properties.count = feature.properties.count || {};
+          _.each(count, function(v, k) {
+            feature.properties.count[k] = feature.properties.count[k] || 0;
+            feature.properties.count[k] += v;
+          })
+        }
+      }
+    });
+
+    console.log(unknown);
+
+    var counts = _.pluck(_.values(data.counts), 'sum');
+
+    logScale = d3.scale.log().domain([_.min(counts), _.max(counts)]).range([0, 1]);
+    linScale = d3.scale.linear().domain([_.min(counts), _.max(counts)]).range([0, 1]);
+
+    g.selectAll('path')
+        .data(data.us.features)
+      .enter().append('path')
+        .attr('d', path)
+        .style('fill', function(d) {
+          return color(logScale(d.properties.count.sum));
+        })
+        .on('click', click);
+  });
+
+  function click(d) {
+    var x, y, k;
+
+    var state = $('#state');
+
+    var contents = _.map(d.properties.count, function(v, k) {
+      return '<b>' + k + '</b>: ' + v;
+    }).join(', ');
+    state.html('<b>' + d.properties.name + '</b>  -  ' + contents);
+
+    if (d && centered !== d) {
+      var centroid = path.centroid(d);
+      x = centroid[0];
+      y = centroid[1];
+      k = 4;
+      centered = d;
+    } else {
+      x = width / 2;
+      y = height / 2;
+      k = 1;
+      centered = null;
+    }
+
+    g.selectAll('path')
+        .classed('active', centered && function(d) { return d === centered; });
+
+    g.transition()
+        .duration(1000)
+        .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')scale(' + k + ')translate(' + -x + ',' + -y + ')')
+        .style('stroke-width', 1.5 / k + 'px');
+  }
+
+  function transition(f) {
+    g.selectAll('path')
+      .transition()
       .duration(1000)
-      .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')scale(' + k + ')translate(' + -x + ',' + -y + ')')
-      .style('stroke-width', 1.5 / k + 'px');
-}
+      .attr('transform', function(d) {
+        var centroid = path.centroid(d),
+            x = centroid[0],
+            y = centroid[1];
+        return 'translate(' + x + ',' + y + ')'
+            + 'scale(' + f(d) + ')'
+            + 'translate(' + -x + ',' + -y + ')';
+      });
+  }
+
+  $('#color').click(function() {
+    transition(function() { return 1; });
+  });
+  $('#linscale').click(function() {
+    transition(function(d) { return linScale(d.properties.count.sum); });
+  });
+  $('#logscale').click(function() {
+    transition(function(d) { return logScale(d.properties.count.sum); });
+  });
+});
 
 </script>
 
-<h2 id="state"></h2>
-<p id="stats"></p>
+<p id='state'></h2>

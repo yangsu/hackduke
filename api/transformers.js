@@ -222,6 +222,7 @@ exports.Directory.basic = {
   duPSAcadCareerDescC1: 1,
   eduPersonPrincipalName: 1,
   facsimileTelephoneNumber: 1,
+  duPSExpGradTermC1: 1,
   telephoneNumber: 1,
   mail: 1
 };
@@ -230,7 +231,6 @@ Directory.detailed = _.extend({}, Directory.basic, {
   duLDAPKey: 1,
   eduPersonAffiliation: 1,
   duPSAcadProgC1: 1,
-  duPSExpGradTermC1: 1,
   duPSAcadProgC1: 1,
   duPSAcadCareerDescC1: 1,
   ou: 1,
