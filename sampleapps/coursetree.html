@@ -28,10 +28,6 @@
 </head>
 <body>
     <div id='body'>
-        <div id='footer'>
-            d3.layout.tree
-            <div class='hint'>click or option-click to expand or collapse</div>
-        </div>
         <div id="display">Loading...</div>
     </div>
     <script type='text/javascript'>
@@ -59,12 +55,13 @@ var start = Date.now();
 d3.json(baseURL + 'list/department-code', function(departments) {
   var reqs = _.reduce(departments, function(memo, department) {
     memo[department] = function(cb) {
-      d3.json(baseURL + 'class/department/' + department, function(data) {
+      d3.json(baseURL + 'class/department/' + department + '?limit=500', function(data) {
         cb(null, data);
       });
     };
     return memo;
   }, {})
+
   async.series(reqs, function(err, data) {
     $('#display').html('Loaded data in ' + (Date.now() - start)/1000 + 's');
     var courses = _.chain(data)
@@ -75,11 +72,16 @@ d3.json(baseURL + 'list/department-code', function(departments) {
       .map(function(departments, letter) {
         return {
           name: letter,
+          type: 'letter',
           children: _.map(departments, function(departmentPair) {
             return {
               name: departmentPair[0],
+              type: 'department',
               children: _.map(departmentPair[1], function(c) {
                 return {
+                  type: 'class',
+                  number: c.number,
+                  department: departmentPair[0],
                   name: c.number + ' - ' + c.title
                 };
               })
@@ -202,12 +204,53 @@ function update(source) {
 
 // Toggle children.
 function toggle(d) {
-  if (d.children) {
-    d._children = d.children;
-    d.children = null;
+  var children = d.children || d._children;
+  if (!children) {
+    var url = baseURL + 'class/department/' + d.department + '/number/' + d.number + '/term';
+    if (d.type == 'class') {
+      d3.json(url, function(terms) {
+        d.children = _.chain(terms)
+          .map(function(term) {
+            return {
+              name: term.title,
+              department: d.department,
+              number: d.number,
+              term: term.title,
+              type: 'term'
+            };
+          })
+          .sortBy(function(t) {
+            return t.name;
+          })
+          .value();
+        toggle(d);
+      });
+    } else if (d.type == 'term') {
+      d3.json(url + '/' + d.term, function(sections) {
+        d.children = _.chain(sections)
+          .map(function(section) {
+            return {
+              name: section.section_id + ' - ' + section.info.instructor + ' - ' + section.info.meets,
+              department: d.department,
+              number: d.number,
+              type: 'section'
+            };
+          })
+            .sortBy(function(t) {
+            return t.name;
+          })
+          .value();
+        toggle(d);
+      });
+    }
   } else {
-    d.children = d._children;
-    d._children = null;
+    if (d.children) {
+      d._children = d.children;
+      d.children = null;
+    } else {
+      d.children = d._children;
+      d._children = null;
+    }
   }
 }
 
