@@ -54,19 +54,18 @@ var vis = d3.select('#body').append('svg:svg')
   .append('svg:g')
     .attr('transform', 'translate(' + m[3] + ',' + m[0] + ')');
 
-var baseURL = 'http://0.0.0.0:8080/list/';
+var baseURL = 'http://0.0.0.0:8080/';
 var start = Date.now();
-d3.json(baseURL + 'department-code', function(departments) {
+d3.json(baseURL + 'list/department-code', function(departments) {
   var reqs = _.reduce(departments, function(memo, department) {
     memo[department] = function(cb) {
-      d3.json(baseURL + 'department/' + department, function(data) {
+      d3.json(baseURL + 'class/department/' + department, function(data) {
         cb(null, data);
       });
     };
     return memo;
   }, {})
   async.series(reqs, function(err, data) {
-    console.log(data);
     $('#display').html('Loaded data in ' + (Date.now() - start)/1000 + 's');
     var courses = _.chain(data)
       .pairs()
@@ -81,7 +80,7 @@ d3.json(baseURL + 'department-code', function(departments) {
               name: departmentPair[0],
               children: _.map(departmentPair[1], function(c) {
                 return {
-                  name: c
+                  name: c.number + ' - ' + c.title
                 };
               })
             };
@@ -89,12 +88,11 @@ d3.json(baseURL + 'department-code', function(departments) {
         };
       })
       .value();
-    console.log(courses);
+
     root = {
       name: 'Duke Courses Catalog',
       children: courses
     };
-
 
     root.x0 = h / 2;
     root.y0 = 0;
@@ -106,16 +104,11 @@ d3.json(baseURL + 'department-code', function(departments) {
       }
     }
 
-    // Initialize the display to show a few nodes.
     root.children.forEach(toggleAll);
 
     update(root);
   });
 });
-
-
-// d3.json('tree.json', function(json) {
-// });
 
 function update(source) {
   var duration = d3.event && d3.event.altKey ? 5000 : 500;
