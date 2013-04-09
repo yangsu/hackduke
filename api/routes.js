@@ -82,12 +82,7 @@ var listEndpoint = function(collection, queryfields, filterField, f) {
   };
 };
 
-exports.listclass = listEndpoint(
-    'Class',
-    ['department'], 'number title',
-    function(data) {
-      return _.map(data, function(c) { return c.number + ' - ' + c.title; });
-    });
+exports.listclass = listEndpoint('Class', ['department'], 'number title')
 
 exports.listterm = listEndpoint('Term', ['department', 'number'], 'title');
 
