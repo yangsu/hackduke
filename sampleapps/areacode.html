@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<style>
+
+.background {
+  fill: none;
+  pointer-events: all;
+}
+
+body {
+  text-align: center;
+}
+
+#states {
+  fill: #aaa;
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+#states .active {
+  stroke: orange !important;
+}
+
+</style>
+<body>
+<script src='http://d3js.org/d3.v3.min.js'></script>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/lodash.js/1.1.1/lodash.underscore.min.js'></script>
+<script src='//cdnjs.cloudflare.com/ajax/libs/async/1.22/async.min.js'></script>
+<script>
+
+var width = 960,
+    height = 500,
+    centered;
+
+var path = d3.geo.path();
+
+var svg = d3.select('body').append('svg')
+    .attr('width', width)
+    .attr('height', height);
+
+svg.append('rect')
+    .attr('class', 'background')
+    .attr('width', width)
+    .attr('height', height)
+    .on('click', click);
+
+var g = svg.append('g')
+    .attr('id', 'states');
+
+var colorScale = d3.scale.category10()
+
+var baseURL = 'http://0.0.0.0:8080/directory/program/Undergraduate?limit=16000';
+function getAreaCodeCounts(cb) {
+  d3.json(baseURL, function(data) {
+    var numbers = _.chain(data)
+      .map(function(d) {
+        var number = d.telephoneNumber || '';
+        var matches = number.match(/^(\+1 (\d{3}))/) || [];
+        var year = d.duPSExpGradTermC1 || '';
+        if (matches[2])
+          return [matches[2], year.slice(0, 4)];
+        else
+          return null;
+      })
+      .compact()
+      .groupBy(function(a) {
+        return a[0];
+      })
+      .value();
+    _.each(numbers, function(counts, k) {
+      var v = _.countBy(counts, function(i) {
+        return i[1];
+      });
+
+      var sum = _.reduce(v, function(memo, c) {
+        return memo + c
+      }, 0);
+      _.extend(v, {
+        sum: sum
+      });
+
+      numbers[k] = v;
+    })
+      console.log(numbers);
+    cb(numbers);
+  });
+}
+
+function wrapData(cb) {
+  return function(data) {
+    cb(null, data);
+  };
+};
+
+function color(alpha) {
+  return 'rgba(3,48,147,' + alpha + ')';
+};
+
+async.parallel({
+  counts: function(cb) {
+    getAreaCodeCounts(wrapData(cb));
+  },
+  us: function(cb) {
+    d3.json('us.json', wrapData(cb));
+  },
+  areacode: function(cb) {
+    d3.json('areacode.json', wrapData(cb));
+  }
+}, function(err, data) {
+  var map = _.reduce(data.us.features, function(memo, f, i) {
+    memo[f.properties.name] = i;
+    return memo;
+  }, {});
+
+  var areacodeMap = _.reduce(data.areacode, function(memo, codes, state) {
+    _.each(codes, function(code) {
+      memo[code] = state;
+    });
+    return memo;
+  }, {});
+
+  var unknown = [];
+
+  _.each(data.counts, function(count, code) {
+    var state = areacodeMap[code];
+    if (!state) {
+      unknown.push(code);
+    } else {
+      var index = map[state];
+      var feature = data.us.features[index];
+      if (feature) {
+        feature.properties.count = count;
+      }
+    }
+  });
+
+  console.log(unknown);
+
+  var counts = _.pluck(_.values(data.counts), 'sum');
+
+  var alphaScale = d3.scale.log().domain([_.min(counts), _.max(counts)]).range([0, 1]);
+
+  g.selectAll('path')
+      .data(data.us.features)
+    .enter().append('path')
+      .attr('d', path)
+      .style('fill', function(d) {
+        return color(alphaScale(d.properties.count.sum));
+      })
+      .on('click', click);
+});
+
+function click(d) {
+  var x, y, k;
+
+  state.innerHTML = d.properties.name;
+  stats.innerHTML = d.properties.count.sum;
+
+  if (d && centered !== d) {
+    var centroid = path.centroid(d);
+    x = centroid[0];
+    y = centroid[1];
+    k = 4;
+    centered = d;
+  } else {
+    x = width / 2;
+    y = height / 2;
+    k = 1;
+    centered = null;
+  }
+
+  g.selectAll('path')
+      .classed('active', centered && function(d) { return d === centered; });
+
+  g.transition()
+      .duration(1000)
+      .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')scale(' + k + ')translate(' + -x + ',' + -y + ')')
+      .style('stroke-width', 1.5 / k + 'px');
+}
+
+</script>
+
+<h2 id="state"></h2>
+<p id="stats"></p>
