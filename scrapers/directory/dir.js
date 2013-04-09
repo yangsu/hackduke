@@ -26,7 +26,7 @@ function next() {
 
     lastindex = index + 1;
     _.each(entry.split('\n'), function(ln) {
-      temp = ln.split(': ');
+      temp = ln.split(/:\s*/);
       obj[temp[0]] = temp[1];
     });
 
