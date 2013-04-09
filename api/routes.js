@@ -68,21 +68,26 @@ exports.listPrograms = distinct('Class', 'course-offering.career');
 exports.listSchools = distinct('Class', 'course-offering.academic-group');
 exports.listTerm = distinct('Term', 'title');
 
-var listEndpoint = function(collection, queryfields, filterField) {
+var listEndpoint = function(collection, queryfields, filterField, f) {
   return function(req, res, next) {
     var query = _.pick.apply(_, [req.params].concat(queryfields));
-    var filter = {};
-    filter[filterField] = 1;
 
-    db[collection].find(query, filter, genOptions({
-      sort: filter
-    }), handlerGenerator(res, function(data) {
+    f = f || function(data) {
       return _.pluck(data, filterField);
-    }));
+    };
+
+    db[collection].find(query, filterField, genOptions({
+      sort: filterField
+    }), handlerGenerator(res, f));
   };
 };
 
-exports.listclass = listEndpoint('Class', ['department'], 'number');
+exports.listclass = listEndpoint(
+    'Class',
+    ['department'], 'number title',
+    function(data) {
+      return _.map(data, function(c) { return c.number + ' - ' + c.title; });
+    });
 
 exports.listterm = listEndpoint('Term', ['department', 'number'], 'title');
 

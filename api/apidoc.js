@@ -544,6 +544,12 @@ module.exports = function(callback) {
       resourcePath: '/list',
       apis: [
         get({
+          path: '/list/academic-programs',
+          description: 'Get a list of possible academic programs',
+          name: 'getAcademicPrograms',
+          responseClass: 'LIST'
+        }),
+        get({
           path: '/list/academic-organization',
           description: 'Get a list of academic organizations',
           name: 'getAcademicOrganizations',
@@ -551,20 +557,41 @@ module.exports = function(callback) {
         }),
         get({
           path: '/list/department',
-          description: 'Get a list of departments',
+          description: 'Get a list of department names',
           name: 'getDepartments',
           responseClass: 'LIST'
         }),
         get({
-          path: '/list/program',
-          description: 'Get a list of programs',
-          name: 'getPrograms',
+          path: '/list/department-code',
+          description: 'Get a list of department codes',
+          name: 'getDepartments',
           responseClass: 'LIST'
         }),
         get({
-          path: '/list/school',
-          description: 'Get a list of schools',
-          name: 'getSchools',
+          path: '/list/department/{department}',
+          description: 'Get a list of classes in a department',
+          name: 'getClassListByDepartment',
+          responseClass: 'LIST',
+          parameters: [departmentParam].concat(formatLimitSkip)
+        }),
+        get({
+          path: '/list/department/{department}/class/{number}',
+          description: 'Get a list of terms a class has been offered',
+          name: 'getTermListByClassNumber',
+          responseClass: 'LIST',
+          parameters: [departmentParam, numberParam].concat(formatLimitSkip)
+        }),
+        get({
+          path: '/list/department/{department}/class/{number}/term/{term}',
+          description: 'Get a list of sections of a class in a given semester',
+          name: 'getSectionListByClassNumberTerm',
+          responseClass: 'LIST',
+          parameters: [departmentParam, numberParam, termParam].concat(formatLimitSkip)
+        }),
+        get({
+          path: '/list/education-affiliation',
+          description: 'Get a list of education affiliations',
+          name: 'getEducationAffiliation',
           responseClass: 'LIST'
         }),
         get({
@@ -586,6 +613,12 @@ module.exports = function(callback) {
           responseClass: 'LIST'
         }),
         get({
+          path: '/list/graduation-term',
+          description: 'Get a list of possible graduation terms',
+          name: 'getGraduationTerm',
+          responseClass: 'LIST'
+        }),
+        get({
           path: '/list/location',
           description: 'Get a list of building locations',
           name: 'getLocations',
@@ -604,21 +637,15 @@ module.exports = function(callback) {
           responseClass: 'LIST'
         }),
         get({
-          path: '/list/education-affiliation',
-          description: 'Get a list of education affiliations',
-          name: 'getEducationAffiliation',
+          path: '/list/program',
+          description: 'Get a list of programs',
+          name: 'getPrograms',
           responseClass: 'LIST'
         }),
         get({
-          path: '/list/graduation-term',
-          description: 'Get a list of possible graduation terms',
-          name: 'getGraduationTerm',
-          responseClass: 'LIST'
-        }),
-        get({
-          path: '/list/academic-programs',
-          description: 'Get a list of possible academic programs',
-          name: 'getAcademicPrograms',
+          path: '/list/school',
+          description: 'Get a list of schools',
+          name: 'getSchools',
           responseClass: 'LIST'
         })
       ]
