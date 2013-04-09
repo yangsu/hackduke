@@ -3,6 +3,7 @@ var _ = require('lodash');
 var async = require('async');
 
 var db = require('../db');
+var utils = require('../utils');
 
 var filepath = process.argv[2];
 if (!filepath) process.exit(0);
@@ -31,7 +32,7 @@ function next() {
 
     db.Directory.update(
       { duLDAPKey: obj.duLDAPKey },
-      { $set: obj },
+      { $set: utils.trimAll(obj) },
       { upsert: true }, function(err, d) {
         console.log('count', ':', index, '/', buffer.length);
         process.nextTick(next);

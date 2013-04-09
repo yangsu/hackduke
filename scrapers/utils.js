@@ -271,6 +271,7 @@ function trimAll(data) {
     return data;
   }
 }
+exports.trimAll = trimAll;
 
 
 /**
