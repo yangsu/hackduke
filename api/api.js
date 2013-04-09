@@ -96,7 +96,7 @@ server.get('/term/:id', routes.termById);
 
 server.get('/event', routes.event);
 server.get('/event/:id', routes.eventById);
-server.get(/event\/category\/([A-Za-z0-9\/]+)/, routes.eventByCategory);
+server.get(/event\/category\/(.+)/, routes.eventByCategory);
 server.get('/event/venue/:location', routes.eventByVenue);
 server.get('/event/host/:host', routes.eventByHost);
 server.get('/event/date/:year/:month', routes.eventByMonth);

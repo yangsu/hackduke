@@ -329,7 +329,7 @@ exports.eventById = byId('Event');
 
 exports.eventByCategory = function(req, res, next) {
   eventEndpoint({
-    'categories.category.value': req.params[0]
+    'categories.category.value': decodeURIComponent(req.params[0])
   }, req, res, next);
 };
 
