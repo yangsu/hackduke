@@ -14,7 +14,7 @@ var wrapError = function(cb) {
   }
 };
 
-var chunkSize = 1000;
+var chunkSize = 100;
 var chunkReqs = _.map(_.range(0, 188394, chunkSize), function(skip) {
   return function(callback) {
     console.log('Trimming', skip, 'to', skip + chunkSize);
@@ -23,7 +23,7 @@ var chunkReqs = _.map(_.range(0, 188394, chunkSize), function(skip) {
         return function(cb) {
           var o = _.omit(dir.toObject(), '_id');
           _.each(o, function(v, k) {
-            dir[k] = utils.trimAll(v);
+            dir.set(k, utils.trimAll(v));
           });
           dir.save(cb);
         };
