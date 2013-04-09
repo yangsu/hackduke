@@ -24,5 +24,11 @@ $(function() {
     docExpansion: 'none'
   });
 
+  window.HOVER_APP = {
+    snap: function() {
+      $('a[id^=endpoint]').click();
+    }
+  };
+
   window.swaggerUi.load();
 });
