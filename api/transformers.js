@@ -222,6 +222,7 @@ exports.Directory.basic = {
   duPSAcadCareerDescC1: 1,
   eduPersonPrincipalName: 1,
   facsimileTelephoneNumber: 1,
+  telephoneNumber: 1,
   mail: 1
 };
 
