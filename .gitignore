@@ -14,7 +14,7 @@ intermediate
 publish
 
 # Sublime
-*.sublime*
+*.sublime-workspace
 
 # Scrapers
 maces-*.json
@@ -26,5 +26,5 @@ maces-*.json
 test/config/test.sqlite
 
 data/
-scrapers/calendar/*.json
-scrapers/directory/*.txt
+collector/calendar/*.json
+collector/directory/*.txt
