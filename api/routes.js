@@ -162,7 +162,7 @@ exports.classSection = function(req, res, next) {
               'term_id'
           );
         });
-        res.json(response);
+        return response;
       }));
 };
 
