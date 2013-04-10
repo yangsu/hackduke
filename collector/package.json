@@ -1,5 +1,5 @@
 {
-  "name": "scrapers",
+  "name": "collector",
   "version": "0.0.0",
   "description": "",
   "dependencies": {
