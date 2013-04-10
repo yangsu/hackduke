@@ -1,45 +1,46 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Duke Data UI</title>
-    <link href='//fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'/>
-    <link href='css/hightlight.default.css' media='screen' rel='stylesheet' type='text/css'/>
-    <link href='css/screen.css' media='screen' rel='stylesheet' type='text/css'/>
-    <script src='lib/jquery-1.8.0.min.js'></script>
-    <script src='lib/jquery.slideto.min.js'></script>
-    <script src='lib/jquery.wiggle.min.js'></script>
-    <script src='lib/jquery.ba-bbq.min.js'></script>
-    <script src='lib/handlebars-1.0.rc.1.js'></script>
-    <script src='lib/underscore-min.js'></script>
-    <script src='lib/backbone-min.js'></script>
-    <script src='lib/swagger.js'></script>
-    <script src='swagger-ui.js'></script>
-    <script src='lib/highlight.7.3.pack.js'></script>
-    <script src='loadapi.js'></script>
-</head>
+    <head>
+        <title>Duke Data UI</title>
+        <link href='//fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'/>
+        <link href='css/hightlight.default.css' media='screen' rel='stylesheet' type='text/css'/>
+        <link href='css/screen.css' media='screen' rel='stylesheet' type='text/css'/>
+        <script src='lib/jquery-1.8.0.min.js'></script>
+        <script src='lib/jquery.slideto.min.js'></script>
+        <script src='lib/jquery.wiggle.min.js'></script>
+        <script src='lib/jquery.ba-bbq.min.js'></script>
+        <script src='lib/handlebars.min.js'></script>
+        <script src='lib/lodash-min.js'></script>
+        <script src='lib/backbone-min.js'></script>
+        <script src='lib/swagger.js'></script>
+        <script src='swagger-ui.js'></script>
+        <script src='lib/highlight.min.js'></script>
+        <script src='loadapi.js'></script>
+    </head>
 
-<body>
-<div id='header'>
-    <div class="swagger-ui-wrap">
-        <a id="logo" href="http://colab-sbx-03.oit.duke.edu:8080/">Duke Data API</a>
+    <body>
+        <div id='header'>
+            <div class="swagger-ui-wrap">
+                <a id="logo" href="http://colab-sbx-03.oit.duke.edu:8080/">Duke Data API</a>
 
-        <form id='api_selector'>
-            <div class='input'><input placeholder="http://example.com/api" id="input_baseUrl" name="baseUrl"
-                                      type="text"/></div>
-            <div class='input'><input placeholder="api_key" id="input_apiKey" name="apiKey" type="text"/></div>
-            <div class='input'><a id="explore" href="#">Explore</a></div>
-        </form>
-    </div>
-</div>
+                <form id='api_selector'>
+                    <div class='input'>
+                        <input placeholder="http://example.com/api" id="input_baseUrl" name="baseUrl"
+                                          type="text"/>
+                    </div>
+                    <div class='input'>
+                        <input placeholder="api_key" id="input_apiKey" name="apiKey" type="text"/>
+                    </div>
+                    <div class='input'>
+                        <a id="explore" href="#">Explore</a>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-<div id="message-bar" class="swagger-ui-wrap">
-    &nbsp;
-</div>
+        <div id="message-bar" class="swagger-ui-wrap">&nbsp;</div>
 
-<div id="swagger-ui-container" class="swagger-ui-wrap">
+        <div id="swagger-ui-container" class="swagger-ui-wrap"></div>
 
-</div>
-
-</body>
-
+    </body>
 </html>
