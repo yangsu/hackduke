@@ -126,6 +126,6 @@ server.get('/directory/program/:program', routes.directoryByProgram);
 server.get('/directory/program/:program/class/:class', routes.directoryByProgramClass);
 server.get('/directory/program/:program/graduation-term/:term', routes.directoryByProgramGraduation);
 
-server.listen(8080, function() {
+server.listen(80, function() {
   console.log('%s listening at %s', server.name, server.url);
 });
