@@ -126,6 +126,7 @@ server.get('/directory/program/:program', routes.directoryByProgram);
 server.get('/directory/program/:program/class/:class', routes.directoryByProgramClass);
 server.get('/directory/program/:program/graduation-term/:term', routes.directoryByProgramGraduation);
 
-server.listen(80, function() {
+var port = process.env.PORT || 8080;
+server.listen(port, function() {
   console.log('%s listening at %s', server.name, server.url);
 });
