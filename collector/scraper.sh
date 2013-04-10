@@ -3,8 +3,21 @@
 ## Static
 #  catalog_renumbering
 #  location
+#  markers
 
 echo "Remember to update the cookies before moving on"
+
+echo "Collecting Event Data in the background..."
+cd calendar
+./collect.sh > calender.log &
+cd ..
+
+echo "Collecting Directory Data in the background..."
+cd directory
+for year in {2013..2018}; do
+  ./scrapedir.sh $year > $year.log &
+done
+cd ..
 
 echo "Scraping departments.js..."
 time node departments.js # A-Z => Department
@@ -29,3 +42,5 @@ time node evaluations.js # Term => Evaluation
 
 echo "Scraping evaluationdetail.js..."
 time node evaluationdetail.js # Evaluation => Evaluation
+
+echo "

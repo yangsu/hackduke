@@ -1,7 +1,8 @@
 var _ = require('lodash');
 
-var db = require('./db');
+var db = require('../db');
 var utils = require('./utils');
+var collector = require('./collector');
 
 db.Class.find({
   sectionsPath: { $exists: true, $ne: null }
@@ -13,5 +14,5 @@ db.Class.find({
     };
   });
 
-  db.parallel(cs, 'Term');
+  collector.parallel(cs, 'Term');
 });

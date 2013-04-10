@@ -1,6 +1,6 @@
 // Data from http://www.siss.duke.edu/catalog_renumbering/
 // source:http://www.siss.duke.edu/catalog_renumbering/catalog.js
-var catalog = [
+module.exports = [
 ["AAAS","African and African American S","FIRST-YEAR SEMINAR (TOP)","  49S","  89S"],
 ["AAAS","African and African American S","DUKE-ADM ST ABR (TOP)","  55"," 190A"],
 ["AAAS","African and African American S","THE THIRD WORLD & THE WEST I","  70"," 131"],
@@ -12071,5 +12071,3 @@ var catalog = [
 ["XTIANTHE","Christian Theology","CONTMP SYST THEOL AMER/ENGLAND"," 835"," 835"],
 ["XTIANTHE","Christian Theology","XTIANTHEO ELECTIVE"," 999"," 999"]
 ];
-
-exports.catalog = catalog;

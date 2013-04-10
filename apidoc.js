@@ -2,7 +2,7 @@ var _ = require('lodash');
 var async = require('async');
 
 var config = require('./config');
-var db = require('../scrapers/db');
+var db = require('./db');
 
 var base = {
   apiVersion: config.version,

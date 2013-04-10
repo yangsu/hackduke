@@ -1,7 +1,7 @@
 var _ = require('lodash');
 var async = require('async');
 
-var db = require('../scrapers/db');
+var db = require('./db');
 
 var baseOptions = {
   lean: true

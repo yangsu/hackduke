@@ -2,7 +2,7 @@ var _ = require('lodash');
 
 var markers = require('./markers');
 
-var db = require('../db');
+var db = require('../../db');
 
 var handleError = function(err) {
   console.log('Error', err);

@@ -1,7 +1,8 @@
 var _ = require('lodash');
 
-var db = require('./db');
+var db = require('../db');
 var utils = require('./utils');
+var collector = require('./collector');
 
 db.Term.find({
   title: /2012/
@@ -13,5 +14,5 @@ db.Term.find({
     };
   }));
 
-  db.parallel(ts, 'Section');
+  collector.parallel(ts, 'Section');
 });

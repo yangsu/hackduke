@@ -1,7 +1,7 @@
 var _ = require('lodash');
 var async = require('async');
 
-var db = require('../db');
+var db = require('../../db');
 
 var wrapError = function(cb) {
   return function(err, data) {

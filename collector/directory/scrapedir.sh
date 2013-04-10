@@ -1,3 +1,4 @@
+#! /bin/sh
 
 YEAR=${1:-2013}
 FILE=$YEAR.txt

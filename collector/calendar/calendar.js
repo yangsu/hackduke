@@ -2,19 +2,22 @@ var fs = require('fs');
 var _ = require('lodash');
 var async = require('async');
 
-var db = require('../db');
+var db = require('../../db');
+
+/**
+ * Parse Calender JSON output and dump to db
+ * ex: node calendar.js file.json
+ */
 
 var parseDate = function(datestring) {
-    var chunks = datestring.split('');
-    chunks.splice(-5, 0, ':');
-    chunks.splice(-3, 0, ':');
-    chunks.splice(6, 0, '-');
-    chunks.splice(4, 0, '-');
-    return new Date(chunks.join(''));
-  };
+  var chunks = datestring.split('');
+  chunks.splice(-5, 0, ':');
+  chunks.splice(-3, 0, ':');
+  chunks.splice(6, 0, '-');
+  chunks.splice(4, 0, '-');
+  return new Date(chunks.join(''));
+};
 
-// argv[0] = 'node', argv[1] = 'processAndDumpToDb.js'
-// argv[2] is the input file
 var inputFile = process.argv[2];
 
 try {

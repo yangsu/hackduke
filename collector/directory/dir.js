@@ -2,7 +2,7 @@ var fs = require('fs');
 var _ = require('lodash');
 var async = require('async');
 
-var db = require('../db');
+var db = require('../../db');
 var utils = require('../utils');
 
 var filepath = process.argv[2];
@@ -31,12 +31,12 @@ function next() {
     });
 
     db.Directory.update(
-      { duLDAPKey: obj.duLDAPKey },
-      { $set: utils.trimAll(obj) },
-      { upsert: true }, function(err, d) {
-        console.log('count', ':', index, '/', buffer.length);
-        process.nextTick(next);
-      });
+        { duLDAPKey: obj.duLDAPKey },
+        { $set: utils.trimAll(obj) },
+        { upsert: true }, function(err, d) {
+          console.log('progress', ':', index, '/', buffer.length);
+          process.nextTick(next);
+        });
   } else {
     process.exit(0);
   }

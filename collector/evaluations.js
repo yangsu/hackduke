@@ -1,7 +1,8 @@
 var _ = require('lodash');
 
-var db = require('./db');
+var db = require('../db');
 var config = require('./config');
+var collector = require('./collector');
 
 db.Term.find({}, { course_id: 1 }, { lean: true }, function(err, terms) {
   var uniqIds = _.unique(_.pluck(terms, 'course_id'));
@@ -16,6 +17,6 @@ db.Term.find({}, { course_id: 1 }, { lean: true }, function(err, terms) {
       };
     });
 
-    db.parallel(ts, 'Evaluation');
+    collector.parallel(ts, 'Evaluation');
   });
 });

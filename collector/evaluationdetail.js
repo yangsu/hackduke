@@ -1,7 +1,8 @@
 var _ = require('lodash');
 
-var db = require('./db');
+var db = require('../db');
 var config = require('./config');
+var collector = require('./collector');
 
 db.Evaluation.find({
   details: { $exists: false }
@@ -14,5 +15,5 @@ db.Evaluation.find({
     };
   });
 
-  db.parallel(ts, 'Evaluation');
+  collector.parallel(ts, 'Evaluation');
 });

@@ -2,7 +2,7 @@ var _ = require('lodash');
 
 var catalog = require('./catalog_renumbering');
 
-var db = require('../db');
+var db = require('../../db');
 
 var handleError = function(err) {
   console.log('Error', err);

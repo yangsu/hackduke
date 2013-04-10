@@ -1,7 +1,8 @@
 var _ = require('lodash');
 var async = require('async');
 
-var db = require('../db');
+var db = require('../../db');
+var collector = require('../collector');
 
 var wrapError = function(cb) {
   return function(err, data) {
@@ -20,7 +21,7 @@ var dbParsePath = function(collection, path) {
     db[collection].find(query, {}, { limit: 0 }, wrapError(function(d) {
       var reqs = _.map(d, function(doc) {
         return function(cb) {
-          doc.set(db.parseQSData(doc.get(path)));
+          doc.set(collector.parseQSData(doc.get(path)));
           doc.save(cb);
         };
       });

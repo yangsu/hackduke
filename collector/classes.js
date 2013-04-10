@@ -1,13 +1,14 @@
 var _ = require('lodash');
 
-var db = require('./db');
+var db = require('../db');
+var collector = require('./collector');
 
-db.Department.find({}, 'path', {}, function (err, departments) {
+db.Department.find({}, 'path', {}, function(err, departments) {
   var ds = _.map(departments, function(department) {
     return {
       type: 'department',
       path: department.path
     };
   });
-  db.parallel(ds, 'Class');
+  collector.parallel(ds, 'Class');
 });

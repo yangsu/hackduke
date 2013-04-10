@@ -1,6 +1,7 @@
 var _ = require('lodash');
 
-var db = require('./db');
+var db = require('../db');
+var collector = require('./collector');
 
 var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
@@ -11,4 +12,4 @@ var departments = _.map(letters, function(letter) {
   };
 });
 
-db.parallel(departments, 'Department');
+collector.parallel(departments, 'Department');
