@@ -10,7 +10,7 @@ var ObjectId = Schema.Types.ObjectId;
 var db = {};
 var queryMap = {};
 
-mongoose.connect(config.mongo.path, config.mongo.db);
+mongoose.connect(config.mongouri);
 
 var CourseNumberMappingSchema = Schema({
   department: String,
