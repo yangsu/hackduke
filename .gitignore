@@ -1,29 +1,12 @@
-# Fabio
-.idea
-campusconnect/node_modules
-*.iml
-
-
 # Node
 node_modules
 *.log
 
-# Yeoman
-temp
-intermediate
-publish
-
 # Sublime
 *.sublime-workspace
 
-# Scrapers
-maces-*.json
-
 # Mac
 .DS_Store
-
-# sqlite
-test/config/test.sqlite
 
 data/
 collector/calendar/*.json
