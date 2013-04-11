@@ -62,7 +62,7 @@ d3.json(baseURL + 'list/department-code', function(departments) {
     return memo;
   }, {})
 
-  async.series(reqs, function(err, data) {
+  async.parallel(reqs, function(err, data) {
     $('#display').html('Loaded data in ' + (Date.now() - start)/1000 + 's');
     var courses = _.chain(data)
       .pairs()
