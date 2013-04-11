@@ -28,7 +28,7 @@ server.use(restify.throttle({
   rate: 100, //per second
   ip: true,
   overrides: {
-    'hackduke.com': { rate: 0, burst: 0 }
+    'www.hackduke.com': { rate: 0, burst: 0 }
   }
 }));
 

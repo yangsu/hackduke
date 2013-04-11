@@ -1,6 +1,6 @@
 $(function() {
   window.swaggerUi = new SwaggerUi({
-    discoveryUrl: 'http://hackduke.com/apidoc',
+    discoveryUrl: 'http://www.hackduke.com/apidoc',
     apiKey: '',
     dom_id: 'swagger-ui-container',
     supportHeaderParams: false,
