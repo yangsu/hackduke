@@ -38,13 +38,13 @@ server.get('/', restify.serveStatic({
   directory: './docs/',
   default: 'index.html'
 }));
-server.get(/\/.+\.(js|json)/, restify.serveStatic({
+server.get(/^\/.+\.js$/, restify.serveStatic({
   directory: './docs/'
 }));
-server.get(/\/css\/.+\.css/, restify.serveStatic({
+server.get(/^\/css\/.+\.css$/, restify.serveStatic({
   directory: './docs/'
 }));
-server.get(/\/images\/.+\.(png|gif)/, restify.serveStatic({
+server.get(/^\/images\/.+\.(png|gif)$/, restify.serveStatic({
   directory: './docs/'
 }));
 
@@ -56,6 +56,10 @@ require('./apidoc')(function(err, docs) {
     return res.json(docs[req.params.resource]);
   });
 });
+
+server.get(/^\/\w+\.(html|json|png)/, restify.serveStatic({
+  directory: './sampleapps/'
+}));
 
 server.get('/list/academic-organization', routes.listAcademicOrgs);
 server.get('/list/department', routes.listDepartment);
