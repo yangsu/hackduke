@@ -161,7 +161,7 @@ ol li {
 }
 
 .markdown h3 {
-    color: #547f00;
+    color: #6CAED8;
 }
 
 .markdown h4 {
@@ -219,7 +219,7 @@ span.blank, span.empty {
 }
 
 a {
-    color: #547f00;
+    color: #6CAED8;
 }
 
 b, strong {
@@ -457,7 +457,7 @@ body #header form#api_selector .input a#explore {
 }
 
 body #header form#api_selector .input a#explore:hover {
-    background-color: #547f00;
+    background-color: #6CAED8;
 }
 
 body p#colophon {
@@ -472,7 +472,7 @@ body p#colophon {
 
 body p#colophon a {
     text-decoration: none;
-    color: #547f00;
+    color: #6CAED8;
 }
 
 body ul#resources {
