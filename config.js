@@ -4,6 +4,6 @@ module.exports = {
   swaggerVersion: '1.1',
   basePath: 'http://www.hackduke.com/',
   // mongouri: 'mongodb://localhost/aces'
-  mongouri: 'mongodb://hackduke:T6ct5YhUvsaK@ds029117.mongolab.com:29117/heroku_app14811010'
-  // mongouri: 'mongodb://www.hackduke.com/hackduke'
+  // mongouri: 'mongodb://hackduke:T6ct5YhUvsaK@ds029117.mongolab.com:29117/heroku_app14811010'
+  mongouri: 'mongodb://colab-sbx-03.oit.duke.edu/hackduke'
 };
