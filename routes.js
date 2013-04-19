@@ -3,12 +3,14 @@ var async = require('async');
 
 var db = require('./db');
 
-var baseOptions = {
-  lean: true
+var baseOptions = function() {
+  return {
+    lean: true
+  };
 };
 
 var genOptions = function(opt) {
-  return _.extend({}, baseOptions, opt);
+  return _.extend({}, baseOptions(), opt);
 };
 
 var wrapError = function(res, cb) {
@@ -127,7 +129,7 @@ exports.departmentById = byId('Department');
 exports.class = function(req, res, next) {
   var query = _.pick(req.params, 'department', 'number');
   var filter = getFormat('Class', req.query.format);
-  db.Class.findOne(query, filter, baseOptions, defaultHandler(res));
+  db.Class.findOne(query, filter, baseOptions(), defaultHandler(res));
 };
 
 exports.classById = byId('Class');
@@ -141,7 +143,7 @@ exports.classTerm = function(req, res, next) {
     course_id: 0
   });
   db.Term
-    .find(query, filter, baseOptions)
+    .find(query, filter, baseOptions())
     .exec(defaultHandler(res));
 };
 
@@ -149,7 +151,7 @@ exports.classSection = function(req, res, next) {
   var query = _.pick(req.params, 'department', 'number', 'title');
   var filter = getFormat('Section', req.query.format);
   db.Section
-    .find(query, filter, baseOptions)
+    .find(query, filter, baseOptions())
     .exec(handlerGenerator(res, function(docs) {
         var response = _.map(docs, function(doc) {
           return _.omit(
@@ -198,7 +200,7 @@ exports.classHistory = function(req, res, next) {
   var sectionFilter = getFormat('Section', req.query.format);
 
   db.Class
-    .find(query, filter, baseOptions)
+    .find(query, filter, baseOptions())
     .populate({
         path: 'terms',
         select: termFilter
@@ -225,7 +227,7 @@ exports.classHistoryById = function(req, res, next) {
   var sectionFilter = getFormat('Section', req.query.format);
 
   db.Class
-    .findById(req.params.id, filter, baseOptions)
+    .findById(req.params.id, filter, baseOptions())
     .populate({
         path: 'terms',
         select: termFilter
@@ -265,13 +267,13 @@ exports.evaluation = function(req, res, next) {
   var filter = getFormat('Section', req.query.format);
   var evalfilter = getFormat('Evaluation', req.query.format);
 
-  db.Section.find(query, filter, baseOptions, wrapError(res, function(d) {
+  db.Section.find(query, filter, baseOptions(), wrapError(res, function(d) {
     var course_id = _.unique(_.pluck(d, 'course_id'))[0];
 
     db.Evaluation.find({
       course_id: course_id,
       details: { $exists: true }
-    }, evalfilter, baseOptions, handlerGenerator(res, function(data) {
+    }, evalfilter, baseOptions(), handlerGenerator(res, function(data) {
       if (_.isArray(data) && req.query.format == 'detailed') {
         data = _.map(data, function(d) {
           var details = d.details;
