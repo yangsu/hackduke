@@ -32,8 +32,6 @@ server.use(restify.throttle({
   }
 }));
 
-var routes = require('./routes');
-
 server.get('/', restify.serveStatic({
   directory: './docs/',
   default: 'index.html'
@@ -61,74 +59,82 @@ server.get(/^\/\w+\.(html|json|png)/, restify.serveStatic({
   directory: './sampleapps/'
 }));
 
-server.get('/list/academic-organization', routes.listAcademicOrgs);
-server.get('/list/department', routes.listDepartment);
-server.get('/list/department-code', routes.listDepartmentCode);
-server.get('/list/program', routes.listPrograms);
-server.get('/list/school', routes.listSchools);
-server.get('/list/term', routes.listTerm);
-server.get('/list/event-host', routes.listEventHost);
-server.get('/list/event-category', routes.listEventCategory);
-server.get('/list/event-venue', routes.listEventVenue);
-server.get('/list/location', routes.listLocation);
-server.get('/list/marker', routes.listMarker);
-server.get('/list/marker-category', routes.listMarkerCategory);
-server.get('/list/education-affiliation', routes.listEducationalAffiliation);
-server.get('/list/graduation-term', routes.listDirectoryGraduationTerm);
-server.get('/list/academic-programs', routes.listDirectoryProgram);
+var routes = require('./routes');
 
-server.get('/list/department/:department', routes.listclass);
-server.get('/list/department/:department/class/:number', routes.listterm);
-server.get('/list/department/:department/class/:number/term/:title', routes.listsection);
+var list = routes.list;
+server.get('/list/academic-organization', list.academicOrgs);
+server.get('/list/academic-programs', list.directoryProgram);
+server.get('/list/department', list.department);
+server.get('/list/department-code', list.departmentCode);
+server.get('/list/department/:department', list.class);
+server.get('/list/department/:department/class/:number', list.term);
+server.get('/list/department/:department/class/:number/term/:title', list.section);
+server.get('/list/education-affiliation', list.educationalAffiliation);
+server.get('/list/event-category', list.eventCategory);
+server.get('/list/event-host', list.eventHost);
+server.get('/list/event-venue', list.eventVenue);
+server.get('/list/graduation-term', list.directoryGraduationTerm);
+server.get('/list/location', list.location);
+server.get('/list/marker', list.marker);
+server.get('/list/marker-category', list.markerCategory);
+server.get('/list/program', list.programs);
+server.get('/list/school', list.schools);
+server.get('/list/term', list.term);
 
-server.get('/department', routes.departments);
-server.get('/department/:id', routes.departmentById);
+var department = routes.department;
+server.get('/department', department.index);
+server.get('/department/:id', department.byId);
 
-server.get('/class', routes.classes);
-server.get('/class/:id', routes.classById);
-server.get('/class/department/:department', routes.classes);
-server.get('/class/department/:department/number/:number', routes.class);
-server.get('/class/department/:department/number/:number/evaluation', routes.evaluation);
-server.get('/class/department/:department/number/:number/term', routes.classTerm);
-server.get('/class/department/:department/number/:number/term/:title', routes.classSection);
-server.get('/class/term/:title', routes.classByTerm);
-server.get('/class/term/:title/department/:department', routes.classByTerm);
-server.get('/class/history/department/:department/number/:number', routes.classHistory);
+var cls = routes.class;
+server.get('/class', cls.classes);
+server.get('/class/:id', cls.byId);
+server.get('/class/department/:department', cls.classes);
+server.get('/class/department/:department/number/:number', cls.index);
+server.get('/class/department/:department/number/:number/evaluation', cls.evaluation);
+server.get('/class/department/:department/number/:number/term', cls.term);
+server.get('/class/department/:department/number/:number/term/:title', cls.section);
+server.get('/class/term/:title', cls.byTerm);
+server.get('/class/term/:title/department/:department', cls.byTerm);
+server.get('/class/history/department/:department/number/:number', cls.history);
 
-server.get('/evaluation/:id', routes.evaluationById);
-server.get('/history/:id', routes.classHistoryById);
-server.get('/section/:id', routes.sectionById);
-server.get('/term/:id', routes.termById);
+server.get('/evaluation/:id', cls.evaluationById);
+server.get('/history/:id', cls.historyById);
+server.get('/section/:id', cls.sectionById);
+server.get('/term/:id', cls.termById);
 
-server.get('/event', routes.event);
-server.get('/event/:id', routes.eventById);
-server.get(/event\/category\/(.+)/, routes.eventByCategory);
-server.get('/event/venue/:location', routes.eventByVenue);
-server.get('/event/host/:host', routes.eventByHost);
-server.get('/event/date/:year/:month', routes.eventByMonth);
-server.get('/event/date/:year/:month/:day', routes.eventByDate);
-server.get('/event/date/today', routes.eventToday);
-server.get('/event/date/this-week', routes.eventThisWeek);
+var event = routes.event;
+server.get('/event', event.index);
+server.get('/event/:id', event.byId);
+server.get(/event\/category\/(.+)/, event.byCategory);
+server.get('/event/venue/:location', event.byVenue);
+server.get('/event/host/:host', event.byHost);
+server.get('/event/date/:year/:month', event.byMonth);
+server.get('/event/date/:year/:month/:day', event.byDate);
+server.get('/event/date/today', event.today);
+server.get('/event/date/this-week', event.thisWeek);
 
-server.get('/location', routes.location);
-server.get('/location/:id', routes.locationById);
-server.get('/location/building-id/:id', routes.locationByBuildingId);
-server.get('/location/name/:name', routes.locationByName);
+var location = routes.location;
+server.get('/location', location.index);
+server.get('/location/:id', location.byId);
+server.get('/location/building-id/:id', location.byBuildingId);
+server.get('/location/name/:name', location.byName);
 
-server.get('/marker', routes.marker);
-server.get('/marker/:id', routes.markerById);
-server.get('/marker/marker-id/:id', routes.markerByMarkerId);
-server.get('/marker/name/:name', routes.markerByName);
-server.get('/marker/category/:category', routes.markerByCategory);
+var marker = routes.marker;
+server.get('/marker', marker.index);
+server.get('/marker/:id', marker.byId);
+server.get('/marker/marker-id/:id', marker.byMarkerId);
+server.get('/marker/name/:name', marker.byName);
+server.get('/marker/category/:category', marker.byCategory);
 
-server.get('/directory', routes.directory);
-server.get('/directory/:id', routes.directoryById);
-server.get('/directory/netid/:netid', routes.directoryByNetId);
-server.get('/directory/phone/:phone', routes.directoryByPhone);
-server.get('/directory/affiliation/:affiliation', routes.directoryByAffiliation);
-server.get('/directory/program/:program', routes.directoryByProgram);
-server.get('/directory/program/:program/class/:class', routes.directoryByProgramClass);
-server.get('/directory/program/:program/graduation-term/:term', routes.directoryByProgramGraduation);
+var directory = routes.directory;
+server.get('/directory', directory.index);
+server.get('/directory/:id', directory.byId);
+server.get('/directory/netid/:netid', directory.byNetId);
+server.get('/directory/phone/:phone', directory.byPhone);
+server.get('/directory/affiliation/:affiliation', directory.byAffiliation);
+server.get('/directory/program/:program', directory.byProgram);
+server.get('/directory/program/:program/class/:class', directory.byProgramClass);
+server.get('/directory/program/:program/graduation-term/:term', directory.byProgramGraduation);
 
 var port = process.env.PORT || 8080;
 server.listen(port, function() {
