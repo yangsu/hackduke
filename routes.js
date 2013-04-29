@@ -34,9 +34,6 @@ var defaultHandler = function(res) {
   return handlerGenerator(res, _.identity);
 };
 
-
-var transformers = require('./transformers');
-
 var limitAndSkip = function(query) {
   return genOptions({
     limit: query.limit || 100,
@@ -53,22 +50,18 @@ var includeFilter = function(filter, key) {
   }
 };
 
-// =============================================================================
-// list.json
-// =============================================================================
+var transformers = require('./transformers');
+
+var getFormat = function(collection, format) {
+  var filters = transformers[collection];
+  return filters[format] || filters.basic || {};
+};
 
 var distinct = function(collection, field) {
   return function(req, res, next) {
     db[collection].distinct(field).exec(defaultHandler(res));
   };
 };
-
-exports.listAcademicOrgs = distinct('Class', 'course-offering.academic-organization');
-exports.listDepartment = distinct('Department', 'title');
-exports.listDepartmentCode = distinct('Department', 'code');
-exports.listPrograms = distinct('Class', 'course-offering.career');
-exports.listSchools = distinct('Class', 'course-offering.academic-group');
-exports.listTerm = distinct('Term', 'title');
 
 var listEndpoint = function(collection, queryfields, filterField, f) {
   return function(req, res, next) {
@@ -84,21 +77,6 @@ var listEndpoint = function(collection, queryfields, filterField, f) {
   };
 };
 
-exports.listclass = listEndpoint('Class', ['department'], 'number title')
-
-exports.listterm = listEndpoint('Term', ['department', 'number'], 'title');
-
-exports.listsection = listEndpoint('Section', ['department', 'number', 'title'], 'section_id');
-
-// =============================================================================
-// ById
-// =============================================================================
-
-var getFormat = function(collection, format) {
-  var filters = transformers[collection];
-  return filters[format] || filters.basic || {};
-};
-
 var byId = function(collection) {
   return function(req, res, next) {
     var filter = getFormat(collection, req.query.format);
@@ -107,7 +85,21 @@ var byId = function(collection) {
 };
 
 // =============================================================================
-// department.json
+// list
+// =============================================================================
+
+exports.listAcademicOrgs = distinct('Class', 'course-offering.academic-organization');
+exports.listDepartment = distinct('Department', 'title');
+exports.listDepartmentCode = distinct('Department', 'code');
+exports.listPrograms = distinct('Class', 'course-offering.career');
+exports.listSchools = distinct('Class', 'course-offering.academic-group');
+exports.listTerm = distinct('Term', 'title');
+exports.listclass = listEndpoint('Class', ['department'], 'number title');
+exports.listterm = listEndpoint('Term', ['department', 'number'], 'title');
+exports.listsection = listEndpoint('Section', ['department', 'number', 'title'], 'section_id');
+
+// =============================================================================
+// department
 // =============================================================================
 
 exports.departments = function(req, res, next) {
@@ -123,7 +115,7 @@ exports.departments = function(req, res, next) {
 exports.departmentById = byId('Department');
 
 // =============================================================================
-// class.json
+// class
 // =============================================================================
 
 exports.class = function(req, res, next) {
@@ -258,7 +250,7 @@ exports.classes = function(req, res, next) {
 };
 
 // =============================================================================
-// evaluation.json
+// evaluation
 // =============================================================================
 
 exports.evaluation = function(req, res, next) {
@@ -488,42 +480,7 @@ var DirectoryEndpoint = function(query, req, res, next) {
 };
 
 exports.directory = function(req, res, next) {
-  var query = _.pick(req.query,
-      'cn',
-      'displayName',
-      'duAcMailboxExists',
-      'duDempoID',
-      'duDempoIDhist',
-      'duLDAPKey',
-      'duMiddleName1',
-      'duPSAcadCareerC1',
-      'duPSAcadCareerDescC1',
-      'duPSAcadProgC1',
-      'duPSCareerSeqNbrC1',
-      'duSAPCompany',
-      'duSAPCompanyDesc',
-      'duSAPOrgUnit',
-      'eduPersonAffiliation',
-      'eduPersonPrimaryAffiliation',
-      'eduPersonPrincipalName',
-      'facsimileTelephoneNumber',
-      'gidNumber',
-      'givenName',
-      'homeDirectory',
-      'loginShell',
-      'mail',
-      'objectClass',
-      'ou',
-      'pager',
-      'postOfficeBox',
-      'postalAddress',
-      'sn',
-      'telephoneNumber',
-      'title',
-      'uid',
-      'uidNumber'
-    );
-  DirectoryEndpoint(query, req, res, next);
+  DirectoryEndpoint({}, req, res, next);
 };
 
 exports.directoryById = byId('Directory');
