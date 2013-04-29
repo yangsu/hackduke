@@ -1570,3 +1570,14 @@ pre code {
 .message-fail {
   color: #cc0000;
 }
+
+.inlineblock, .inlineblock a {
+  display: inline-block;
+  margin-right: 10px;
+  font-family: 'Droid Sans', sans-serif;
+  font-weight: bold;
+  color: #999999;
+}
+.inlineblock a:hover {
+  color: black;
+}
