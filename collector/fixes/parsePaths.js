@@ -31,8 +31,8 @@ var dbParsePath = function(collection, path) {
 };
 
 async.series({
-  // class: dbParsePath('Class', 'sectionsPath'),
-  // term: dbParsePath('Term', 'path'),
+  class: dbParsePath('Class', 'sectionsPath'),
+  term: dbParsePath('Term', 'path'),
   section: dbParsePath('Section', 'path'),
   evaluation: dbParsePath('Evaluation', 'detailPath')
 }, function(err, data) {
