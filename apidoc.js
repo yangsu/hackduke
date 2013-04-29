@@ -493,18 +493,18 @@ module.exports = function(callback) {
           })
         }),
         get({
-          path: '/event/affiliation/{affiliation}',
-          description: 'Get events by phone number',
-          notes: 'Affiliations can be found under /list/education-affiliation',
-          name: 'getEventByAffiliation',
+          path: '/event/host/{host}',
+          description: 'Get events by event host',
+          notes: 'Hosts can be found under /list/event-host',
+          name: 'getEventByHost',
           responseClass: 'LIST[Event]',
           parameters: [listParam({
-            name: 'affiliation',
+            name: 'host',
             paramType: 'path',
-            description: 'Affiliation',
+            description: 'Host',
             dataType: 'String',
             required: true
-          }, values.affiliations)].concat(formatLimitSkip)
+          }, values.eventHosts)].concat(formatLimitSkip)
         }),
         get({
           path: '/event/date/{year}/{month}',
