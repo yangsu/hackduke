@@ -78,24 +78,23 @@ The documentation app is based on [Swagger UI][]. The documentation JSON are gen
 
 I've created 3 sample apps to show case different parts of the API
 
-### Course Tree
+### [Course Tree][]
 
 A course catalog presented in a collapsible tree format generated using [D3.js][]
 
 The app first loads a list of classes offered. When available, you can open up each node to reveal term and section information.
 
-### Area Code
+### [Area Code][]
 
 A visualization of the undergraduate population by state. Over 14000 phone numbers are analyzed and the area codes are turned into states. These numbers are then mapped linearly to the color and size for the states with respect to population of Dukies from that particular state. Click to zoom in and out.
 
-### Around Me
+### [Around Me][]
 
 A map based visualization to show the locations of all events occuring in the next week around campus
 
 ---
 
 <!-- Links -->
-
 
 [`curl`]: http://curl.haxx.se/docs/manpage.html
 [`db`]: https://github.com/yangsu/hackduke/blob/master/db.js
@@ -109,11 +108,14 @@ A map based visualization to show the locations of all events occuring in the ne
 [API Server]: #api-server
 [api.js]: https://github.com/yangsu/hackduke/blob/master/api.js
 [apidoc.js]: https://github.com/yangsu/hackduke/blob/master/apidoc.js
+[Area Code]: http://hackduke.com/areacode.html
+[Around Me]: http://hackduke.com/aroundme.html
 [async.js]: https://github.com/caolan/async
 [cheerio.js]: https://github.com/MatthewMueller/cheerio
 [class.js]: https://github.com/yangsu/hackduke/blob/master/collector/class.js
 [classes.js]: https://github.com/yangsu/hackduke/blob/master/collector/classes.js
 [course renumbers]: https://github.com/yangsu/hackduke/blob/master/collector/renumbering/catalog_renumbering.js
+[Course Tree]: http://hackduke.com/coursetree.html
 [creator field prefix]: https://github.com/yangsu/hackduke/blob/master/collector/calendar/calendar.js#L49
 [D3.js]: https://github.com/mbostock/d3
 [departments.js]: https://github.com/yangsu/hackduke/blob/master/collector/departments.js
