@@ -43,4 +43,3 @@ time node evaluations.js # Term => Evaluation
 echo "Scraping evaluationdetail.js..."
 time node evaluationdetail.js # Evaluation => Evaluation
 
-echo "
