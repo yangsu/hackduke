@@ -68,7 +68,7 @@
         }
       });
 
-      var url = 'http://www.hackduke.com/event/date/this-week';
+      var url = 'http://hackduke.herokuapp.com/event/date/this-week';
       var options = '?limit=0&location=1';
       $.getJSON(url + options, function(events) {
         var es = _.chain(events)

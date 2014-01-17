@@ -63,7 +63,7 @@ $(function() {
   var linScale;
 
 
-  var baseURL = 'http://www.hackduke.com/directory/program/Undergraduate?limit=16000';
+  var baseURL = 'http://hackduke.herokuapp.com/directory/program/Undergraduate?limit=16000';
   function getAreaCodeCounts(cb) {
     d3.json(baseURL, function(data) {
       var numbers = _.chain(data)
